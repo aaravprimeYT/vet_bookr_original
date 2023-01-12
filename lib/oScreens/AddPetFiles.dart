@@ -213,7 +213,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
                       //         builder: (context) => MenuScreen()));
                       // vaccinationDate =
                       //     "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-                      await uploadImages(path: pdfFile!.path!, name: petName);
+                      await uploadImages(path: pdfFile!.path, name: petName);
 
                       Map<String, dynamic> addedPetFile = {
                         "name": controllerChanger(0).text,

@@ -264,8 +264,7 @@ class _AddPetHomeState extends State<AddPetHome> {
                       //         builder: (context) => MenuScreen()));
                       // vaccinationDate =
                       //     "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-                      await uploadImages(
-                          path: profilePic!.path!, name: petName);
+                      await uploadImages(path: profilePic!.path, name: petName);
 
                       Map<String, dynamic> addedPet = {
                         "name": controllerChanger(0).text,
