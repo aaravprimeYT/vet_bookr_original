@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "916421099888",
+    "project_id": "the-app-354102",
+    "storage_bucket": "the-app-354102.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916421099888:android:9dcb63fcb2391adfd64fb5",
+        "android_client_info": {
+          "package_name": "com.example.vet_bookr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916421099888-gnnl4dcbomq9totrpu46o43iqhcqtbk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vet_bookr",
+            "certificate_hash": "9bcb46e61aeda147673ec09188c66197158b6184"
+          }
+        },
+        {
+          "client_id": "916421099888-tln5a9s23hn0c8pg5u9vi71sg3h80kau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXKG5HhBjJqp5cygIDGdCaq1To_gQfTKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916421099888-tln5a9s23hn0c8pg5u9vi71sg3h80kau.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "916421099888-28738nqrn6he99d6ti4d7pjrqejjlrus.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vetBookr.vetBookr"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916421099888:android:7e7a1d8bde33db7fd64fb5",
+        "android_client_info": {
+          "package_name": "com.vetBookr.vet_bookr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916421099888-tln5a9s23hn0c8pg5u9vi71sg3h80kau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXKG5HhBjJqp5cygIDGdCaq1To_gQfTKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916421099888-tln5a9s23hn0c8pg5u9vi71sg3h80kau.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "916421099888-28738nqrn6he99d6ti4d7pjrqejjlrus.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vetBookr.vetBookr"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
