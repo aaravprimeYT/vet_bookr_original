@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vet_bookr/models/sizeConfig.dart';
+import 'package:vet_bookr/oScreens/petPharmacies_part.dart';
+import 'package:vet_bookr/oScreens/searchLocationLists/SearchLocationPharmacy.dart';
+
+class PharmaLoading extends StatefulWidget {
+  const PharmaLoading({super.key});
+
+  @override
+  State<PharmaLoading> createState() => _PharmaLoadingState();
+}
+
+class _PharmaLoadingState extends State<PharmaLoading> {
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Color(0xffFFD9B3),
+      body: Container(
+        width: 1.sw,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: 0.85.sh,
+              width: 0.5.sw,
+              child: Image.asset(
+                'assets/pharmacyloadingscreen.png',
+              ),
+            ),
+            ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Color(0xffFF8B6A))),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PetPharmaciesPage()));
+                },
+                child: Container(
+                  width: 0.65.sw,
+                  child: Text(
+                    "Find a Pet Pharmacy Near Me",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Color(0xffD4F0FF))),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SearchLocationPharmacy()));
+              },
+              child: Container(
+                width: 0.65.sw,
+                child: Text(
+                  "Enter Location Where You Need a Pet Pharmacy",
+                  style: TextStyle(
+                      color: Color(0xff8B8B8C),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 10.9.sp),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
