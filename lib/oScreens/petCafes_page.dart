@@ -104,10 +104,11 @@ class _PetCafesPageState extends State<PetCafesPage> {
     /**
      * Adding the markerss
      */
-
-    setState(() {
-      isLoading = false;
-    });
+    if(!mounted) return;
+  
+      setState(() {
+        isLoading = false;
+      });
 
     // for (vetClinic in vetClinics) {
     //   final marker = Marker(

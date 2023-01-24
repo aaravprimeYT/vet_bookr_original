@@ -58,6 +58,7 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetResortsPage()));
                     },
                     style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
                         backgroundColor:
                             MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
@@ -84,6 +85,7 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetCafesPage()));
                     },
                     style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
                         backgroundColor:
                             MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
@@ -112,6 +114,7 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetRestaurantsPage()));
                     },
                     style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
                         backgroundColor:
                             MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
@@ -141,6 +144,7 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetTrainersPage()));
                     },
                     style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
                       backgroundColor:
                           MaterialStateProperty.all(Color(0xffFAEEE2)),
                       shape: MaterialStateProperty.all(CircleBorder()),
@@ -170,6 +174,7 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetBoardersPage()));
                     },
                     style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
                         backgroundColor:
                         MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
@@ -196,10 +201,11 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetGroomersPage()));
                     },
                     style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
                         backgroundColor:
                         MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
-                    child: Image.asset("assets/cafes.png",
+                    child: Image.asset("assets/grooming.png",
                         width: 0.25.sw, height: 0.25.sw),
                   ),
                 ),
@@ -223,6 +229,7 @@ class PetSocialFilter extends StatelessWidget {
                             builder: (context) => PetParksPage()));
                   },
                   style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0),
                     backgroundColor:
                     MaterialStateProperty.all(Color(0xffFAEEE2)),
                     shape: MaterialStateProperty.all(CircleBorder()),

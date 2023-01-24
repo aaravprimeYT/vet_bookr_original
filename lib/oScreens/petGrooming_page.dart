@@ -104,6 +104,7 @@ class _PetGroomersPageState extends State<PetGroomersPage> {
     /**
      * Adding the markerss
      */
+    if(!mounted) return;
 
     setState(() {
       isLoading = false;

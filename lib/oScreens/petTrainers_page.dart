@@ -104,25 +104,11 @@ class _PetTrainersPageState extends State<PetTrainersPage> {
     /**
      * Adding the markerss
      */
+    if(!mounted) return;
 
     setState(() {
       isLoading = false;
     });
-
-    // for (vetClinic in vetClinics) {
-    //   final marker = Marker(
-    //     markerId: MarkerId(vetClinic.placeId),
-    //     position: LatLng(vetClinic.lat.toDouble(), vetClinic.lng.toDouble()),
-    //     infoWindow: InfoWindow(
-    //       title: vetClinic.name,
-    //       snippet: vetClinic.address,
-    //     ),
-    //   );
-    //   _markers.add(marker);
-    // }
-
-    // return TotalVetData(
-    //     usersLat: latLng[0], usersLng: latLng[1], vetClinics: vetClinics);
   }
 
   clinicTile(data) {

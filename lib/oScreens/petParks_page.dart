@@ -104,6 +104,7 @@ class _PetParksPageState extends State<PetParksPage> {
     /**
      * Adding the markerss
      */
+    if(!mounted) return;
 
     setState(() {
       isLoading = false;

@@ -104,7 +104,8 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
     print(vetClinic);
     /**
      * Adding the markerss
-     */
+     */    
+    if(!mounted) return;
 
     setState(() {
       isLoading = false;
