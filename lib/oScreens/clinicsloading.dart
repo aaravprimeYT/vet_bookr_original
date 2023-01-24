@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 "Find a Vet Near Me",
                 style: TextStyle(
                   color: Colors.white,
-                    fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -67,14 +67,21 @@ class _SplashScreenState extends State<SplashScreen> {
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Color(0xffD4F0FF))),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SearchLocationClinics()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SearchLocationClinics()));
             },
-            child: Text(
-              "Enter Location Where You Find a Vet",
-              style: TextStyle(
-                color: Color(0xff8B8B8C),
-                fontWeight: FontWeight.w400
+            child: Container(
+              width: 0.55.sw,
+              child: Text(
+                "Enter Location Where You Find a Vet",
+                style: TextStyle(
+                  color: Color(0xff8B8B8C),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 0.025.sw,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ),

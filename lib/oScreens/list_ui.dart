@@ -50,12 +50,17 @@ class _ListUIState extends State<ListUI> {
   Widget build(BuildContext context) {
     return isLoading
         ? Container(
-          padding: EdgeInsets.all(75.sp),
-          child: CircularProgressIndicator(color: Color(0xffFF8B6A),),
-        )
+            padding: EdgeInsets.all(75.sp),
+            child: CircularProgressIndicator(
+              color: Color(0xffFF8B6A),
+            ),
+          )
         : GestureDetector(
             onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ShowPet(details: details)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ShowPet(details: details)));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -75,15 +80,23 @@ class _ListUIState extends State<ListUI> {
                       padding: EdgeInsets.only(top: 0.01.sh),
                       child: Text(
                         "${details["name"]}",
-                        style:
-                            TextStyle(fontSize: 20.sp, color: Color(0xffF08714)),
+                        style: TextStyle(
+                            fontSize: 0.05.sw, color: Color(0xffF08714)),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 0.01.sh),
-                      child: Text(
-                        "${details["breed"]}",
-                        style: TextStyle(fontSize: 18.sp),
+                    Flexible(
+                      flex: 0,
+                      child: Container(
+                        width: 0.45.sw,
+                        padding: EdgeInsets.only(
+                          top: 0.01.sh,
+                        ),
+                        child: Text(
+                          "${details["breed"]}",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 0.04.sw),
+                        ),
                       ),
                     ),
                   ],

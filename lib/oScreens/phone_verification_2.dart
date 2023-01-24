@@ -63,10 +63,25 @@ class _PV2State extends State<PV2> {
                           ),
                           Container(
                             width: 0.8.sw,
-                            height: 60.sp,
+                            height: 0.08.sh,
                             child: IntlPhoneField(
+                              style: TextStyle(fontSize: 0.017.sh),
+                              cursorColor: Colors.black,
+                              dropdownTextStyle: TextStyle(
+                                fontSize: 0.017.sh,
+                              ),
+                              dropdownIcon: Icon(
+                                Icons.arrow_drop_down,
+                                size: 0.02.sh,
+                              ),
+                              dropdownIconPosition: IconPosition.leading,
+                              disableLengthCheck: true,
                               decoration: InputDecoration(
-                                labelText: 'Phone Number',
+                                hintText: 'Phone Number',
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 0.00.sh, horizontal: 0.03.sw),
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 0.017.sh),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.sp),
                                   borderSide: BorderSide(),
@@ -74,7 +89,6 @@ class _PV2State extends State<PV2> {
                               ),
                               initialCountryCode: 'IN',
                               onChanged: (phone) {
-                                print(phone.completeNumber);
                                 setState(() {
                                   _phoneController.text = phone.completeNumber;
                                 });
@@ -134,7 +148,6 @@ class _PV2State extends State<PV2> {
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-
                           SizedBox(
                             height: 0.02.sh,
                           ),
@@ -142,29 +155,30 @@ class _PV2State extends State<PV2> {
                             height: 60.sp,
                             width: 0.8.sw,
                             child: TextFormField(
-
                               cursorColor: Colors.black,
+                              style: TextStyle(fontSize: 0.017.sh),
                               decoration: InputDecoration(
-                                  contentPadding:
-                                  EdgeInsets.symmetric(vertical: 0.01.sh, horizontal: 0.03.sw),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.sp),
-                                    borderSide: BorderSide(),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.sp),
-                                    borderSide: BorderSide(),
-                                  ),
-                                  filled: true,
-                                  fillColor: Color(0xffFFF5F0),
-                                  hintText: "Enter OTP"),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 0.01.sh, horizontal: 0.03.sw),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.sp),
+                                  borderSide: BorderSide(),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.sp),
+                                  borderSide: BorderSide(),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xffFFF5F0),
+                                hintText: "Enter OTP",
+                                hintStyle: TextStyle(fontSize: 0.017.sh),
+                              ),
                               controller: _otpController,
                             ),
                           ),
                           SizedBox(
                             height: 0.02.sh,
                           ),
-
                           Text(
                             "Enter the OTP that you have received on \n registered mobile number",
                             style:

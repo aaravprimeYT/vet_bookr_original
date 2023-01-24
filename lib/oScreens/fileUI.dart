@@ -52,7 +52,7 @@ class _FileUIState extends State<FileUI> {
   Widget build(BuildContext context) {
     return isLoading
         ? Padding(
-            padding: EdgeInsets.all(75.sp),
+            padding: EdgeInsets.all(0.095.sh),
             child: CircularProgressIndicator(
               color: Color(0xffFF8B6A),
             ),
@@ -69,65 +69,74 @@ class _FileUIState extends State<FileUI> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10.sp),
+                          padding: EdgeInsets.only(top: 0.015.sh),
                           child: Text(
                             "Record Type:",
-                            style:
-                                TextStyle(fontSize: 12.sp, color: Colors.black),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2.sp),
-                          child: Text(
-                            "${details["name"]}",
                             style: TextStyle(
-                                fontSize: 18.sp, color: Color(0xffF08714)),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10.sp),
-                          child: Text(
-                            "Date:",
-                            style:
-                                TextStyle(fontSize: 12.sp, color: Colors.black),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 2.sp),
-                          child: Text(
-                            "${details["date"]}",
-                            style: TextStyle(
-                                fontSize: 18.sp, color: Color(0xffF08714)),
+                                fontSize: 0.014.sh, color: Colors.black),
                           ),
                         ),
                         Container(
                           width: 0.42.sw,
-                          margin: EdgeInsets.only(right: 0.03.sw, top: 0.04.sh),
+                          padding: EdgeInsets.only(top: 0.005.sh),
+                          child: Text(
+                            "${details["name"]}",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 0.020.sh, color: Color(0xffF08714)),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 0.015.sh),
+                          child: Text(
+                            "Date:",
+                            style: TextStyle(
+                                fontSize: 0.014.sh, color: Colors.black),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 0.005.sh),
+                          child: Text(
+                            "${details["date"]}",
+                            style: TextStyle(
+                                fontSize: 0.020.sh, color: Color(0xffF08714)),
+                          ),
+                        ),
+                        Expanded(child: Container()),
+                        Container(
+                          width: 0.42.sw,
+                          margin: EdgeInsets.only(
+                            right: 0.03.sw,
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                //fixedSize: Size(SizeConfig.blockSizeHorizontal! * 30,
-                                //  SizeConfig.blockSizeVertical! * 6),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.sp)),
-                                  backgroundColor: Color(0xffFF8B6A)),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PDFViewerFromUrl(
-                                          url: details["fileLink"],
-                                          diseaseName: details["name"],
-                                        )));
-                              },
-                              child: Text(
-                                "View File",
-                                style: TextStyle(color: Colors.white),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                    //fixedSize: Size(SizeConfig.blockSizeHorizontal! * 30,
+                                    //  SizeConfig.blockSizeVertical! * 6),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.sp)),
+                                    backgroundColor: Color(0xffFF8B6A)),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PDFViewerFromUrl(
+                                                url: details["fileLink"],
+                                                diseaseName: details["name"],
+                                              )));
+                                },
+                                child: Text(
+                                  "View File",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 0.015.sh),
+                                ),
                               ),
-                            ),
-                          ],),
+                            ],
+                          ),
                         )
                       ],
                     ),

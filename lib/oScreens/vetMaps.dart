@@ -11,6 +11,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:vet_bookr/models/total_data_vet.dart';
 import 'package:vet_bookr/models/vet_clinic.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 
 class VetsMaps extends StatefulWidget {
   VetsMaps({Key? key, required this.vetClinic, this.latLong}) : super(key: key);
@@ -275,6 +277,15 @@ class _VetsMapsState extends State<VetsMaps> {
                       child: GoogleMap(
                         polylines: Set<Polyline>.of(polylines.values),
                         onMapCreated: _onMapCreated,
+                        gestureRecognizers: Set()
+                          ..add(Factory<PanGestureRecognizer>(
+                              () => PanGestureRecognizer()))
+                          ..add(Factory<ScaleGestureRecognizer>(
+                              () => ScaleGestureRecognizer()))
+                          ..add(Factory<TapGestureRecognizer>(
+                              () => TapGestureRecognizer()))
+                          ..add(Factory<VerticalDragGestureRecognizer>(
+                              () => VerticalDragGestureRecognizer())),
                         markers: _markers,
                         initialCameraPosition: CameraPosition(
                           //innital position in map

@@ -87,7 +87,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           height: 40.sp,
                           child: TextFormField(
                             cursorColor: Colors.black,
-                            style: TextStyle(fontSize: 15.sp),
+                            style: TextStyle(fontSize: 0.017.sh),
                             controller: emailController,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
@@ -96,6 +96,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       BorderSide(color: Color(0xffFF8B6A))),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 0.01.sh, horizontal: 0.03.sw),
+                              hintStyle: TextStyle(fontSize: 0.017.sh),
                               hintText: "Registered Email Id",
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.sp),
@@ -129,7 +130,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             } else {
                               await passwordReset();
                               var snackBar = SnackBar(
-                                content: Text("Password reset link is sent successfully"),
+                                content: Text(
+                                    "Password reset link is sent successfully"),
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
@@ -150,7 +152,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               : Text(
                                   'Reset Password',
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 15.sp),
+                                      color: Colors.white, fontSize: 0.03.sw),
                                 ),
                         ),
                       ),
@@ -158,15 +160,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         height: 0.04.sh,
                       ),
                       Container(
-                      width: 0.6.sw,
+                          width: 0.6.sw,
                           child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Image.asset("assets/BackButton.png"),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent, elevation: 0),
-                      )),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Image.asset("assets/BackButton.png"),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                elevation: 0),
+                          )),
                       SizedBox(
                         height: 0.2.sh,
                       )

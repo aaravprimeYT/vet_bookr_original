@@ -43,8 +43,14 @@ class _PetFilesState extends State<PetFiles> {
           );
         },
         backgroundColor: Color(0xffFF8B6A),
-        label: Text("Add Pet Files"),
-        icon: Icon(Icons.add),
+        label: Text(
+          "Add Pet Files",
+          style: TextStyle(fontSize: 0.03.sw),
+        ),
+        icon: Icon(
+          Icons.add,
+          size: 0.05.sw,
+        ),
       ),
       appBar: AppBar(
         backgroundColor: kBackgroundColor,
@@ -69,10 +75,10 @@ class _PetFilesState extends State<PetFiles> {
             children: [
               Text(
                 "My Pet's Health Records",
-                style: TextStyle(color: Color(0xffF08714), fontSize: 24.sp),
+                style: TextStyle(color: Color(0xffF08714), fontSize: 0.05.sw),
               ),
               SizedBox(
-                height: 40.sp,
+                height: 0.05.sh,
               ),
               StreamBuilder(
                   stream: FirebaseFirestore.instance
@@ -96,7 +102,7 @@ class _PetFilesState extends State<PetFiles> {
                                 child: Text(
                               "Please add your pet's vaccination/disease files",
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 18.sp),
+                              style: TextStyle(fontSize: 0.03.sh),
                             )));
                       }
                       return GridView.builder(

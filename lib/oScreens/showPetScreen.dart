@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,24 +16,22 @@ class ShowPet extends StatefulWidget {
   State<ShowPet> createState() => _ShowPetState();
 }
 
-
 class _ShowPetState extends State<ShowPet> {
-
   List<String> labels = ["Name", "Age", "Breed", "Weight"];
 
   var getText = "";
 
-  String controllerChanger(index){
-    if(index == 0){
+  String controllerChanger(index) {
+    if (index == 0) {
       return widget.details["name"];
     }
-    if(index == 1){
+    if (index == 1) {
       return widget.details["age"];
     }
-    if(index == 2){
+    if (index == 2) {
       return widget.details["breed"];
     }
-    if(index == 3){
+    if (index == 3) {
       return widget.details["weight"];
     }
     return getText;
@@ -70,7 +67,8 @@ class _ShowPetState extends State<ShowPet> {
                   // sBox(h: 10),
                   Text(
                     'Pet Information',
-                    style: TextStyle(color: Color(0xffF08519), fontSize: 20.sp),
+                    style:
+                        TextStyle(color: Color(0xffF08519), fontSize: 0.05.sw),
                   ),
                   //      myPetTile()
                   SizedBox(
@@ -78,10 +76,11 @@ class _ShowPetState extends State<ShowPet> {
                   ),
                   GestureDetector(
                       child: CircleAvatar(
-                          radius: 75.sp,
-                          backgroundColor: Color(0xffFF8B6A),
-                        backgroundImage: NetworkImage(widget.details["profilePicture"]),
-                      )),
+                    radius: 0.095.sh,
+                    backgroundColor: Color(0xffFF8B6A),
+                    backgroundImage:
+                        NetworkImage(widget.details["profilePicture"]),
+                  )),
                   SizedBox(
                     height: 0.02.sh,
                   ),
@@ -92,16 +91,20 @@ class _ShowPetState extends State<ShowPet> {
                           top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
                       child: TextField(
                         enabled: false,
-                        controller: TextEditingController(text: controllerChanger(index)),
+                        controller: TextEditingController(
+                            text: controllerChanger(index)),
+                        style: TextStyle(fontSize: 0.017.sh),
                         decoration: InputDecoration(
-                          label: Text(labels[index]),
+                          label: Text(labels[index],
+                              style: TextStyle(fontSize: 0.02.sh)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.sp),
                               borderSide: BorderSide(color: Color(0xffFF8B6A))),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.sp),
                               borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10.sp),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10.sp),
                           hintStyle: TextStyle(color: Colors.grey),
                         ),
                       ),
@@ -109,14 +112,19 @@ class _ShowPetState extends State<ShowPet> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        top: 0.02.sh, left: 0.05.sw, right: 0.05.sw, bottom: 0.02.sh),
+                        top: 0.02.sh,
+                        left: 0.05.sw,
+                        right: 0.05.sw,
+                        bottom: 0.02.sh),
                     child: TextField(
                       enabled: false,
-                      controller:
-                          TextEditingController(text: "${widget.details["lastVaccinationDate"]}"),
+                      controller: TextEditingController(
+                          text: "${widget.details["lastVaccinationDate"]}"),
                       readOnly: true,
+                      style: TextStyle(fontSize: 0.017.sh),
                       decoration: InputDecoration(
-                        label: Text("Last Vaccination Date"),
+                        label: Text("Last Vaccination Date",
+                            style: TextStyle(fontSize: 0.02.sh)),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.sp),
                             borderSide: BorderSide(color: Color(0xffFF8B6A))),
@@ -152,11 +160,17 @@ class _ShowPetState extends State<ShowPet> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PetFiles(petId: widget.details["id"],)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PetFiles(
+                                  petId: widget.details["id"],
+                                )));
                   },
                   child: Text(
                     "Pet Health Records",
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400),
+                    style: TextStyle(
+                        fontSize: 0.029.sw, fontWeight: FontWeight.w400),
                   )),
             ),
           ],

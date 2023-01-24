@@ -40,8 +40,11 @@ class _ListPetsState extends State<ListPets> {
           );
         },
         backgroundColor: Color(0xffFF8B6A),
-        label: Text("Add Pet"),
-        icon: Icon(Icons.add),
+        label: Text(
+          "Add Pet",
+          style: TextStyle(fontSize: 0.03.sw),
+        ),
+        icon: Icon(Icons.add, size: 0.05.sw),
       ),
       appBar: AppBar(
         backgroundColor: kBackgroundColor,
@@ -66,7 +69,7 @@ class _ListPetsState extends State<ListPets> {
             children: [
               Text(
                 "My Pet(s)",
-                style: TextStyle(color: Color(0xffDD8229), fontSize: 24.sp),
+                style: TextStyle(color: Color(0xffDD8229), fontSize: 0.05.sw),
               ),
               SizedBox(
                 height: 0.03.sh,

@@ -67,141 +67,160 @@ class _AddPetHomeState extends State<AddPetHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kBackgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: kBackgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-      ),
-      extendBodyBehindAppBar: true,
-      backgroundColor: kBackgroundColor,
-      body: Container(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(15.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // sBox(h: 10),
-                Text(
-                  'My Pet Details',
-                  style: TextStyle(color: Color(0xffF08519), fontSize: 20.sp),
-                ),
-                //      myPetTile()
-                SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    profilePic = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
-                    setState(() {});
-                  },
-                  child: CircleAvatar(
-                    radius: 75.sp,
-                    backgroundColor: Color(0xffFF8B6A),
-                    child: profilePic == null
-                        ? Padding(
-                            padding: EdgeInsets.all(10.sp),
-                            child: Text(
-                              "Click here to add a profile picture for your pet",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: SizedBox(
-                              height: 0.7.sh,
-                              width: 0.7.sh,
-                              child: Image.file(
-                                fit: BoxFit.cover,
-                                File(
-                                  "${profilePic?.path}",
+        extendBodyBehindAppBar: true,
+        backgroundColor: kBackgroundColor,
+        body: Container(
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(15.sp),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // sBox(h: 10),
+                  Text(
+                    'My Pet Details',
+                    style: TextStyle(
+                      color: Color(0xffF08519),
+                      fontSize: 0.05.sw,
+                    ),
+                  ),
+                  //      myPetTile()
+                  SizedBox(
+                    height: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      profilePic = await ImagePicker()
+                          .pickImage(source: ImageSource.gallery);
+                      setState(() {});
+                    },
+                    child: CircleAvatar(
+                      radius: 75.sp,
+                      backgroundColor: Color(0xffFF8B6A),
+                      child: profilePic == null
+                          ? Padding(
+                              padding: EdgeInsets.all(10.sp),
+                              child: Text(
+                                "Click here to add a profile picture for your pet",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: SizedBox(
+                                height: 0.7.sh,
+                                width: 0.7.sh,
+                                child: Image.file(
+                                  fit: BoxFit.cover,
+                                  File(
+                                    "${profilePic?.path}",
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ...List.generate(
-                  4,
-                  (index) => Padding(
-                    padding: EdgeInsets.only(
-                        top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      controller: controllerChanger(index),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.sp),
-                            borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.sp),
-                            borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10.sp),
-                        hintText: hintTextChanger(index),
-                        hintStyle: TextStyle(color: Colors.grey),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  ...List.generate(
+                    4,
+                    (index) => Padding(
+                      padding: EdgeInsets.only(
+                          top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
+                      child: TextField(
+                        cursorColor: Colors.black,
+                        style: TextStyle(fontSize: 0.017.sh),
+                        controller: controllerChanger(index),
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.sp),
+                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.sp),
+                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10.sp),
+                          hintText: hintTextChanger(index),
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 0.017.sh),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: 0.02.sh,
-                      left: 0.05.sw,
-                      right: 0.05.sw,
-                      bottom: 0.02.sh),
-                  child: TextField(
-                      controller: vaccinationController,
-                      onTap: () => {
-                            showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate:
-                                        DateTime(DateTime.now().year - 4),
-                                    lastDate: DateTime.now())
-                                .then((value) {
-                              if (value == null) {
-                                return;
-                              } else {
-                                vaccinationController.text =
-                                    "${value.day}/${value.month}/${value.year}";
-                              }
-                            })
-                          },
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 0.02.sh,
+                        left: 0.05.sw,
+                        right: 0.05.sw,
+                        bottom: 0.02.sh),
+                    child: TextField(
+                        controller: vaccinationController,
+                        onTap: () => {
+                              showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate:
+                                          DateTime(DateTime.now().year - 4),
+                                      lastDate: DateTime.now())
+                                  .then((value) {
+                                if (value == null) {
+                                  return;
+                                } else {
+                                  vaccinationController.text =
+                                      "${value.day}/${value.month}/${value.year}";
+                                }
+                              })
+                            },
+                        readOnly: true,
+                        style: TextStyle(fontSize: 0.017.sh),
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.sp),
+                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 0.03.sw,
+                          ),
+                          hintText: "Last Vaccination Date ",
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 0.017.sh),
+                          border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        hintText: "Last Vaccination Date: ",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      onChanged: (name) {
-                        setState(() {
-                          vaccinationDate = vaccinationController as String;
-                        });
-                      }),
-                ),
-                buttonWidget()
-              ],
+                        onChanged: (name) {
+                          setState(() {
+                            vaccinationDate = vaccinationController as String;
+                          });
+                        }),
+                  ),
+                  buttonWidget()
+                ],
+              ),
             ),
           ),
         ),
@@ -231,12 +250,14 @@ class _AddPetHomeState extends State<AddPetHome> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              width: 150,
+              width: 0.4.sw,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff5EBB86),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
+                    backgroundColor: Color(0xff5EBB86),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.sp),
+                    ),
+                  ),
                   onPressed: () async {
                     bool isEmpty = false;
 
@@ -290,7 +311,7 @@ class _AddPetHomeState extends State<AddPetHome> {
                       ? Container(
                           height: 15.sp,
                           width: 15.sp,
-                          child: CircularProgressIndicator(
+                          child: const CircularProgressIndicator(
                             strokeWidth: 2,
                             color: Colors.white,
                           ),
@@ -298,7 +319,9 @@ class _AddPetHomeState extends State<AddPetHome> {
                       : Text(
                           "Submit",
                           style: TextStyle(
-                              fontSize: 15.sp, fontWeight: FontWeight.w400),
+                            fontSize: 0.03.sw,
+                            fontWeight: FontWeight.w400,
+                          ),
                         )),
             ),
           ],
@@ -345,16 +368,16 @@ var hintText = "";
 
 hintTextChanger(index) {
   if (index == 0) {
-    return hintText = "Name: ";
+    return hintText = "Name ";
   }
   if (index == 1) {
-    return hintText = "Age: ";
+    return hintText = "Age ";
   }
   if (index == 2) {
-    return hintText = "Breed: ";
+    return hintText = "Breed ";
   }
   if (index == 3) {
-    return hintText = "Weight: ";
+    return hintText = "Weight ";
   }
 }
 

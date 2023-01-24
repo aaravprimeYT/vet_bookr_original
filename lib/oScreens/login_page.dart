@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
         height: 40.sp,
         child: TextFormField(
           cursorColor: Colors.black,
-          style: TextStyle(fontSize: 15.sp),
+          style: TextStyle(fontSize: 0.017.sh),
           controller: emailController,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
@@ -83,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                 borderSide: BorderSide(color: Color(0xffFF8B6A))),
             contentPadding:
                 EdgeInsets.symmetric(vertical: 0.01.sh, horizontal: 0.03.sw),
+            hintStyle: TextStyle(fontSize: 0.017.sh),
             hintText: hText,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.sp),
@@ -102,6 +103,7 @@ class _LoginPageState extends State<LoginPage> {
         child: TextFormField(
           cursorColor: Colors.black,
           obscureText: true,
+          style: TextStyle(fontSize: 0.017.sh),
           controller: passwordController,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
@@ -109,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                 borderSide: BorderSide(color: Color(0xffFF8B6A))),
             contentPadding:
                 EdgeInsets.symmetric(vertical: 0.01.sh, horizontal: 0.03.sw),
+            hintStyle: TextStyle(fontSize: 0.017.sh),
             hintText: hText,
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color(0xffFF8B6A)),
@@ -222,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                       : Text(
                           'Login',
                           style:
-                              TextStyle(color: Colors.white, fontSize: 12.sp),
+                              TextStyle(color: Colors.white, fontSize: 0.03.sw),
                         ),
                 ),
               )

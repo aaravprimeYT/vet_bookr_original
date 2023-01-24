@@ -74,7 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
         height: 40.sp,
         child: TextFormField(
           cursorColor: Colors.black,
-          style: TextStyle(fontSize: 15.sp),
+          style: TextStyle(fontSize: 0.017.sh),
           controller: emailController,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
@@ -82,6 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 borderSide: BorderSide(color: Color(0xff5EBB86))),
             contentPadding:
                 EdgeInsets.symmetric(vertical: 0.01.sh, horizontal: 0.03.sw),
+            hintStyle: TextStyle(fontSize: 0.017.sh),
             hintText: hText,
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.sp),
@@ -101,6 +102,7 @@ class _SignUpPageState extends State<SignUpPage> {
         child: TextFormField(
           cursorColor: Colors.black,
           obscureText: true,
+          style: TextStyle(fontSize: 0.017.sh),
           controller: passwordController,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
@@ -108,6 +110,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 borderSide: BorderSide(color: Color(0xff5EBB86))),
             contentPadding:
                 EdgeInsets.symmetric(vertical: 0.01.sh, horizontal: 0.03.sw),
+            hintStyle: TextStyle(fontSize: 0.017.sh),
             hintText: hText,
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color(0xff5EBB86)),
@@ -194,7 +197,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       )
                     : Text(
                         'Sign Up',
-                        style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                        style:
+                            TextStyle(color: Colors.white, fontSize: 0.03.sw),
                       ),
               ),
             )
