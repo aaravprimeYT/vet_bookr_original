@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/prescription.dart';
 
@@ -23,10 +24,27 @@ class AddPetFiles extends StatefulWidget {
   State<AddPetFiles> createState() => _AddPetFilesState();
 }
 
-final nameController = TextEditingController();
-
 class _AddPetFilesState extends State<AddPetFiles> {
   DateTime selectedDate = DateTime.now();
+  final nameController = TextEditingController();
+
+  final ImagePicker imgpicker = ImagePicker();
+  List<XFile>? imagefiles;
+
+  openImages() async {
+    try {
+      var pickedfiles = await imgpicker.pickMultiImage();
+      //you can use ImageCourse.camera for Camera capture
+      if (pickedfiles != null) {
+        imagefiles = pickedfiles;
+        setState(() {});
+      } else {
+        print("No image is selected.");
+      }
+    } catch (e) {
+      print("error while picking file.");
+    }
+  }
 
   List<Prescription> prescArray = [];
 
@@ -42,14 +60,17 @@ class _AddPetFilesState extends State<AddPetFiles> {
   var petId = DateTime.now().millisecondsSinceEpoch.toString();
 
   String imageUrl = "";
-
+  List<String> imageUrlList = [];
+  int index = 0;
   Future<void> uploadImages(
       {required String path, required String name}) async {
     try {
-      final imageRef = storageRef
-          .child("Users/${FirebaseAuth.instance.currentUser?.uid}/$petId");
+      final imageRef = storageRef.child(
+          "Users/${FirebaseAuth.instance.currentUser?.uid}/$petId$index");
+      index++;
       await imageRef.putFile(File(path));
       imageUrl = await imageRef.getDownloadURL();
+      imageUrlList.add(imageUrl);
       setState(() {});
       print(imageRef.getDownloadURL());
     } on FirebaseException catch (e) {
@@ -61,88 +82,48 @@ class _AddPetFilesState extends State<AddPetFiles> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kBackgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: kBackgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-      ),
-      extendBodyBehindAppBar: true,
-      backgroundColor: kBackgroundColor,
-      body: Container(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(15.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'My Pet Details',
-                  style: TextStyle(color: Color(0xffF08519), fontSize: 20.sp),
-                ),
-                SizedBox(
-                  height: 0.02.sh,
-                ),
-                TextField(
-                  cursorColor: Colors.black,
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.sp),
-                        borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.sp),
-                        borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10.sp),
-                    hintText: "Name of vaccination / disease",
-                    hintStyle: TextStyle(color: Colors.grey),
+        extendBodyBehindAppBar: true,
+        backgroundColor: kBackgroundColor,
+        body: Container(
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(15.sp),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'My Pet Details',
+                    style: TextStyle(color: Color(0xffF08519), fontSize: 20.sp),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 0.02.sh, bottom: 0.02.sh),
-                  child: TextField(
-                    controller: vaccinationController,
-                    onTap: () => {
-                      showDatePicker(
-                              builder: (context, child) {
-                                return Theme(
-                                  data: Theme.of(context).copyWith(
-                                    colorScheme: ColorScheme.light(
-                                      primary: Color(0xffFF8B6A),
-                                    ),
-                                    textButtonTheme: TextButtonThemeData(
-                                      style: TextButton.styleFrom(
-                                        primary: Color(
-                                            0xffFF8B6A), // button text color
-                                      ),
-                                    ),
-                                  ),
-                                  child: child!,
-                                );
-                              },
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(DateTime.now().year - 4),
-                              lastDate: DateTime.now())
-                          .then((value) {
-                        if (value == null) {
-                          return;
-                        } else {
-                          vaccinationController.text =
-                              "${value.day}/${value.month}/${value.year}";
-                        }
-                      })
-                    },
-                    readOnly: true,
+                  SizedBox(
+                    height: 0.02.sh,
+                  ),
+                  TextField(
+                    cursorColor: Colors.black,
+                    controller: nameController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.sp),
@@ -150,19 +131,68 @@ class _AddPetFilesState extends State<AddPetFiles> {
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.sp),
                           borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                      hintText: "Date: ",
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10.sp),
+                      hintText: "Name of vaccination / disease",
                       hintStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 0.02.sh, bottom: 0.02.sh),
+                    child: TextField(
+                      controller: vaccinationController,
+                      onTap: () => {
+                        showDatePicker(
+                                builder: (context, child) {
+                                  return Theme(
+                                    data: Theme.of(context).copyWith(
+                                      colorScheme: ColorScheme.light(
+                                        primary: Color(0xffFF8B6A),
+                                      ),
+                                      textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                          primary: Color(
+                                              0xffFF8B6A), // button text color
+                                        ),
+                                      ),
+                                    ),
+                                    child: child!,
+                                  );
+                                },
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(DateTime.now().year - 4),
+                                lastDate: DateTime.now())
+                            .then((value) {
+                          if (value == null) {
+                            return;
+                          } else {
+                            vaccinationController.text =
+                                "${value.day}/${value.month}/${value.year}";
+                          }
+                        })
+                      },
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.sp),
+                            borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.sp),
+                            borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                        hintText: "Date: ",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                buttonWidget(),
-                SizedBox(height: 0.01.sh),
-                Text(pdfFile == null ? "No File Selected" : "File Selected")
-              ],
+                  buttonWidget(),
+                  SizedBox(height: 0.01.sh),
+                  Text(pdfFile == null ? "No File Selected" : "File Selected")
+                ],
+              ),
             ),
           ),
         ),
@@ -184,6 +214,8 @@ class _AddPetFilesState extends State<AddPetFiles> {
     });
   }
 
+  List<File> files = [];
+
   Widget buttonWidget() {
     return Column(
       children: [
@@ -198,13 +230,16 @@ class _AddPetFilesState extends State<AddPetFiles> {
                 onPressed: () async {
                   FilePickerResult? result =
                       await FilePicker.platform.pickFiles(
+                    allowMultiple: true,
                     type: FileType.custom,
-                    allowedExtensions: ['pdf'],
+                    allowedExtensions: ['png', 'jpg'],
                   );
+                  //await openImages();
                   if (result != null) {
-                    setState(() {
-                      pdfFile = File(result.files.single.path!);
-                    });
+                    files = result.paths.map((path) => File(path!)).toList();
+                    setState(() {});
+                  } else {
+                    // User canceled the picker
                   }
                 },
                 child: Text("Upload Pet Files")),
@@ -221,7 +256,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
                     });
                     if (nameController.text == "" ||
                         vaccinationController.text == "" ||
-                        pdfFile?.path == null) {
+                        files.length == 0) {
                       const snackBar = SnackBar(
                         content: Text("One of these fields is empty"),
                       );
@@ -233,15 +268,17 @@ class _AddPetFilesState extends State<AddPetFiles> {
                       //         builder: (context) => MenuScreen()));
                       // vaccinationDate =
                       //     "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-                      await uploadImages(path: pdfFile!.path, name: petName);
+                      for (File file in files) {
+                        await uploadImages(path: file.path, name: petName);
+                      }
 
                       Map<String, dynamic> addedPetFile = {
-                        "name": controllerChanger(0).text,
-                        "fileLink": imageUrl,
+                        "name": nameController.text,
+                        "files": imageUrlList,
                         "date": vaccinationController.text
                       };
                       addPetToFireStore(addedPetFile);
-                      controllerChanger(0).clear();
+                      nameController.clear();
                       vaccinationController.clear();
                       Navigator.pop(context);
                     }

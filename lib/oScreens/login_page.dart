@@ -4,10 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/oScreens/forgot_password.dart';
-import 'package:vet_bookr/oScreens/home_page.dart';
 import 'package:vet_bookr/oScreens/phone_verification_2.dart';
-
-import 'menu_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

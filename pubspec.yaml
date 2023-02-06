@@ -61,6 +61,9 @@ dependencies:
   flutter_cached_pdfview: ^0.4.1
   flutter_google_places: ^0.3.0
   country_picker: ^2.0.19
+  camera: ^0.10.3
+  path_provider: ^2.0.12
+  path: ^1.8.2
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PDFViewerFromUrl extends StatelessWidget {
-  PDFViewerFromUrl({Key? key, required this.url, required this.diseaseName}) : super(key: key);
+class ImageViewer extends StatelessWidget {
+  ImageViewer({Key? key, required this.urls, required this.diseaseName})
+      : super(key: key);
 
-  final String url;
+  List<dynamic> urls = [];
   String diseaseName;
 
   @override
@@ -16,10 +17,22 @@ class PDFViewerFromUrl extends StatelessWidget {
         title: Text(diseaseName),
       ),
       body: Container(
-        child: PDF().fromUrl(
-          url,
-          placeholder: (double progress) => Center(child: Text('$progress %')),
-          errorWidget: (dynamic error) => Center(child: Text(error.toString())),
+        child: ListView.builder(
+          itemCount: urls.length,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 1.sw,
+              margin: EdgeInsets.only(
+                left: 0.05.sw,
+                right: 0.05.sw,
+                top: 0.02.sh,
+              ),
+              child: Image.network(
+                "${urls[index]}",
+                fit: BoxFit.contain,
+              ),
+            );
+          },
         ),
       ),
     );

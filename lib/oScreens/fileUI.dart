@@ -1,14 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vet_bookr/oScreens/editPetFiles.dart';
 import 'package:vet_bookr/oScreens/showPdf.dart';
-import 'package:vet_bookr/oScreens/showPetScreen.dart';
-
-import '../constant.dart';
-import 'addPet_screen.dart';
-
 
 class FileUI extends StatefulWidget {
   FileUI({Key? key, required this.id, required this.petId}) : super(key: key);
@@ -22,7 +16,6 @@ class FileUI extends StatefulWidget {
 }
 
 class _FileUIState extends State<FileUI> {
-
   @override
   void initState() {
     getFileDetails();
@@ -36,6 +29,7 @@ class _FileUIState extends State<FileUI> {
         .doc(widget.id)
         .get();
     details = petDetails.data()!;
+    details.putIfAbsent("id", () => widget.id);
     setState(() {
       isLoading = false;
     });
@@ -74,6 +68,7 @@ class _FileUIState extends State<FileUI> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
                               padding: EdgeInsets.only(top: 0.015.sh),
@@ -84,17 +79,54 @@ class _FileUIState extends State<FileUI> {
                               ),
                             ),
                             Container(
-                                child: IconButton(
-                                    onPressed: () {
-                                      final editFile = FirebaseFirestore
-                                          .instance
-                                          .collection("petFiles")
-                                          .doc(widget.id);
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      size: 0.05.sw,
-                                    )))
+                              width: 0.07.sw,
+                              height: 0.07.sw,
+                              child: PopupMenuButton(
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  color: Colors.black,
+                                ),
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem<int>(
+                                      value: 0,
+                                      child: Text("Edit Record"),
+                                    ),
+                                    PopupMenuItem<int>(
+                                      value: 1,
+                                      child: Text("Delete Record"),
+                                    ),
+                                  ];
+                                },
+                                onSelected: (value) async {
+                                  if (value == 0) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EditPetFiles(
+                                          petId: widget.petId,
+                                          details: details,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  if (value == 1) {
+                                    await FirebaseFirestore.instance
+                                        .collection("petsDetails")
+                                        .doc(widget.petId)
+                                        .update({
+                                      'petFiles':
+                                          FieldValue.arrayRemove([widget.id])
+                                    });
+                                    final deleteFile = FirebaseFirestore
+                                        .instance
+                                        .collection("petFiles")
+                                        .doc(widget.id);
+                                    await deleteFile.delete();
+                                  }
+                                },
+                              ),
+                            )
                           ],
                         ),
                         Container(
@@ -142,13 +174,14 @@ class _FileUIState extends State<FileUI> {
                                     backgroundColor: Color(0xffFF8B6A)),
                                 onPressed: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PDFViewerFromUrl(
-                                                url: details["fileLink"],
-                                                diseaseName: details["name"],
-                                              )));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ImageViewer(
+                                        urls: details["files"],
+                                        diseaseName: details["name"],
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: Text(
                                   "View File",
@@ -156,25 +189,6 @@ class _FileUIState extends State<FileUI> {
                                       color: Colors.white, fontSize: 0.015.sh),
                                 ),
                               ),
-                              Container(
-                                width: 0.06.sw,
-                                child: IconButton(
-                                    onPressed: () async {
-                                      final deleteFile = FirebaseFirestore
-                                          .instance
-                                          .collection("petFiles")
-                                          .doc(widget.id);
-                                      await deleteFile.delete();
-                                          await FirebaseFirestore.instance
-                                              .collection("petsDetails")
-                                              .doc(widget.petId)
-                                      .update({'petFiles': FieldValue.arrayRemove([widget.id])});
-                                    },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      size: 0.05.sw,
-                                    )),
-                              )
                             ],
                           ),
                         )
