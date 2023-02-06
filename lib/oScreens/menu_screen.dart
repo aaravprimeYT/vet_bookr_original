@@ -83,7 +83,7 @@ class MenuScreen extends StatelessWidget {
                               MaterialStateProperty.all(Colors.transparent),
                           shape: MaterialStateProperty.all(CircleBorder())),
                       child: Image.asset("assets/My_Pet_Profile.png",
-                          width: 0.23.sw, height: 0.23.sw),
+                          width: 0.27.sw, height: 0.27.sw),
                     ),
                     SizedBox(
                       height: 0.01.sh,
@@ -113,7 +113,7 @@ class MenuScreen extends StatelessWidget {
                               MaterialStateProperty.all(Color(0xffFAEEE2)),
                           shape: MaterialStateProperty.all(CircleBorder())),
                       child: Image.asset("assets/Find_a_Pet.png",
-                          width: 0.23.sw, height: 0.23.sw),
+                          width: 0.27.sw, height: 0.27.sw),
                     ),
                   ),
                   SizedBox(
@@ -146,7 +146,7 @@ class MenuScreen extends StatelessWidget {
                               MaterialStateProperty.all(Color(0xffFAEEE2)),
                           shape: MaterialStateProperty.all(CircleBorder())),
                       child: Image.asset("assets/Find_A_Pet_Pharmacy.png",
-                          width: 0.23.sw, height: 0.23.sw),
+                          width: 0.27.sw, height: 0.27.sw),
                     ),
                     SizedBox(
                       height: 0.01.sh,
@@ -164,7 +164,7 @@ class MenuScreen extends StatelessWidget {
               Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 0.08.sh),
+                    padding: EdgeInsets.only(top: 0.05.sh),
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -179,12 +179,10 @@ class MenuScreen extends StatelessWidget {
                         shape: MaterialStateProperty.all(CircleBorder()),
                       ),
                       child: Image.asset("assets/Pet_Social.png",
-                          fit: BoxFit.contain, width: 0.25.sw, height: 0.25.sw),
+                          fit: BoxFit.contain, width: 0.275.sw, height: 0.3.sw),
                     ),
                   ),
-                  SizedBox(
-                    height: 0.01.sh,
-                  ),
+
                   Text(
                     "Pet Social",
                     style:

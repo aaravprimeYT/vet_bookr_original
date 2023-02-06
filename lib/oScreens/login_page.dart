@@ -202,10 +202,6 @@ class _LoginPageState extends State<LoginPage> {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else {
-                      // if (rememberMe != true) {
-                      //   setState(() => showErrorMessage = true);
-                      // } else {
-                      //   setState(() => showErrorMessage = false);
                       await signInUser(email, _password);
                       // }
                     }

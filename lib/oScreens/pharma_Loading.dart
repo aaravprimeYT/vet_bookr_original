@@ -39,8 +39,9 @@ class _PharmaLoadingState extends State<PharmaLoading> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: 0.85.sh,
-              width: 0.5.sw,
+              padding: EdgeInsets.only(top: 0.03.sh),
+              height: 0.65.sh,
+              width: 1.sw,
               child: Image.asset(
                 'assets/pharmacyloadingscreen.png',
               ),

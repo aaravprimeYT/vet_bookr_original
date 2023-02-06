@@ -27,6 +27,16 @@ class PetGroomersPage extends StatefulWidget {
 class _PetGroomersPageState extends State<PetGroomersPage> {
   bool isLoading = true;
 
+  String dropdownvalue = 'in 2.5Kms';
+
+  var apiChanger = 2500;
+
+  var apis = [
+    'in 2.5Kms',
+    'in 5Kms',
+    'in 10Kms',
+  ];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -90,7 +100,7 @@ class _PetGroomersPageState extends State<PetGroomersPage> {
     List<double> latLng = await getLatLng();
 
     String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+grooming&location=${latLng[0]},${latLng[1]}&radius=2500&type=pet_grooming&key=${Constants.apiKey}";
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+grooming&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=pet_grooming&key=${Constants.apiKey}";
     final response = await http.get(Uri.parse(vetsUrl));
 
     final Map<String, dynamic> data = jsonDecode(response.body);
@@ -109,21 +119,6 @@ class _PetGroomersPageState extends State<PetGroomersPage> {
     setState(() {
       isLoading = false;
     });
-
-    // for (vetClinic in vetClinics) {
-    //   final marker = Marker(
-    //     markerId: MarkerId(vetClinic.placeId),
-    //     position: LatLng(vetClinic.lat.toDouble(), vetClinic.lng.toDouble()),
-    //     infoWindow: InfoWindow(
-    //       title: vetClinic.name,
-    //       snippet: vetClinic.address,
-    //     ),
-    //   );
-    //   _markers.add(marker);
-    // }
-
-    // return TotalVetData(
-    //     usersLat: latLng[0], usersLng: latLng[1], vetClinics: vetClinics);
   }
 
   clinicTile(data) {
@@ -184,6 +179,28 @@ class _PetGroomersPageState extends State<PetGroomersPage> {
       ),
     );
   }
+  
+  void apisChanger() async {
+    if(dropdownvalue == apis[0]){
+      apiChanger = 2500;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+    if(dropdownvalue == apis[1]){
+      apiChanger = 5000;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+    if(dropdownvalue == apis[2]){
+      apiChanger = 10000;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -209,16 +226,43 @@ class _PetGroomersPageState extends State<PetGroomersPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //  sBox(h: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10.0.sp,top: 15.sp),
-                child: Text(
-                  'Best Pet Groomers Near Me',
-                  style: TextStyle(color: Colors.deepOrange[300], fontSize: 22),
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0.sp,top: 15.sp),
+                    child: Text(
+                      'Best Pet Groomers Near Me',
+                      style: TextStyle(color: Color(0xffFF8B6A), fontSize: 0.045.sw),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 0.02.sh, left: 0.01.sw),
+                    height: 0.04.sh,
+                    child: DropdownButton(
+                      value: dropdownvalue,
+                      underline: SizedBox(),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: apis.map((String items) {
+                        print(items);
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        apisChanger();
+                        setState(() {
+                          dropdownvalue = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+
+                ],
               ),
               Divider(
                 thickness: 2,
-                color: Colors.deepOrange[300],
+                color: Color(0xffFF8B6A),
                 indent: 15,
                 endIndent: 10,
               ),

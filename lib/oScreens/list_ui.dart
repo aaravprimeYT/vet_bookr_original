@@ -72,7 +72,7 @@ class _ListUIState extends State<ListUI> {
                       child: CircleAvatar(
                         backgroundImage:
                             NetworkImage(details["profilePicture"]),
-                        radius: 40.sp,
+                        radius: 44.sp,
                         backgroundColor: Colors.white,
                       ),
                     ),

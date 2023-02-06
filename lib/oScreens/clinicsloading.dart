@@ -37,8 +37,8 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(80),
-            height: 0.85.sh,
+            padding: EdgeInsets.symmetric(horizontal: 75.sp, vertical: 10.sp),
+            height: 0.75.sh,
             width: 1.sw,
             child: Image.asset(
               'assets/clinicloadingscreen.png',

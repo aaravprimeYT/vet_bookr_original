@@ -29,6 +29,16 @@ class SearchLocationClinics extends StatefulWidget {
 class _SearchLocationClinicsState extends State<SearchLocationClinics> {
   bool isLoading = true;
 
+  String dropdownvalue = 'in 2.5Kms';
+
+  var apiChanger = 2500;
+
+  var apis = [
+    'in 2.5Kms',
+    'in 5Kms',
+    'in 10Kms',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +101,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
     List<double> latLng = await getLatLng();
 
     String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=${latLng[0]},${latLng[1]}&radius=2500&type=veterinary_care&key=${Constants.apiKey}";
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=veterinary_care&key=${Constants.apiKey}";
 
     ///Getting the data
     final response = await http.get(Uri.parse(vetsUrl));
@@ -271,6 +281,27 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
       ),
     );
   }
+  void apisChanger() async {
+    if(dropdownvalue == apis[0]){
+      apiChanger = 2500;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+    if(dropdownvalue == apis[1]){
+      apiChanger = 5000;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+    if(dropdownvalue == apis[2]){
+      apiChanger = 10000;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+  }
+
 
   String selectedCountryCode = "in";
 
@@ -322,16 +353,43 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //  sBox(h: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10.sp, top: 15.sp),
-                child: Text(
-                  'Veterinary Clinics in Specific Location',
-                  style: TextStyle(color: Colors.deepOrange[300], fontSize: 22),
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.sp, top: 15.sp),
+                    child: Text(
+                      'Veterinary Clinics in Specific Location',
+                      style: TextStyle(color: Color(0xffFF8B6A), fontSize: 0.040.sw),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 0.02.sh, left: 0.01.sw),
+                    height: 0.04.sh,
+                    child: DropdownButton(
+                      value: dropdownvalue,
+                      underline: SizedBox(),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: apis.map((String items) {
+                        print(items);
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        apisChanger();
+                        setState(() {
+                          dropdownvalue = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+
+                ],
               ),
               Divider(
                 thickness: 2,
-                color: Colors.deepOrange[300],
+                color: Color(0xffFF8B6A),
                 indent: 15,
                 endIndent: 10,
               ),

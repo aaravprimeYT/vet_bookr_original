@@ -155,6 +155,7 @@ class _PV2State extends State<PV2> {
                             height: 60.sp,
                             width: 0.8.sw,
                             child: TextFormField(
+                              keyboardType: TextInputType.number,
                               cursorColor: Colors.black,
                               style: TextStyle(fontSize: 0.017.sh),
                               decoration: InputDecoration(

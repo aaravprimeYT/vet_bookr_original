@@ -109,7 +109,7 @@ class _PetFilesState extends State<PetFiles> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2),
                         itemBuilder: (BuildContext context, int index) {
-                          return FileUI(id: petFiles[index]);
+                          return FileUI(id: petFiles[index], petId: widget.petId,);
                         },
                         itemCount: petFiles.length,
                         shrinkWrap: true,

@@ -27,6 +27,16 @@ class PetCafesPage extends StatefulWidget {
 class _PetCafesPageState extends State<PetCafesPage> {
   bool isLoading = true;
 
+  String dropdownvalue = 'in 2.5Kms';
+
+  var apiChanger = 2500;
+
+  var apis = [
+    'in 2.5Kms',
+    'in 5Kms',
+    'in 10Kms',
+  ];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -90,7 +100,7 @@ class _PetCafesPageState extends State<PetCafesPage> {
     List<double> latLng = await getLatLng();
 
     String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+cafe&location=${latLng[0]},${latLng[1]}&radius=2500&type=pet_cafe&key=${Constants.apiKey}";
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+cafe&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=pet_cafe&key=${Constants.apiKey}";
     final response = await http.get(Uri.parse(vetsUrl));
 
     final Map<String, dynamic> data = jsonDecode(response.body);
@@ -104,33 +114,22 @@ class _PetCafesPageState extends State<PetCafesPage> {
     /**
      * Adding the markerss
      */
-    if(!mounted) return;
-  
-      setState(() {
-        isLoading = false;
-      });
+    if (!mounted) return;
 
-    // for (vetClinic in vetClinics) {
-    //   final marker = Marker(
-    //     markerId: MarkerId(vetClinic.placeId),
-    //     position: LatLng(vetClinic.lat.toDouble(), vetClinic.lng.toDouble()),
-    //     infoWindow: InfoWindow(
-    //       title: vetClinic.name,
-    //       snippet: vetClinic.address,
-    //     ),
-    //   );
-    //   _markers.add(marker);
-    // }
-
-    // return TotalVetData(
-    //     usersLat: latLng[0], usersLng: latLng[1], vetClinics: vetClinics);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   clinicTile(data) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => VetsMaps(vetClinic: data,)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => VetsMaps(
+                      vetClinic: data,
+                    )));
       },
       child: Container(
         margin: EdgeInsets.only(top: 0.03.sh),
@@ -146,19 +145,32 @@ class _PetCafesPageState extends State<PetCafesPage> {
               children: [
                 Text(
                   data.name,
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: Color(0xffFF8B6A)),
+                  style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffFF8B6A)),
                 ),
-                SizedBox(height: 0.008.sh,),
+                SizedBox(
+                  height: 0.008.sh,
+                ),
                 Text(
                   data.address,
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
+                  style:
+                      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
                 ),
-                SizedBox(height: 0.005.sh,),
+                SizedBox(
+                  height: 0.005.sh,
+                ),
                 Text(
-                  data.timing?"Currently Open":"Currently Closed",
-                  style: TextStyle(fontSize: 15.sp,color: data.timing?Colors.greenAccent:Colors.redAccent),
+                  data.timing ? "Currently Open" : "Currently Closed",
+                  style: TextStyle(
+                      fontSize: 15.sp,
+                      color:
+                          data.timing ? Colors.greenAccent : Colors.redAccent),
                 ),
-                SizedBox(height: 0.005.sh,),
+                SizedBox(
+                  height: 0.005.sh,
+                ),
                 Container(
                   child: RatingBar.builder(
                     initialRating: data.rating,
@@ -185,10 +197,31 @@ class _PetCafesPageState extends State<PetCafesPage> {
     );
   }
 
+  void apisChanger() async {
+    if (dropdownvalue == apis[0]) {
+      apiChanger = 2500;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+    if (dropdownvalue == apis[1]) {
+      apiChanger = 5000;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+    if (dropdownvalue == apis[2]) {
+      apiChanger = 10000;
+      getTotalData();
+      print(apiChanger);
+      clinicTile(vetClinic);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -204,52 +237,79 @@ class _PetCafesPageState extends State<PetCafesPage> {
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(top: 10.sp,left: 10.sp,right: 10.sp),
+          padding: EdgeInsets.only(top: 10.sp, left: 10.sp, right: 10.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //  sBox(h: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10.0.sp,top: 15.sp),
-                child: Text(
-                  'Best Pet Friendly Cafes Near Me',
-                  style: TextStyle(color: Colors.deepOrange[300], fontSize: 22),
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0.sp, top: 15.sp),
+                    child: Text(
+                      'Best Pet Friendly Cafes Near Me',
+                      style: TextStyle(
+                          color: Color(0xffFF8B6A), fontSize: 0.045.sw),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 0.02.sh, left: 0.01.sw),
+                    height: 0.04.sh,
+                    child: DropdownButton(
+                      value: dropdownvalue,
+                      underline: SizedBox(),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: apis.map((String items) {
+                        print(items);
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        apisChanger();
+                        setState(() {
+                          dropdownvalue = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
               Divider(
                 thickness: 2,
-                color: Colors.deepOrange[300],
+                color: Color(0xffFF8B6A),
                 indent: 15,
                 endIndent: 10,
               ),
               // sBox(h: 1),
               isLoading
                   ? Container(
-                width: 1.sw,
-                height: 0.7.sh,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 15.sp,
-                      width: 15.sp,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Color(0xffFF8B6A),
+                      width: 1.sw,
+                      height: 0.7.sh,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 15.sp,
+                            width: 15.sp,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xffFF8B6A),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              )
+                    )
                   : ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: vetClinic?.length,
-                itemBuilder: ((context, index) {
-                  return clinicTile(vetClinic![index]);
-                }),
-              )
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: vetClinic?.length,
+                      itemBuilder: ((context, index) {
+                        return clinicTile(vetClinic![index]);
+                      }),
+                    )
             ],
           ),
         ),

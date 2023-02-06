@@ -9,16 +9,20 @@ import 'package:vet_bookr/oScreens/showPetScreen.dart';
 import '../constant.dart';
 import 'addPet_screen.dart';
 
+
 class FileUI extends StatefulWidget {
-  FileUI({Key? key, required this.id}) : super(key: key);
+  FileUI({Key? key, required this.id, required this.petId}) : super(key: key);
 
   String id;
+
+  String petId;
 
   @override
   State<FileUI> createState() => _FileUIState();
 }
 
 class _FileUIState extends State<FileUI> {
+
   @override
   void initState() {
     getFileDetails();
@@ -31,13 +35,14 @@ class _FileUIState extends State<FileUI> {
         .collection("petFiles")
         .doc(widget.id)
         .get();
-    //print(widget.id);
     details = petDetails.data()!;
     setState(() {
       isLoading = false;
     });
     print(petDetails.data());
   }
+
+  late Map<String, dynamic> petDetails;
 
   late Map<String, dynamic> details;
 
@@ -68,13 +73,29 @@ class _FileUIState extends State<FileUI> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 0.015.sh),
-                          child: Text(
-                            "Record Type:",
-                            style: TextStyle(
-                                fontSize: 0.014.sh, color: Colors.black),
-                          ),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 0.015.sh),
+                              child: Text(
+                                "Record Type:",
+                                style: TextStyle(
+                                    fontSize: 0.014.sh, color: Colors.black),
+                              ),
+                            ),
+                            Container(
+                                child: IconButton(
+                                    onPressed: () {
+                                      final editFile = FirebaseFirestore
+                                          .instance
+                                          .collection("petFiles")
+                                          .doc(widget.id);
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      size: 0.05.sw,
+                                    )))
+                          ],
                         ),
                         Container(
                           width: 0.42.sw,
@@ -135,6 +156,25 @@ class _FileUIState extends State<FileUI> {
                                       color: Colors.white, fontSize: 0.015.sh),
                                 ),
                               ),
+                              Container(
+                                width: 0.06.sw,
+                                child: IconButton(
+                                    onPressed: () async {
+                                      final deleteFile = FirebaseFirestore
+                                          .instance
+                                          .collection("petFiles")
+                                          .doc(widget.id);
+                                      await deleteFile.delete();
+                                          await FirebaseFirestore.instance
+                                              .collection("petsDetails")
+                                              .doc(widget.petId)
+                                      .update({'petFiles': FieldValue.arrayRemove([widget.id])});
+                                    },
+                                    icon: Icon(
+                                      Icons.delete,
+                                      size: 0.05.sw,
+                                    )),
+                              )
                             ],
                           ),
                         )

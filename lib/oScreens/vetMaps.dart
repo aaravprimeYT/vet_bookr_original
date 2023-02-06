@@ -161,9 +161,9 @@ class _VetsMapsState extends State<VetsMaps> {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.deepPurpleAccent,
+      color: Colors.lightBlueAccent,
       points: polylineCoordinates,
-      width: 8,
+      width: 4,
     );
     polylines[id] = polyline;
     if (mounted) {

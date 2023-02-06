@@ -12,6 +12,7 @@ class ShowPet extends StatefulWidget {
 
   Map<String, dynamic> details;
 
+
   @override
   State<ShowPet> createState() => _ShowPetState();
 }
@@ -20,6 +21,8 @@ class _ShowPetState extends State<ShowPet> {
   List<String> labels = ["Name", "Age", "Breed", "Weight"];
 
   var getText = "";
+
+  bool isLoading = false;
 
   String controllerChanger(index) {
     if (index == 0) {
@@ -52,10 +55,48 @@ class _ShowPetState extends State<ShowPet> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          Padding(padding: EdgeInsets.only(right: 5.sp),
+              child: PopupMenuButton(
+                icon: Icon(Icons.more_vert, color: Colors.black,),
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(value: 0, child: Text("Edit Pet")), PopupMenuItem<int>(value: 1, child: Text("Delete Pet"))
+                  ];
+                },
+                onSelected: (value)async {
+                  if(value == 0){
+
+                  }
+                  else if (value == 1){
+                    setState(() {
+                      isLoading = true;
+                    });
+                    await FirebaseFirestore
+                        .instance
+                        .collection("petsDetails")
+                        .doc(widget.details["id"]).delete();
+
+                    await FirebaseFirestore
+                    .instance
+                    .collection("users")
+                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                    .update({'pets':FieldValue.arrayRemove([widget.details["id"]])});
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+              )
+          )
+        ],
       ),
       extendBodyBehindAppBar: true,
       backgroundColor: kBackgroundColor,
-      body: SafeArea(
+
+      body: isLoading ? Container(child: CircularProgressIndicator())  :
+      SafeArea(
         child: Container(
           //alignment: Alignment.center,
           child: SingleChildScrollView(
@@ -68,7 +109,7 @@ class _ShowPetState extends State<ShowPet> {
                   Text(
                     'Pet Information',
                     style:
-                        TextStyle(color: Color(0xffF08519), fontSize: 0.05.sw),
+                    TextStyle(color: Color(0xffF08519), fontSize: 0.05.sw),
                   ),
                   //      myPetTile()
                   SizedBox(
@@ -76,39 +117,42 @@ class _ShowPetState extends State<ShowPet> {
                   ),
                   GestureDetector(
                       child: CircleAvatar(
-                    radius: 0.095.sh,
-                    backgroundColor: Color(0xffFF8B6A),
-                    backgroundImage:
+                        radius: 0.095.sh,
+                        backgroundColor: Color(0xffFF8B6A),
+                        backgroundImage:
                         NetworkImage(widget.details["profilePicture"]),
-                  )),
+                      )),
                   SizedBox(
                     height: 0.02.sh,
                   ),
                   ...List.generate(
                     4,
-                    (index) => Padding(
-                      padding: EdgeInsets.only(
-                          top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
-                      child: TextField(
-                        enabled: false,
-                        controller: TextEditingController(
-                            text: controllerChanger(index)),
-                        style: TextStyle(fontSize: 0.017.sh),
-                        decoration: InputDecoration(
-                          label: Text(labels[index],
-                              style: TextStyle(fontSize: 0.02.sh)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.sp),
-                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.sp),
-                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
-                          contentPadding:
+                        (index) =>
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
+                          child: TextField(
+                            enabled: false,
+                            controller: TextEditingController(
+                                text: controllerChanger(index)),
+                            style: TextStyle(fontSize: 0.017.sh),
+                            decoration: InputDecoration(
+                              label: Text(labels[index],
+                                  style: TextStyle(fontSize: 0.02.sh)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.sp),
+                                  borderSide: BorderSide(
+                                      color: Color(0xffFF8B6A))),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.sp),
+                                  borderSide: BorderSide(
+                                      color: Color(0xffFF8B6A))),
+                              contentPadding:
                               EdgeInsets.symmetric(horizontal: 10.sp),
-                          hintStyle: TextStyle(color: Colors.grey),
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -142,7 +186,7 @@ class _ShowPetState extends State<ShowPet> {
             ),
           ),
         ),
-      ),
+      ) ,
     );
   }
 
@@ -163,7 +207,8 @@ class _ShowPetState extends State<ShowPet> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PetFiles(
+                            builder: (context) =>
+                                PetFiles(
                                   petId: widget.details["id"],
                                 )));
                   },
