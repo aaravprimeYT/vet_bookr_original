@@ -1,15 +1,16 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/prescription.dart';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class AddPetHome extends StatefulWidget {
   const AddPetHome({super.key});
@@ -45,15 +46,12 @@ class _AddPetHomeState extends State<AddPetHome> {
 
   final storageRef = FirebaseStorage.instance.ref();
 
-  var petId = DateTime.now().millisecondsSinceEpoch.toString();
-
   String imageUrl = "";
 
-  Future<void> uploadImages(
-      {required String path, required String name}) async {
+  Future<void> uploadImages({required String path, required String id}) async {
     try {
       final imageRef = storageRef
-          .child("Users/${FirebaseAuth.instance.currentUser?.uid}/$petId");
+          .child("Users/${FirebaseAuth.instance.currentUser?.uid}/$id");
       await imageRef.putFile(File(path));
       imageUrl = await imageRef.getDownloadURL();
       setState(() {});
@@ -182,6 +180,23 @@ class _AddPetHomeState extends State<AddPetHome> {
                         controller: vaccinationController,
                         onTap: () => {
                               showDatePicker(
+                                      builder: (context, child) {
+                                        return Theme(
+                                          data: Theme.of(context).copyWith(
+                                            colorScheme: ColorScheme.light(
+                                              primary: Color(0xffFF8B6A),
+                                            ),
+                                            textButtonTheme:
+                                                TextButtonThemeData(
+                                              style: TextButton.styleFrom(
+                                                primary: Color(
+                                                    0xffFF8B6A), // button text color
+                                              ),
+                                            ),
+                                          ),
+                                          child: child!,
+                                        );
+                                      },
                                       context: context,
                                       initialDate: DateTime.now(),
                                       firstDate:
@@ -199,6 +214,9 @@ class _AddPetHomeState extends State<AddPetHome> {
                         readOnly: true,
                         style: TextStyle(fontSize: 0.017.sh),
                         decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.sp),
+                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.sp),
                               borderSide: BorderSide(color: Color(0xffFF8B6A))),
@@ -231,6 +249,9 @@ class _AddPetHomeState extends State<AddPetHome> {
   Future<void> addPetToFireStore(Map<String, dynamic> addedPet) async {
     var doc = FirebaseFirestore.instance.collection("petDetails").doc();
     addedPet.update("id", (value) => doc.id);
+    await uploadImages(path: profilePic!.path, id: doc.id);
+    addedPet.update("profilePicture", (value) => imageUrl);
+
     await FirebaseFirestore.instance
         .collection("petsDetails")
         .doc(doc.id)
@@ -285,7 +306,6 @@ class _AddPetHomeState extends State<AddPetHome> {
                       //         builder: (context) => MenuScreen()));
                       // vaccinationDate =
                       //     "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-                      await uploadImages(path: profilePic!.path, name: petName);
 
                       Map<String, dynamic> addedPet = {
                         "name": controllerChanger(0).text,
@@ -334,8 +354,6 @@ class _AddPetHomeState extends State<AddPetHome> {
     prescArray = prescriptionArray;
     print(prescArray.length);
   }
-
-  void uploadImage() {}
 }
 
 Widget imageWidget(image) {

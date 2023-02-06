@@ -1,15 +1,16 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/prescription.dart';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:file_picker/file_picker.dart';
 
 import 'addPet_screen.dart';
 
@@ -112,6 +113,22 @@ class _AddPetFilesState extends State<AddPetFiles> {
                     controller: vaccinationController,
                     onTap: () => {
                       showDatePicker(
+                              builder: (context, child) {
+                                return Theme(
+                                  data: Theme.of(context).copyWith(
+                                    colorScheme: ColorScheme.light(
+                                      primary: Color(0xffFF8B6A),
+                                    ),
+                                    textButtonTheme: TextButtonThemeData(
+                                      style: TextButton.styleFrom(
+                                        primary: Color(
+                                            0xffFF8B6A), // button text color
+                                      ),
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(DateTime.now().year - 4),
@@ -127,8 +144,11 @@ class _AddPetFilesState extends State<AddPetFiles> {
                     },
                     readOnly: true,
                     decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.sp),
+                          borderSide: BorderSide(color: Color(0xffFF8B6A))),
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.sp),
                           borderSide: BorderSide(color: Color(0xffFF8B6A))),
                       contentPadding: EdgeInsets.symmetric(horizontal: 10),
                       hintText: "Date: ",
