@@ -1,18 +1,16 @@
-import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/models/sizeConfig.dart';
-import 'package:vet_bookr/utils/constants.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/total_data_vet.dart';
 import 'package:vet_bookr/models/vet_clinic.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 
 class VetsMaps extends StatefulWidget {
   VetsMaps({Key? key, required this.vetClinic, this.latLong}) : super(key: key);
@@ -83,7 +81,6 @@ class _VetsMapsState extends State<VetsMaps> {
     } else {
       latLng = widget.latLong!;
     }
-    print(latLng);
     _markers.add(Marker(
       //add start location marker
       markerId: MarkerId("Your Location"),
@@ -122,9 +119,7 @@ class _VetsMapsState extends State<VetsMaps> {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
-    } else {
-      print(result.errorMessage);
-    }
+    } else {}
 
     addPolyLine(polylineCoordinates);
     //   String vetsUrl = "https://maps.googleapis.com/maps/api/directions/json?"
@@ -171,10 +166,19 @@ class _VetsMapsState extends State<VetsMaps> {
     }
   }
 
+  _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -219,9 +223,12 @@ class _VetsMapsState extends State<VetsMaps> {
                     ),
                   ),
                   Container(
-                      height: 0.2.sh,
-                      width: 0.2.sh,
-                      child: Image.asset("assets/detailsscreen.png")),
+                    height: 0.2.sh,
+                    width: 0.2.sh,
+                    child: Image.asset(
+                      "assets/detailsscreen.png",
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -257,9 +264,7 @@ class _VetsMapsState extends State<VetsMaps> {
                           Icons.star,
                           color: Colors.amber,
                         ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
+                        onRatingUpdate: (rating) {},
                         ignoreGestures: true,
                       ),
                     ])),
@@ -267,32 +272,54 @@ class _VetsMapsState extends State<VetsMaps> {
                 future: getTotalData(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    print(snapshot.data);
                     return Container(
                       margin: EdgeInsets.all(0.02.sh),
                       padding: EdgeInsets.all(0.015.sh),
                       height: 0.45.sh,
                       width: 0.52.sh,
                       color: Colors.white,
-                      child: GoogleMap(
-                        polylines: Set<Polyline>.of(polylines.values),
-                        onMapCreated: _onMapCreated,
-                        gestureRecognizers: Set()
-                          ..add(Factory<PanGestureRecognizer>(
-                              () => PanGestureRecognizer()))
-                          ..add(Factory<ScaleGestureRecognizer>(
-                              () => ScaleGestureRecognizer()))
-                          ..add(Factory<TapGestureRecognizer>(
-                              () => TapGestureRecognizer()))
-                          ..add(Factory<VerticalDragGestureRecognizer>(
-                              () => VerticalDragGestureRecognizer())),
-                        markers: _markers,
-                        initialCameraPosition: CameraPosition(
-                          //innital position in map
-                          target: LatLng(latLng[0], latLng[1]),
-                          //initial position
-                          zoom: 16.0, //initial zoom level
-                        ),
+                      child: Stack(
+                        children: [
+                          GoogleMap(
+                            polylines: Set<Polyline>.of(polylines.values),
+                            onMapCreated: _onMapCreated,
+                            gestureRecognizers: Set()
+                              ..add(Factory<PanGestureRecognizer>(
+                                  () => PanGestureRecognizer()))
+                              ..add(Factory<ScaleGestureRecognizer>(
+                                  () => ScaleGestureRecognizer()))
+                              ..add(Factory<TapGestureRecognizer>(
+                                  () => TapGestureRecognizer()))
+                              ..add(Factory<VerticalDragGestureRecognizer>(
+                                  () => VerticalDragGestureRecognizer())),
+                            markers: _markers,
+                            initialCameraPosition: CameraPosition(
+                              //innital position in map
+                              target: LatLng(latLng[0], latLng[1]),
+                              //initial position
+                              zoom: 16.0, //initial zoom level
+                            ),
+                          ),
+                          Positioned(
+                            right: 0.01.sw,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xffFF8B6A),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.sp),
+                                ),
+                              ),
+                              onPressed: () async {
+                                String url =
+                                    'https://www.google.com/maps/dir/?api=1&origin=${latLng[0]},${latLng[1]}&destination=${widget.vetClinic.lat},${widget.vetClinic.lng}&travelmode=driving&dir_action=navigate';
+                                await _launchURL(Uri.parse(url));
+                              },
+                              child: Text(
+                                "Navigate",
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }

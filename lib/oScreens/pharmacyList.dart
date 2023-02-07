@@ -1,5 +1,6 @@
-import 'package:vet_bookr/models/pharmacy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:vet_bookr/models/pharmacy.dart';
 import 'package:vet_bookr/oScreens/pharmacyDetails.dart';
 
 class PharmacyList extends StatelessWidget {
@@ -11,6 +12,7 @@ class PharmacyList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         title: Text("Vet List"),
       ),
       body: Column(

@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/models/sizeConfig.dart';
-import 'package:vet_bookr/oScreens/menu_screen.dart';
 import 'package:vet_bookr/oScreens/phone_verification_2.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -135,6 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           backgroundColor: kBackgroundColor,
           elevation: 0,
           leading: IconButton(

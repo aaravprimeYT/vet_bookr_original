@@ -1,20 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/vet_clinic.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
-import 'package:http/http.dart' as http;
-
-import '../models/sizeConfig.dart';
-import '../models/total_data_vet.dart';
-import '../utils/constants.dart';
 
 class PetPharmaciesPage extends StatefulWidget {
   // PetClinicsPage(this.vetClinic);
@@ -36,7 +31,6 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
     'in 5Kms',
     'in 10Kms',
   ];
-
 
   @override
   void initState() {
@@ -102,6 +96,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
 
     String vetsUrl =
         "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+pharmacies+near+me&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=veterinary_pharmacy&key=${Constants.apiKey}";
+
     ///Getting the data
     final response = await http.get(Uri.parse(vetsUrl));
 
@@ -115,8 +110,8 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
     print(vetClinic);
     /**
      * Adding the markerss
-     */    
-    if(!mounted) return;
+     */
+    if (!mounted) return;
 
     setState(() {
       isLoading = false;
@@ -127,7 +122,11 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => VetsMaps(vetClinic: data,)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => VetsMaps(
+                      vetClinic: data,
+                    )));
       },
       child: Container(
         margin: EdgeInsets.only(top: 0.03.sh),
@@ -143,19 +142,32 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
               children: [
                 Text(
                   data.name,
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: Color(0xffFF8B6A)),
+                  style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffFF8B6A)),
                 ),
-                SizedBox(height: 0.008.sh,),
+                SizedBox(
+                  height: 0.008.sh,
+                ),
                 Text(
                   data.address,
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
+                  style:
+                      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
                 ),
-                SizedBox(height: 0.005.sh,),
+                SizedBox(
+                  height: 0.005.sh,
+                ),
                 Text(
-                  data.timing?"Currently Open":"Currently Closed",
-                  style: TextStyle(fontSize: 15.sp,color: data.timing?Colors.greenAccent:Colors.redAccent),
+                  data.timing ? "Currently Open" : "Currently Closed",
+                  style: TextStyle(
+                      fontSize: 15.sp,
+                      color:
+                          data.timing ? Colors.greenAccent : Colors.redAccent),
                 ),
-                SizedBox(height: 0.005.sh,),
+                SizedBox(
+                  height: 0.005.sh,
+                ),
                 Container(
                   child: RatingBar.builder(
                     initialRating: data.rating,
@@ -183,19 +195,19 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
   }
 
   void apisChanger() async {
-    if(dropdownvalue == apis[0]){
+    if (dropdownvalue == apis[0]) {
       apiChanger = 2500;
       getTotalData();
       print(apiChanger);
       clinicTile(vetClinic);
     }
-    if(dropdownvalue == apis[1]){
+    if (dropdownvalue == apis[1]) {
       apiChanger = 5000;
       getTotalData();
       print(apiChanger);
       clinicTile(vetClinic);
     }
-    if(dropdownvalue == apis[2]){
+    if (dropdownvalue == apis[2]) {
       apiChanger = 10000;
       getTotalData();
       print(apiChanger);
@@ -206,7 +218,8 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -222,7 +235,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(top: 10.sp,left: 10.sp,right: 10.sp),
+          padding: EdgeInsets.only(top: 10.sp, left: 10.sp, right: 10.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -230,10 +243,11 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
               Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 10.0.sp,top: 15.sp),
+                    padding: EdgeInsets.only(left: 10.0.sp, top: 15.sp),
                     child: Text(
                       'Pet Pharmacies Near Me',
-                      style: TextStyle(color: Color(0xffFF8B6A), fontSize: 0.045.sw),
+                      style: TextStyle(
+                          color: Color(0xffFF8B6A), fontSize: 0.045.sw),
                     ),
                   ),
                   Container(
@@ -258,7 +272,6 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                       },
                     ),
                   ),
-
                 ],
               ),
               Divider(
@@ -270,31 +283,31 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
               // sBox(h: 1),
               isLoading
                   ? Container(
-                width: 1.sw,
-                height: 0.7.sh,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 15.sp,
-                      width: 15.sp,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Color(0xffFF8B6A),
+                      width: 1.sw,
+                      height: 0.7.sh,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 15.sp,
+                            width: 15.sp,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xffFF8B6A),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              )
+                    )
                   : ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: vetClinic?.length,
-                itemBuilder: ((context, index) {
-                  return clinicTile(vetClinic![index]);
-                }),
-              )
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: vetClinic?.length,
+                      itemBuilder: ((context, index) {
+                        return clinicTile(vetClinic![index]);
+                      }),
+                    )
             ],
           ),
         ),

@@ -1,20 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/vet_clinic.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
-import 'package:http/http.dart' as http;
-
-import '../models/sizeConfig.dart';
-import '../models/total_data_vet.dart';
-import '../utils/constants.dart';
 
 class PetCafesPage extends StatefulWidget {
   // PetCafesPage(this.vetClinic);
@@ -222,6 +217,7 @@ class _PetCafesPageState extends State<PetCafesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(

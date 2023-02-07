@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 
@@ -159,17 +157,27 @@ class _EditPetFilesState extends State<EditPetFiles> {
         .collection("petFiles")
         .doc(widget.details["id"])
         .update(addedPet);
+
+    DocumentSnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
+        .instance
+        .collection("petsDetails")
+        .doc(widget.petId)
+        .get();
     await FirebaseFirestore.instance
         .collection("petsDetails")
         .doc(widget.petId)
         .update({
-      "petFiles": FieldValue.arrayRemove([widget.details["id"]])
+      "petFiles": FieldValue.arrayRemove(
+        snap.data()!["petFiles"]!,
+      ),
     });
     await FirebaseFirestore.instance
         .collection("petsDetails")
         .doc(widget.petId)
         .update({
-      "petFiles": FieldValue.arrayUnion([widget.details["id"]])
+      "petFiles": FieldValue.arrayUnion(
+        snap.data()!["petFiles"]!,
+      ),
     });
   }
 
@@ -198,8 +206,7 @@ class _EditPetFilesState extends State<EditPetFiles> {
                     "name": nameController.text,
                     "date": vaccinationController.text
                   };
-                  addPetToFireStore(addedPetFile);
-                  controllerChanger(0).clear();
+                  await addPetToFireStore(addedPetFile);
                   vaccinationController.clear();
                   Navigator.pop(context);
                 }

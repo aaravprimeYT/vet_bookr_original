@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 
@@ -47,6 +48,7 @@ class _ListPetsState extends State<ListPets> {
         icon: Icon(Icons.add, size: 0.05.sw),
       ),
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: kBackgroundColor,
         elevation: 0,
         leading: IconButton(

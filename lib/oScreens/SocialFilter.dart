@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/oScreens/petBoarding_page.dart';
@@ -10,12 +11,13 @@ import 'package:vet_bookr/oScreens/petRestaurants_page.dart';
 import 'package:vet_bookr/oScreens/petTrainers_page.dart';
 
 class PetSocialFilter extends StatelessWidget {
-   PetSocialFilter({Key? key}) : super(key: key);
+  PetSocialFilter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -32,7 +34,7 @@ class PetSocialFilter extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only( bottom: 0.03.sp),
+            padding: EdgeInsets.only(bottom: 0.03.sp),
             child: Text(
               'Find more fun for your pet',
               style: TextStyle(color: Color(0xffFF8B6A), fontSize: 20.sp),
@@ -50,7 +52,7 @@ class PetSocialFilter extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(
                       right: 0.12.sw, top: 15.sp, bottom: 10.sp, left: 0.12.sw),
-                    child: ElevatedButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                           context,
@@ -66,17 +68,17 @@ class PetSocialFilter extends StatelessWidget {
                         width: 0.25.sw, height: 0.25.sw),
                   ),
                 ),
-                 Text(
+                Text(
                   "Resorts",
-                  style: TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
+                  style:
+                      TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
                 ),
               ],
             ),
             Column(
               children: [
                 Padding(
-                  padding:
-                      EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                  padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -85,7 +87,7 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetCafesPage()));
                     },
                     style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
+                        elevation: MaterialStateProperty.all(0),
                         backgroundColor:
                             MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
@@ -93,9 +95,10 @@ class PetSocialFilter extends StatelessWidget {
                         width: 0.25.sw, height: 0.25.sw),
                   ),
                 ),
-                 Text(
+                Text(
                   "Cafes",
-                  style: TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
+                  style:
+                      TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
                 ),
               ],
             ),
@@ -134,8 +137,7 @@ class PetSocialFilter extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding:
-                  EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                  padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -153,9 +155,10 @@ class PetSocialFilter extends StatelessWidget {
                         width: 0.25.sw, height: 0.25.sw),
                   ),
                 ),
-                 Text(
+                Text(
                   "Trainers",
-                  style: TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
+                  style:
+                      TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
                 ),
               ],
             ),
@@ -174,25 +177,25 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetBoardersPage()));
                     },
                     style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
+                        elevation: MaterialStateProperty.all(0),
                         backgroundColor:
-                        MaterialStateProperty.all(Color(0xffFAEEE2)),
+                            MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
                     child: Image.asset("assets/boarding.png",
                         width: 0.25.sw, height: 0.25.sw),
                   ),
                 ),
-                 Text(
+                Text(
                   "Boarding",
-                  style: TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
+                  style:
+                      TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
                 ),
               ],
             ),
             Column(
               children: [
                 Padding(
-                  padding:
-                  EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                  padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -201,17 +204,18 @@ class PetSocialFilter extends StatelessWidget {
                               builder: (context) => PetGroomersPage()));
                     },
                     style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
+                        elevation: MaterialStateProperty.all(0),
                         backgroundColor:
-                        MaterialStateProperty.all(Color(0xffFAEEE2)),
+                            MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
                     child: Image.asset("assets/grooming.png",
                         width: 0.25.sw, height: 0.25.sw),
                   ),
                 ),
-                 Text(
+                Text(
                   "Grooming",
-                  style: TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
+                  style:
+                      TextStyle(fontSize: 16.sp, fontFamily: "Vintage Style"),
                 ),
               ],
             ),
@@ -219,8 +223,7 @@ class PetSocialFilter extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding:
-                EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -231,7 +234,7 @@ class PetSocialFilter extends StatelessWidget {
                   style: ButtonStyle(
                     elevation: MaterialStateProperty.all(0),
                     backgroundColor:
-                    MaterialStateProperty.all(Color(0xffFAEEE2)),
+                        MaterialStateProperty.all(Color(0xffFAEEE2)),
                     shape: MaterialStateProperty.all(CircleBorder()),
                   ),
                   child: Image.asset("assets/parks.png",

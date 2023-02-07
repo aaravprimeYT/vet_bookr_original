@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/oScreens/AddPetFiles.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'fileUI.dart';
 
 class PetFiles extends StatefulWidget {
@@ -53,6 +55,7 @@ class _PetFilesState extends State<PetFiles> {
         ),
       ),
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: kBackgroundColor,
         elevation: 0,
         leading: IconButton(
@@ -109,7 +112,10 @@ class _PetFilesState extends State<PetFiles> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2),
                         itemBuilder: (BuildContext context, int index) {
-                          return FileUI(id: petFiles[index], petId: widget.petId,);
+                          return FileUI(
+                            id: petFiles[index],
+                            petId: widget.petId,
+                          );
                         },
                         itemCount: petFiles.length,
                         shrinkWrap: true,

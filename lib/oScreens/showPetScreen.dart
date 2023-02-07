@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_bookr/oScreens/petFiles.dart';
@@ -90,6 +91,7 @@ class _ShowPetState extends State<ShowPet> {
       },
       child: Scaffold(
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -144,7 +146,6 @@ class _ShowPetState extends State<ShowPet> {
                           .collection("petsDetails")
                           .doc(widget.details["id"])
                           .delete();
-
 
                       setState(() {
                         isLoading = false;
@@ -406,11 +407,24 @@ class _ShowPetState extends State<ShowPet> {
                       'lastVaccinationDate':
                           widget.details["lastVaccinationDate"]
                     });
+                    List<String> petIds = [];
+                    DocumentSnapshot<Map<String, dynamic>> snap =
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(FirebaseAuth.instance.currentUser?.uid)
+                            .get();
+
                     await FirebaseFirestore.instance
                         .collection("users")
                         .doc(FirebaseAuth.instance.currentUser?.uid)
                         .update({
-                      'streamUpdate': true,
+                      'pets': FieldValue.arrayRemove(snap.data()!["pets"]!),
+                    });
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(FirebaseAuth.instance.currentUser?.uid)
+                        .update({
+                      'pets': FieldValue.arrayUnion(snap.data()!["pets"]!),
                     });
                     setState(() {
                       isLoadingEdit = false;

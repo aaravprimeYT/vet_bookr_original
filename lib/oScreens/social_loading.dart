@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/models/sizeConfig.dart';
 import 'package:vet_bookr/oScreens/SocialFilter.dart';
-import 'package:vet_bookr/oScreens/petClinics_page.dart';
 
 class SocialLoading extends StatefulWidget {
   const SocialLoading({super.key});
@@ -18,7 +16,8 @@ class _SocialLoadingState extends State<SocialLoading> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
