@@ -36,13 +36,19 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 75.sp, vertical: 10.sp),
-            height: 0.75.sh,
-            width: 1.sw,
-            child: Image.asset(
-              'assets/clinicloadingscreen.png',
+          Padding(
+            padding: EdgeInsets.only(top: 0.1.sh),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 75.sp, vertical: 10.sp),
+              height: 0.68.sh,
+              width: 1.sw,
+              child: Image.asset(
+                'assets/clinicloadingscreen.png',
+              ),
             ),
+          ),
+          SizedBox(
+            height: 0.05.sh,
           ),
           ElevatedButton(
             style: ButtonStyle(

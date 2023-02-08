@@ -133,12 +133,7 @@ class _ShowPetState extends State<ShowPet> {
                       setState(() {
                         isLoading = true;
                       });
-                      await FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(FirebaseAuth.instance.currentUser?.uid)
-                          .update({
-                        'pets': FieldValue.arrayRemove([widget.details["id"]])
-                      });
+
                       final ref = storageRef.child(
                           "Users/${FirebaseAuth.instance.currentUser?.uid}/${widget.details["id"]}");
                       await ref.delete();
@@ -146,7 +141,30 @@ class _ShowPetState extends State<ShowPet> {
                           .collection("petsDetails")
                           .doc(widget.details["id"])
                           .delete();
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(FirebaseAuth.instance.currentUser?.uid)
+                          .update({
+                        'pets': FieldValue.arrayRemove(widget.details["id"]),
+                      });
+                      DocumentSnapshot<Map<String, dynamic>> snap =
+                          await FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .get();
 
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(FirebaseAuth.instance.currentUser?.uid)
+                          .update({
+                        'pets': FieldValue.arrayRemove(snap.data()!["pets"]!),
+                      });
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(FirebaseAuth.instance.currentUser?.uid)
+                          .update({
+                        'pets': FieldValue.arrayUnion(snap.data()!["pets"]!),
+                      });
                       setState(() {
                         isLoading = false;
                       });

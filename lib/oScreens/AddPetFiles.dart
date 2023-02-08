@@ -189,7 +189,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
                   ),
                   buttonWidget(),
                   SizedBox(height: 0.01.sh),
-                  Text(pdfFile == null ? "No File Selected" : "File Selected")
+                  Text(files != null ? "Image Selected" : "No Image Selected")
                 ],
               ),
             ),

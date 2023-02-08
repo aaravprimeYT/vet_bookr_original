@@ -27,9 +27,13 @@ class ImageViewer extends StatelessWidget {
                 right: 0.05.sw,
                 top: 0.02.sh,
               ),
-              child: Image.network(
-                "${urls[index]}",
-                fit: BoxFit.contain,
+              child: InteractiveViewer(
+                minScale: 0.1,
+                maxScale: 1.6,
+                child: Image.network(
+                  "${urls[index]}",
+                  fit: BoxFit.contain,
+                ),
               ),
             );
           },

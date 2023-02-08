@@ -194,23 +194,23 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
   }
 
   void apisChanger() async {
+    setState(() {
+      isLoading = true;
+    });
     if (dropdownvalue == apis[0]) {
       apiChanger = 2500;
       await getTotalData();
       print(apiChanger);
-      await clinicTile(vetClinic);
     }
     if (dropdownvalue == apis[1]) {
       apiChanger = 5000;
       await getTotalData();
       print(apiChanger);
-      await clinicTile(vetClinic);
     }
     if (dropdownvalue == apis[2]) {
       apiChanger = 10000;
       await getTotalData();
       print(apiChanger);
-      await clinicTile(vetClinic);
     }
   }
 
@@ -246,12 +246,12 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                     child: Text(
                       'Veterinary Clinics Near Me',
                       style: TextStyle(
-                          color: Color(0xffFF8B6A), fontSize: 0.045.sw),
+                          color: Color(0xffFF8B6A), fontSize: 0.04.sw),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 0.02.sh, left: 0.01.sw),
-                    height: 0.04.sh,
+                    padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
+                    height: 0.05.sh,
                     child: DropdownButton(
                       value: dropdownvalue,
                       underline: SizedBox(),
@@ -260,14 +260,17 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                         print(items);
                         return DropdownMenuItem(
                           value: items,
-                          child: Text(items),
+                          child: Text(
+                            items,
+                            style: TextStyle(fontSize: 0.04.sw),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        apisChanger();
                         setState(() {
                           dropdownvalue = newValue!;
                         });
+                        apisChanger();
                       },
                     ),
                   ),

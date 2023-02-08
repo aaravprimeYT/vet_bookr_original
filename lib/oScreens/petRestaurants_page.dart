@@ -192,6 +192,9 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
   }
 
   void apisChanger() async {
+    setState(() {
+      isLoading = true;
+    });
     if (dropdownvalue == apis[0]) {
       apiChanger = 2500;
       getTotalData();
@@ -244,11 +247,11 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                     child: Text(
                       'Best Pet Friendly Restaurants Near Me',
                       style: TextStyle(
-                          color: Color(0xffFF8B6A), fontSize: 0.038.sw),
+                          color: Color(0xffFF8B6A), fontSize: 0.04.sw),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 0.02.sh, left: 0.01.sw),
+                    padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                     height: 0.04.sh,
                     child: DropdownButton(
                       value: dropdownvalue,
@@ -258,7 +261,10 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                         print(items);
                         return DropdownMenuItem(
                           value: items,
-                          child: Text(items),
+                          child: Text(
+                            items,
+                            style: TextStyle(fontSize: 0.04.sw),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {

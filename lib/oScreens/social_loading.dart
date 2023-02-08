@@ -35,14 +35,20 @@ class _SocialLoadingState extends State<SocialLoading> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 0.09.sh, bottom: 0.05.sh),
-            height: 0.65.sh,
-            width: 1.sw,
-            child: Image.asset(
-              'assets/socialLoading.png',
-              fit: BoxFit.fitHeight,
+          Padding(
+            padding: EdgeInsets.only(top: 0.1.sh),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 75.sp, vertical: 10.sp),
+              height: 0.65.sh,
+              width: 1.sw,
+              child: Image.asset(
+                'assets/socialLoading.png',
+                fit: BoxFit.fitHeight,
+              ),
             ),
+          ),
+          SizedBox(
+            height: 0.05.sh,
           ),
           ElevatedButton(
               style: ButtonStyle(

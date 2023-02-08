@@ -38,13 +38,20 @@ class _PharmaLoadingState extends State<PharmaLoading> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: EdgeInsets.only(top: 0.03.sh),
-              height: 0.65.sh,
-              width: 1.sw,
-              child: Image.asset(
-                'assets/pharmacyloadingscreen.png',
+            Padding(
+              padding: EdgeInsets.only(top: 0.1.sh),
+              child: Container(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 75.sp, vertical: 10.sp),
+                height: 0.65.sh,
+                width: 1.sw,
+                child: Image.asset(
+                  'assets/pharmacyloadingscreen.png',
+                ),
               ),
+            ),
+            SizedBox(
+              height: 0.05.sh,
             ),
             ElevatedButton(
                 style: ButtonStyle(

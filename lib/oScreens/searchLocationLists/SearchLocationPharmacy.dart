@@ -4,19 +4,17 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:http/http.dart' as http;
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/vet_clinic.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'package:google_api_headers/google_api_headers.dart';
-
-import 'package:vet_bookr/utils/constants.dart';
 
 class SearchLocationPharmacy extends StatefulWidget {
   // SearchLocationPharmacy(this.vetClinic);
@@ -38,7 +36,6 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
     'in 5Kms',
     'in 10Kms',
   ];
-
 
   @override
   void initState() {
@@ -278,19 +275,22 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
   }
 
   void apisChanger() async {
-    if(dropdownvalue == apis[0]){
+    setState(() {
+      isLoading = true;
+    });
+    if (dropdownvalue == apis[0]) {
       apiChanger = 2500;
       getTotalData();
       print(apiChanger);
       clinicTile(vetClinic);
     }
-    if(dropdownvalue == apis[1]){
+    if (dropdownvalue == apis[1]) {
       apiChanger = 5000;
       getTotalData();
       print(apiChanger);
       clinicTile(vetClinic);
     }
-    if(dropdownvalue == apis[2]){
+    if (dropdownvalue == apis[2]) {
       apiChanger = 10000;
       getTotalData();
       print(apiChanger);
@@ -354,7 +354,8 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                     padding: EdgeInsets.only(left: 10.sp, top: 15.sp),
                     child: Text(
                       'Pharmacies in Specific Location',
-                      style: TextStyle(color: Color(0xffFF8B6A), fontSize: 0.045.sw),
+                      style: TextStyle(
+                          color: Color(0xffFF8B6A), fontSize: 0.045.sw),
                     ),
                   ),
                   Container(
@@ -379,7 +380,6 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                       },
                     ),
                   ),
-
                 ],
               ),
               Divider(
