@@ -145,9 +145,10 @@ class _ShowPetState extends State<ShowPet> {
                           .collection("users")
                           .doc(FirebaseAuth.instance.currentUser?.uid)
                           .update({
-                        'pets': FieldValue.arrayRemove(widget.details["id"]),
+                        'pets': FieldValue.arrayRemove([widget.details["id"]]),
                       });
-                      DocumentSnapshot<Map<String, dynamic>> snap =
+
+                      DocumentSnapshot<Map<dynamic, dynamic>> snap =
                           await FirebaseFirestore.instance
                               .collection("users")
                               .doc(FirebaseAuth.instance.currentUser?.uid)
