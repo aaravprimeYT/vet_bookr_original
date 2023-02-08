@@ -254,10 +254,28 @@ class _EditPetFilesState extends State<EditPetFiles> {
                       .collection("petFiles")
                       .doc(widget.details["id"]);
                   await deleteFile.delete();
-                  Navigator.pop(context);
-                  setState(() {
-                    deleteLoading = false;
+
+                  DocumentSnapshot<Map<String, dynamic>> snap =
+                      await FirebaseFirestore.instance
+                          .collection("petsDetails")
+                          .doc(widget.petId)
+                          .get();
+
+                  await FirebaseFirestore.instance
+                      .collection("petsDetails")
+                      .doc(widget.petId)
+                      .update({
+                    'petFiles':
+                        FieldValue.arrayRemove(snap.data()!["petFiles"]!),
                   });
+                  await FirebaseFirestore.instance
+                      .collection("petsDetails")
+                      .doc(widget.petId)
+                      .update({
+                    'petFiles':
+                        FieldValue.arrayUnion(snap.data()!["petFiles"]!),
+                  });
+                  Navigator.pop(context);
                 },
                 child: deleteLoading
                     ? Container(
