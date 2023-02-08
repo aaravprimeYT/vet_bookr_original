@@ -395,6 +395,7 @@ class _ShowPetState extends State<ShowPet> {
               width: 0.4.sw,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
                   backgroundColor: Color(0xffFF8B6A),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.sp),

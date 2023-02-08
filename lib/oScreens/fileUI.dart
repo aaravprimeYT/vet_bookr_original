@@ -93,10 +93,6 @@ class _FileUIState extends State<FileUI> {
                                       value: 0,
                                       child: Text("Edit Record"),
                                     ),
-                                    PopupMenuItem<int>(
-                                      value: 1,
-                                      child: Text("Delete Record"),
-                                    ),
                                   ];
                                 },
                                 onSelected: (value) async {
@@ -110,20 +106,6 @@ class _FileUIState extends State<FileUI> {
                                         ),
                                       ),
                                     );
-                                  }
-                                  if (value == 1) {
-                                    await FirebaseFirestore.instance
-                                        .collection("petsDetails")
-                                        .doc(widget.petId)
-                                        .update({
-                                      'petFiles':
-                                          FieldValue.arrayRemove([widget.id])
-                                    });
-                                    final deleteFile = FirebaseFirestore
-                                        .instance
-                                        .collection("petFiles")
-                                        .doc(widget.id);
-                                    await deleteFile.delete();
                                   }
                                 },
                               ),

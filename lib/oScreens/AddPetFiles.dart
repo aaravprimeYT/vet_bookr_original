@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +188,8 @@ class _AddPetFilesState extends State<AddPetFiles> {
                   ),
                   buttonWidget(),
                   SizedBox(height: 0.01.sh),
-                  Text(files != null ? "Image Selected" : "No Image Selected")
+                  Text(
+                      files.isNotEmpty ? "Image Selected" : "No Image Selected")
                 ],
               ),
             ),
@@ -221,27 +221,29 @@ class _AddPetFilesState extends State<AddPetFiles> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF8B6A),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))),
-                onPressed: () async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(
-                    allowMultiple: true,
-                    type: FileType.custom,
-                    allowedExtensions: ['png', 'jpg'],
-                  );
-                  //await openImages();
-                  if (result != null) {
-                    files = result.paths.map((path) => File(path!)).toList();
+            Container(
+              width: 150,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: Color(0xffFF8B6A),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  onPressed: () async {
+                    final ImagePicker _picker = ImagePicker();
+                    List<XFile> images = await _picker.pickMultiImage();
+                    if (images.isNotEmpty) {
+                      for (XFile image in images) {
+                        files.add(File(image.path));
+                      }
+                    }
                     setState(() {});
-                  } else {
-                    // User canceled the picker
-                  }
-                },
-                child: Text("Upload Pet Files")),
+                  },
+                  child: Text(
+                    "Upload Pet Records",
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  )),
+            ),
             Container(
               width: 150,
               child: ElevatedButton(

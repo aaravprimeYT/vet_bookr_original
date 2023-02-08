@@ -30,6 +30,7 @@ class _EditPetFilesState extends State<EditPetFiles> {
   }
 
   bool isLoading = false;
+  bool deleteLoading = false;
 
   final vaccinationController = TextEditingController();
 
@@ -184,50 +185,96 @@ class _EditPetFilesState extends State<EditPetFiles> {
   Widget buttonWidget() {
     return Column(
       children: [
-        Container(
-          width: 150,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff5EBB86),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))),
-              onPressed: () async {
-                setState(() {
-                  isLoading = true;
-                });
-                if (nameController.text == "" ||
-                    vaccinationController.text == "") {
-                  const snackBar = SnackBar(
-                    content: Text("One of these fields is empty"),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  Map<String, dynamic> addedPetFile = {
-                    "name": nameController.text,
-                    "date": vaccinationController.text
-                  };
-                  await addPetToFireStore(addedPetFile);
-                  vaccinationController.clear();
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 150,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xff5EBB86),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    if (nameController.text == "" ||
+                        vaccinationController.text == "") {
+                      const snackBar = SnackBar(
+                        content: Text("One of these fields is empty"),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else {
+                      Map<String, dynamic> addedPetFile = {
+                        "name": nameController.text,
+                        "date": vaccinationController.text
+                      };
+                      await addPetToFireStore(addedPetFile);
+                      vaccinationController.clear();
+                      Navigator.pop(context);
+                    }
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
+                  child: isLoading
+                      ? Container(
+                          height: 15.sp,
+                          width: 15.sp,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          "Save",
+                          style: TextStyle(
+                              fontSize: 15.sp, fontWeight: FontWeight.w400),
+                        )),
+            ),
+            Container(
+              width: 150,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF8B6A),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onPressed: () async {
+                  setState(() {
+                    deleteLoading = true;
+                  });
+                  await FirebaseFirestore.instance
+                      .collection("petsDetails")
+                      .doc(widget.petId)
+                      .update({
+                    'petFiles': FieldValue.arrayRemove([widget.details["id"]])
+                  });
+                  final deleteFile = FirebaseFirestore.instance
+                      .collection("petFiles")
+                      .doc(widget.details["id"]);
+                  await deleteFile.delete();
                   Navigator.pop(context);
-                }
-                setState(() {
-                  isLoading = false;
-                });
-              },
-              child: isLoading
-                  ? Container(
-                      height: 15.sp,
-                      width: 15.sp,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
+                  setState(() {
+                    deleteLoading = false;
+                  });
+                },
+                child: deleteLoading
+                    ? Container(
+                        height: 15.sp,
+                        width: 15.sp,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(
+                        "Delete Pet Files",
+                        style: TextStyle(fontWeight: FontWeight.w400),
                       ),
-                    )
-                  : Text(
-                      "Save",
-                      style: TextStyle(
-                          fontSize: 15.sp, fontWeight: FontWeight.w400),
-                    )),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -278,18 +325,3 @@ hintTextChanger(index) {
 }
 
 var variableText;
-
-// variableChanger(index, value) {
-//   if (index == 0) {
-//     return petName = value;
-//   }
-//   if (index == 1) {
-//     return petAge = value;
-//   }
-//   if (index == 2) {
-//     return petBreed = value;
-//   }
-//   if (index == 3) {
-//     return petWeight = value;
-//   }
-// }
