@@ -288,7 +288,8 @@ class _EditPetFilesState extends State<EditPetFiles> {
                       )
                     : Text(
                         "Delete Pet Files",
-                        style: TextStyle(fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 12.sp),
                       ),
               ),
             ),
@@ -341,5 +342,3 @@ hintTextChanger(index) {
     return hintText = "Weight: ";
   }
 }
-
-var variableText;

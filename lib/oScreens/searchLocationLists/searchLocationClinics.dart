@@ -375,7 +375,10 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                         print(items);
                         return DropdownMenuItem(
                           value: items,
-                          child: Text(items),
+                          child: Text(
+                            items,
+                            style: TextStyle(fontSize: 0.35.sw),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {

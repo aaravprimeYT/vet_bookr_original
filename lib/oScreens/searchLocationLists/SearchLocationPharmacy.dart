@@ -369,7 +369,10 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                         print(items);
                         return DropdownMenuItem(
                           value: items,
-                          child: Text(items),
+                          child: Text(
+                            items,
+                            style: TextStyle(fontSize: 0.35.sw),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {

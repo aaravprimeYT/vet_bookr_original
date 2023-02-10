@@ -65,7 +65,7 @@ class PetSocialFilter extends StatelessWidget {
                             MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
                     child: Image.asset("assets/vacations.png",
-                        width: 0.25.sw, height: 0.25.sw),
+                        width: 0.25.sw, height: 0.225.sw),
                   ),
                 ),
                 Text(
@@ -92,7 +92,7 @@ class PetSocialFilter extends StatelessWidget {
                             MaterialStateProperty.all(Color(0xffFAEEE2)),
                         shape: MaterialStateProperty.all(CircleBorder())),
                     child: Image.asset("assets/cafes.png",
-                        width: 0.25.sw, height: 0.25.sw),
+                        width: 0.25.sw, height: 0.225.sw),
                   ),
                 ),
                 Text(

@@ -245,7 +245,7 @@ class _PetResortsPageState extends State<PetResortsPage> {
                   Padding(
                     padding: EdgeInsets.only(left: 10.0.sp, top: 15.sp),
                     child: Text(
-                      'Best Pet Friendly Resorts Near Me',
+                      'Best Pet Resorts Near Me',
                       style: TextStyle(
                           color: Color(0xffFF8B6A), fontSize: 0.04.sw),
                     ),

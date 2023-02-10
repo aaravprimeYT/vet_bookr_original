@@ -4,14 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vet_bookr/oScreens/addPet_screen.dart';
-import 'package:vet_bookr/oScreens/list_pet.dart';
-import 'package:vet_bookr/oScreens/loadingscreen1.dart';
-import 'package:vet_bookr/oScreens/petClinics_page.dart';
-import 'package:vet_bookr/oScreens/pharma_Loading.dart';
 import 'package:vet_bookr/oScreens/clinicsloading.dart';
+import 'package:vet_bookr/oScreens/list_pet.dart';
+import 'package:vet_bookr/oScreens/pharma_Loading.dart';
 import 'package:vet_bookr/oScreens/social_loading.dart';
-import 'package:vet_bookr/oScreens/SocialFilter.dart';
 
 import 'authenticator.dart';
 
@@ -146,10 +142,7 @@ class MenuScreen extends StatelessWidget {
                               MaterialStateProperty.all(Color(0xffFAEEE2)),
                           shape: MaterialStateProperty.all(CircleBorder())),
                       child: Image.asset("assets/Find_A_Pet_Pharmacy.png",
-                          width: 0.27.sw, height: 0.27.sw),
-                    ),
-                    SizedBox(
-                      height: 0.01.sh,
+                          width: 0.27.sw, height: 0.25.sw),
                     ),
                     Text(
                       "Find a Pet \nPharmacy",
@@ -179,10 +172,11 @@ class MenuScreen extends StatelessWidget {
                         shape: MaterialStateProperty.all(CircleBorder()),
                       ),
                       child: Image.asset("assets/Pet_Social.png",
-                          fit: BoxFit.contain, width: 0.275.sw, height: 0.3.sw),
+                          fit: BoxFit.contain,
+                          width: 0.275.sw,
+                          height: 0.25.sw),
                     ),
                   ),
-
                   Text(
                     "Pet Social",
                     style:
