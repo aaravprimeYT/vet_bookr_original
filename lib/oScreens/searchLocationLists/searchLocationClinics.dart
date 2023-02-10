@@ -359,7 +359,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                   Padding(
                     padding: EdgeInsets.only(left: 10.sp, top: 15.sp),
                     child: Text(
-                      'Veterinary Clinics in Specific Location',
+                      'Vet Clinics in Specific Location',
                       style: TextStyle(
                           color: Color(0xffFF8B6A), fontSize: 0.040.sw),
                     ),

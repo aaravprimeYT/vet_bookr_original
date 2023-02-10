@@ -244,7 +244,7 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                   Padding(
                     padding: EdgeInsets.only(left: 10.0.sp, top: 15.sp),
                     child: Text(
-                      'Veterinary Clinics Near Me',
+                      'Vet Clinics Near Me',
                       style: TextStyle(
                           color: Color(0xffFF8B6A), fontSize: 0.04.sw),
                     ),

@@ -427,12 +427,18 @@ class _ShowPetState extends State<ShowPet> {
                       'lastVaccinationDate':
                           widget.details["lastVaccinationDate"]
                     });
-                    List<String> petIds = [];
                     DocumentSnapshot<Map<String, dynamic>> snap =
                         await FirebaseFirestore.instance
                             .collection("users")
                             .doc(FirebaseAuth.instance.currentUser?.uid)
                             .get();
+
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(FirebaseAuth.instance.currentUser?.uid)
+                        .update({
+                      'pets': FieldValue.arrayRemove(snap.data()!["pets"]!)
+                    });
 
                     await FirebaseFirestore.instance
                         .collection("users")
@@ -446,6 +452,7 @@ class _ShowPetState extends State<ShowPet> {
                         .update({
                       'pets': FieldValue.arrayUnion(snap.data()!["pets"]!),
                     });
+                    Navigator.pop(context);
                     setState(() {
                       isLoadingEdit = false;
                       editableText = false;

@@ -222,7 +222,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              width: 150,
+              width: 0.4.sw,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.zero,

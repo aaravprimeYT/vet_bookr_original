@@ -51,7 +51,7 @@ class PetSocialFilter extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      right: 0.12.sw, top: 15.sp, bottom: 10.sp, left: 0.12.sw),
+                      right: 0.12.sw, top: 15.sp, bottom: 5.sp, left: 0.12.sw),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -78,7 +78,7 @@ class PetSocialFilter extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                  padding: EdgeInsets.only(top: 15.sp, bottom: 5.sp),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -108,7 +108,7 @@ class PetSocialFilter extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      right: 0.12.sw, top: 15.sp, bottom: 10.sp, left: 0.12.sw),
+                      right: 0.12.sw, top: 15.sp, bottom: 5.sp, left: 0.12.sw),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -137,7 +137,7 @@ class PetSocialFilter extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                  padding: EdgeInsets.only(top: 15.sp, bottom: 5.sp),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -168,7 +168,7 @@ class PetSocialFilter extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      right: 0.12.sw, top: 15.sp, bottom: 10.sp, left: 0.12.sw),
+                      right: 0.12.sw, top: 15.sp, bottom: 5.sp, left: 0.12.sw),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -195,7 +195,7 @@ class PetSocialFilter extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                  padding: EdgeInsets.only(top: 15.sp, bottom: 5.sp),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -223,7 +223,7 @@ class PetSocialFilter extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 15.sp, bottom: 10.sp),
+                padding: EdgeInsets.only(top: 15.sp, bottom: 3.sp),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -238,7 +238,7 @@ class PetSocialFilter extends StatelessWidget {
                     shape: MaterialStateProperty.all(CircleBorder()),
                   ),
                   child: Image.asset("assets/parks.png",
-                      width: 0.25.sw, height: 0.25.sw),
+                      width: 0.25.sw, height: 0.15.sw),
                 ),
               ),
               Text(
