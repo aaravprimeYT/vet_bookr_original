@@ -377,7 +377,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                           value: items,
                           child: Text(
                             items,
-                            style: TextStyle(fontSize: 0.35.sw),
+                            style: TextStyle(fontSize: 0.035.sw),
                           ),
                         );
                       }).toList(),
