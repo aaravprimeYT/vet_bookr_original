@@ -160,6 +160,7 @@ class MenuScreen extends StatelessWidget {
                 top: 0.06.sh,
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Column(
@@ -226,6 +227,9 @@ class MenuScreen extends StatelessWidget {
                           width: 0.27.sw,
                           height: 0.27.sw,
                         ),
+                      ),
+                      SizedBox(
+                        height: 0.01.sh,
                       ),
                       Text(
                         "Pet Social",

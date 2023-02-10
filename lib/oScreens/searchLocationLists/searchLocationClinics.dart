@@ -361,7 +361,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                     child: Text(
                       'Vet Clinics in Specific Location',
                       style: TextStyle(
-                          color: Color(0xffFF8B6A), fontSize: 0.040.sw),
+                          color: Color(0xffFF8B6A), fontSize: 0.035.sw),
                     ),
                   ),
                   Container(

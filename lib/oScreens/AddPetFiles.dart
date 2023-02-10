@@ -240,7 +240,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
                     setState(() {});
                   },
                   child: Text(
-                    "Upload Pet Records",
+                    "Upload Records",
                     style:
                         TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp),
                   )),
@@ -300,7 +300,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
                       : Text(
                           "Submit",
                           style: TextStyle(
-                              fontSize: 15.sp, fontWeight: FontWeight.w400),
+                              fontSize: 12.sp, fontWeight: FontWeight.w400),
                         )),
             ),
           ],
