@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -310,6 +309,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -414,14 +414,30 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                         ],
                       ),
                     )
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: vetClinic?.length,
-                      itemBuilder: ((context, index) {
-                        return clinicTile(vetClinic![index]);
-                      }),
-                    )
+                  : vetClinic?.length == 0
+                      ? Container(
+                          height: 0.5.sh,
+                          width: 1.sw,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "No Clinics Found!",
+                                style: TextStyle(
+                                  fontSize: 0.024.sh,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: vetClinic?.length,
+                          itemBuilder: ((context, index) {
+                            return clinicTile(vetClinic![index]);
+                          }),
+                        ),
             ],
           ),
         ),

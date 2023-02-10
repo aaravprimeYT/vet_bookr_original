@@ -98,15 +98,19 @@ class _PetFilesState extends State<PetFiles> {
                       print(petFiles);
                       if (petFiles.length == 0) {
                         return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 0.05.sw),
-                            height: 0.4.sh,
-                            width: 1.sw,
-                            child: Center(
-                                child: Text(
-                              "Please add your pet's vaccination/disease files",
+                          padding: EdgeInsets.symmetric(horizontal: 0.05.sw),
+                          height: 0.4.sh,
+                          width: 1.sw,
+                          child: Center(
+                            child: Text(
+                              "Please add your pet's \n vaccination/disease files",
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 0.03.sh),
-                            )));
+                              style: TextStyle(
+                                fontSize: 0.024.sh,
+                              ),
+                            ),
+                          ),
+                        );
                       }
                       return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

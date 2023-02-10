@@ -93,7 +93,9 @@ class _ListPetsState extends State<ListPets> {
                           child: Center(
                             child: Text(
                               "Please Add Your Pet",
-                              style: TextStyle(fontSize: 18.sp),
+                              style: TextStyle(
+                                fontSize: 0.024.sh,
+                              ),
                             ),
                           ),
                         );
