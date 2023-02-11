@@ -186,11 +186,11 @@ class MenuScreen extends StatelessWidget {
                         child: Image.asset(
                           "assets/Find_A_Pet_Pharmacy.png",
                           width: 0.27.sw,
-                          height: 0.27.sw,
+                          height: 0.23.sw,
                         ),
                       ),
                       SizedBox(
-                        height: 0.01.sh,
+                        height: 0.005.sh,
                       ),
                       Text(
                         "Find a Pet \nPharmacy",
@@ -225,7 +225,7 @@ class MenuScreen extends StatelessWidget {
                           "assets/Pet_Social.png",
                           fit: BoxFit.contain,
                           width: 0.27.sw,
-                          height: 0.27.sw,
+                          height: 0.22.sw,
                         ),
                       ),
                       SizedBox(

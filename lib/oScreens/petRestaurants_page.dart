@@ -250,29 +250,32 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                           color: Color(0xffFF8B6A), fontSize: 0.04.sw),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
-                    height: 0.04.sh,
-                    child: DropdownButton(
-                      value: dropdownvalue,
-                      underline: SizedBox(),
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: apis.map((String items) {
-                        print(items);
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(
-                            items,
-                            style: TextStyle(fontSize: 0.04.sw),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        apisChanger();
-                        setState(() {
-                          dropdownvalue = newValue!;
-                        });
-                      },
+                  Padding(
+                    padding: EdgeInsets.only(top: 0.025.sh),
+                    child: Container(
+                      padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
+                      height: 0.04.sh,
+                      child: DropdownButton(
+                        value: dropdownvalue,
+                        underline: SizedBox(),
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: apis.map((String items) {
+                          print(items);
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(
+                              items,
+                              style: TextStyle(fontSize: 0.04.sw),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          apisChanger();
+                          setState(() {
+                            dropdownvalue = newValue!;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ],
