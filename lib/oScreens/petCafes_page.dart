@@ -269,10 +269,10 @@ class _PetCafesPageState extends State<PetCafesPage> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        apisChanger();
                         setState(() {
                           dropdownvalue = newValue!;
                         });
+                        apisChanger();
                       },
                     ),
                   ),

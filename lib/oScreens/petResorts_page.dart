@@ -268,10 +268,10 @@ class _PetResortsPageState extends State<PetResortsPage> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        apisChanger();
                         setState(() {
                           dropdownvalue = newValue!;
                         });
+                        apisChanger();
                       },
                     ),
                   ),

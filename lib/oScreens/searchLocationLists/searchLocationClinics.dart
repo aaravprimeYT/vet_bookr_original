@@ -382,10 +382,10 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        apisChanger();
                         setState(() {
                           dropdownvalue = newValue!;
                         });
+                        apisChanger();
                       },
                     ),
                   ),

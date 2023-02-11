@@ -269,10 +269,10 @@ class _PetBoardersPageState extends State<PetBoardersPage> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        apisChanger();
                         setState(() {
                           dropdownvalue = newValue!;
                         });
+                        apisChanger();
                       },
                     ),
                   ),

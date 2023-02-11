@@ -376,10 +376,10 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        apisChanger();
                         setState(() {
                           dropdownvalue = newValue!;
                         });
+                        apisChanger();
                       },
                     ),
                   ),
