@@ -40,7 +40,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera requirement for uploading profile images</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location required for yiginy fue6om 54eul6e</string>
+	<string>This app needs location for showing users location based results</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app needs location for showing users location based results</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
