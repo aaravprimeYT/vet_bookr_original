@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vet_bookr/oScreens/deleteUser.dart';
 import 'package:vet_bookr/oScreens/pharma_Loading.dart';
 import 'package:vet_bookr/oScreens/social_loading.dart';
 import 'package:vet_bookr/oScreens/welcome_screen.dart';
@@ -73,75 +73,10 @@ class _MenuScreenState extends State<MenuScreen> {
                             print("log out");
                           });
                         } else if (value == 1) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          final petsDetails = FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(FirebaseAuth.instance.currentUser?.uid)
-                              .get();
-                          print(petsDetails);
-
-                          final petFiles = FirebaseFirestore.instance
-                              .collection("petsDetails")
-                              .doc()
-                              .get();
-
-                          print(petFiles);
-                          print("Delete first");
-                          var userDetails = await FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .get();
-
-                          for (var petId in userDetails.data()!['pets']) {
-                            var petDetails = await FirebaseFirestore.instance
-                                .collection('petsDetails')
-                                .doc(petId)
-                                .get();
-                            var petFilesIds = petDetails.data()!["petFiles"];
-                            for (var petFileId in petFilesIds) {
-                              var fileDetails = await FirebaseFirestore.instance
-                                  .collection('petFiles')
-                                  .doc(petFileId)
-                                  .get();
-                              print(fileDetails.data());
-
-                              await FirebaseFirestore.instance
-                                  .collection("petsDetails")
-                                  .doc(petId)
-                                  .update({
-                                'petFiles': FieldValue.arrayRemove(
-                                    [fileDetails.data()!["id"]])
-                              });
-                              final deleteFile = FirebaseFirestore.instance
-                                  .collection("petFiles")
-                                  .doc(fileDetails.data()!["id"]);
-                              await deleteFile.delete();
-                            }
-                            await FirebaseFirestore.instance
-                                .collection("petsDetails")
-                                .doc(petId)
-                                .delete();
-                            await FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(FirebaseAuth.instance.currentUser!.uid)
-                                .update({
-                              'pets': FieldValue.arrayRemove([petId]),
-                            });
-                          }
-                          await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .delete();
-                          print("Firestore deleted first");
-                          await FirebaseAuth.instance.signOut();
-                          await FirebaseAuth.instance.currentUser!.delete();
-
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => WelcomePage(),
+                              builder: (context) => DeleteUser(),
                             ),
                           );
                         }
@@ -159,10 +94,10 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
               child: isLoading
                   ? Container(
-                      height: 15.sp,
-                      width: 15.sp,
+                      height: 2.sp,
+                      width: 2.sp,
                       child: CircularProgressIndicator(
-                        color: Colors.white,
+                        color: Color(0xffFF8B6A),
                         strokeWidth: 2.sp,
                       ),
                     )
