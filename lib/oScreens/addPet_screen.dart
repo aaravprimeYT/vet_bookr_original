@@ -388,13 +388,13 @@ hintTextChanger(index) {
     return hintText = "Name ";
   }
   if (index == 1) {
-    return hintText = "Age ";
+    return hintText = "Age (Years, Months) ";
   }
   if (index == 2) {
     return hintText = "Breed ";
   }
   if (index == 3) {
-    return hintText = "Weight ";
+    return hintText = "Weight (Kg) ";
   }
 }
 
