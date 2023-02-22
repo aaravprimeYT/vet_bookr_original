@@ -30,9 +30,16 @@ class _DeleteUserState extends State<DeleteUser> {
 
   Future deleteUser(String email, String password) async {
     try {
-      var user = await _auth.currentUser!;
-      await FirebaseAuth.instance.currentUser
-          ?.delete(); // called from database class
+      User user = _auth.currentUser!;
+      AuthCredential credentials =
+          EmailAuthProvider.credential(email: email, password: password);
+      print(user);
+      UserCredential result =
+          await user.reauthenticateWithCredential(credentials);
+
+      if (result.user != null) {
+        await result.user!.delete();
+      }
       return true;
     } catch (e) {
       print(e.toString());
@@ -96,6 +103,33 @@ class _DeleteUserState extends State<DeleteUser> {
               ),
             ),
           ),
+          Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: 0.1.sw, vertical: 0.01.sh),
+            child: SizedBox(
+              width: 0.9.sw,
+              height: 40.sp,
+              child: TextFormField(
+                cursorColor: Colors.black,
+                obscureText: true,
+                style: TextStyle(fontSize: 0.017.sh),
+                controller: passwordController,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.sp),
+                      borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: 0.01.sh, horizontal: 0.03.sw),
+                  hintStyle: TextStyle(fontSize: 0.017.sh),
+                  hintText: "Password",
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xffFF8B6A)),
+                    borderRadius: BorderRadius.circular(10.sp),
+                  ),
+                ),
+              ),
+            ),
+          ),
           SizedBox(
             height: 0.03.sh,
           ),
@@ -113,20 +147,21 @@ class _DeleteUserState extends State<DeleteUser> {
                 setState(() {
                   isLoading = true;
                 });
-                deleteUser(emailController.text, passwordController.text);
+
+                print(
+                    "delete started -------------------------------------------------");
                 final petsDetails = FirebaseFirestore.instance
                     .collection("users")
                     .doc(FirebaseAuth.instance.currentUser?.uid)
                     .get();
-                print(petsDetails);
-
                 final petFiles = FirebaseFirestore.instance
                     .collection("petsDetails")
                     .doc()
                     .get();
+                print(
+                    "delete halfway -------------------------------------------------");
 
-                print(petFiles);
-                print("Delete first");
+                //print(petFiles);
                 var userDetails = await FirebaseFirestore.instance
                     .collection('users')
                     .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -137,13 +172,15 @@ class _DeleteUserState extends State<DeleteUser> {
                       .collection('petsDetails')
                       .doc(petId)
                       .get();
+
                   var petFilesIds = petDetails.data()!["petFiles"];
                   for (var petFileId in petFilesIds) {
                     var fileDetails = await FirebaseFirestore.instance
                         .collection('petFiles')
                         .doc(petFileId)
                         .get();
-                    print(fileDetails.data());
+                    print(
+                        "delete 75% -------------------------------------------------");
 
                     await FirebaseFirestore.instance
                         .collection("petsDetails")
@@ -173,11 +210,6 @@ class _DeleteUserState extends State<DeleteUser> {
                     .doc(FirebaseAuth.instance.currentUser!.uid)
                     .delete();
                 print("Firestore deleted first");
-                // await FirebaseAuth.instance.signOut();
-                await FirebaseAuth.instance.currentUser?.delete();
-                // setState(() {
-                //   isLoading = false;
-                // });
 
                 setState(() {
                   isLoading = false;
