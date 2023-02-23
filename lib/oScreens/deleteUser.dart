@@ -186,12 +186,11 @@ class _DeleteUserState extends State<DeleteUser> {
                         .collection("petsDetails")
                         .doc(petId)
                         .update({
-                      'petFiles':
-                          FieldValue.arrayRemove([fileDetails.data()!["id"]])
+                      'petFiles': FieldValue.arrayRemove([petFileId])
                     });
                     final deleteFile = FirebaseFirestore.instance
                         .collection("petFiles")
-                        .doc(fileDetails.data()!["id"]);
+                        .doc(petFileId);
                     await deleteFile.delete();
                   }
                   await FirebaseFirestore.instance
@@ -211,10 +210,11 @@ class _DeleteUserState extends State<DeleteUser> {
                     .delete();
                 print("Firestore deleted first");
 
+                await deleteUser(emailController.text, passwordController.text);
+
                 setState(() {
                   isLoading = false;
                 });
-
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => WelcomePage()));
               },
@@ -223,7 +223,7 @@ class _DeleteUserState extends State<DeleteUser> {
                       height: 2.sp,
                       width: 2.sp,
                       child: CircularProgressIndicator(
-                        color: Color(0xffFF8B6A),
+                        color: Colors.white,
                         strokeWidth: 2.sp,
                       ),
                     )
