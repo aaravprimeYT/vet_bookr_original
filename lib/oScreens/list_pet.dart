@@ -3,18 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vet_bookr/constant.dart';
+import 'package:vet_bookr/oScreens/menu_screen.dart';
 
 import '../oScreens/addPet_screen.dart';
 import '../oScreens/list_ui.dart';
+import 'deleteUser.dart';
 
 class ListPets extends StatefulWidget {
   @override
   State<ListPets> createState() => _ListPetsState();
 }
-
-// final Stream<QuerySnapshot> _usersStream =
-//     FirebaseFirestore.instance.collection('petsDetails').snapshots();
 
 @override
 class _ListPetsState extends State<ListPets> {
@@ -57,9 +57,55 @@ class _ListPetsState extends State<ListPets> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MenuScreen()));
           },
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(top: 0.015.sh),
+            child: PopupMenuButton(
+                icon: Icon(
+                  Icons.more_vert,
+                  color: Colors.black,
+                ),
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("Logout"),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: Text("Delete User"),
+                    ),
+                  ];
+                },
+                onSelected: (value) async {
+                  if (value == 0) {
+                    await FirebaseAuth.instance.signOut();
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
+
+                    await preferences.setBool('isUserLoggedIn', false);
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MenuScreen()));
+                      print("log out");
+                    });
+                  } else if (value == 1) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DeleteUser(),
+                      ),
+                    );
+                  }
+                }),
+          )
+        ],
       ),
       backgroundColor: kBackgroundColor,
       body: Container(

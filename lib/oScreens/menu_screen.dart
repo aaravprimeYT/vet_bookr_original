@@ -2,15 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vet_bookr/oScreens/deleteUser.dart';
 import 'package:vet_bookr/oScreens/pharma_Loading.dart';
 import 'package:vet_bookr/oScreens/social_loading.dart';
 import 'package:vet_bookr/oScreens/welcome_screen.dart';
 
-import 'authenticator.dart';
 import 'clinicsloading.dart';
-import 'list_pet.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -38,51 +34,6 @@ class _MenuScreenState extends State<MenuScreen> {
                 height: 0.13.sh,
                 width: 0.47.sw,
               ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(top: 0.015.sh),
-                  child: PopupMenuButton(
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: Colors.black,
-                      ),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem<int>(
-                            value: 0,
-                            child: Text("Logout"),
-                          ),
-                          PopupMenuItem<int>(
-                            value: 1,
-                            child: Text("Delete User"),
-                          ),
-                        ];
-                      },
-                      onSelected: (value) async {
-                        if (value == 0) {
-                          await FirebaseAuth.instance.signOut();
-                          SharedPreferences preferences =
-                              await SharedPreferences.getInstance();
-
-                          await preferences.setBool('isUserLoggedIn', false);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Authenticator()));
-                            print("log out");
-                          });
-                        } else if (value == 1) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DeleteUser(),
-                            ),
-                          );
-                        }
-                      }),
-                )
-              ],
             ),
             extendBodyBehindAppBar: true,
             body: Container(
@@ -118,7 +69,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ListPets(),
+                                        builder: (context) => WelcomePage(),
                                       ),
                                     );
                                   },

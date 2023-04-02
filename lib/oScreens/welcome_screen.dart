@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/models/sizeConfig.dart';
+import 'package:vet_bookr/oScreens/menu_screen.dart';
 import 'package:vet_bookr/oScreens/signup_page.dart';
 
 import 'login_page.dart';
@@ -19,6 +20,20 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        backgroundColor: kBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen()));
+          },
+        ),
+      ),
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
@@ -54,7 +69,9 @@ class _WelcomePageState extends State<WelcomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 0.04.sh,),
+            SizedBox(
+              height: 0.04.sh,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -68,12 +85,14 @@ class _WelcomePageState extends State<WelcomePage> {
                             borderRadius: BorderRadius.circular(10)),
                         backgroundColor: Color(0xff5EBB86)),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SignUpPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
                     },
                     child: Text(
                       'Sign Up',
-                      style: TextStyle(color: Colors.white,fontSize: 12.sp),
+                      style: TextStyle(color: Colors.white, fontSize: 12.sp),
                     ),
                   ),
                 ),
@@ -92,13 +111,15 @@ class _WelcomePageState extends State<WelcomePage> {
                     },
                     child: Text(
                       'Login',
-                      style: TextStyle(color: Colors.white,fontSize: 12.sp),
+                      style: TextStyle(color: Colors.white, fontSize: 12.sp),
                     ),
                   ),
                 )
               ],
             ),
-            SizedBox(height: 0.05.sh,),
+            SizedBox(
+              height: 0.05.sh,
+            ),
             Container(
               width: 1.sw,
               height: 0.47.sh,

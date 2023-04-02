@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vet_bookr/oScreens/menu_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vet_bookr/oScreens/list_pet.dart';
 
 class PV2 extends StatefulWidget {
   final FirebaseAuth auth;
@@ -302,7 +302,7 @@ class _PV2State extends State<PV2> {
       preferences.setBool('isUserLoggedIn', true);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MenuScreen()));
+            context, MaterialPageRoute(builder: (context) => ListPets()));
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == "invalid-verification-code") {

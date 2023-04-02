@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:vet_bookr/oScreens/authenticator.dart';
+import 'package:vet_bookr/oScreens/menu_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, widget) => MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: Authenticator(),
+          body: MenuScreen(),
         ),
       ),
     );
