@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vet_bookr/oScreens/list_pet.dart';
 import 'package:vet_bookr/oScreens/pharma_Loading.dart';
 import 'package:vet_bookr/oScreens/social_loading.dart';
 import 'package:vet_bookr/oScreens/welcome_screen.dart';
@@ -17,6 +18,25 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   bool isLoading = false;
+  var count = 0;
+
+  void checkLogin() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ListPets(),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WelcomePage(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +89,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => WelcomePage(),
+                                        builder: (context) => ListPets(),
                                       ),
                                     );
                                   },

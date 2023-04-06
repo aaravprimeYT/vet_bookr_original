@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/oScreens/menu_screen.dart';
+import 'package:vet_bookr/oScreens/list_pet.dart';
 import 'package:vet_bookr/oScreens/welcome_screen.dart';
 
 class DeleteUser extends StatefulWidget {
@@ -68,8 +68,8 @@ class _DeleteUserState extends State<DeleteUser> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MenuScreen()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ListPets()));
             },
           ),
         ),
