@@ -1,12 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vet_bookr/oScreens/menu_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
-
-import '../constant.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   ForgotPasswordScreen({

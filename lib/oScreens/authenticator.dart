@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/oScreens/menu_screen.dart';
+import 'package:vet_bookr/features/Menu/menu_screen.dart';
 import 'package:vet_bookr/oScreens/welcome_screen.dart';
 
 class Authenticator extends StatefulWidget {
