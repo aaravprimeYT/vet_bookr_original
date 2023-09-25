@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Menu/menu_screen.dart';
-import 'package:vet_bookr/oScreens/welcome_screen.dart';
+import 'package:vet_bookr/features/Welcome_Page/welcome_screen.dart';
 
 class Authenticator extends StatefulWidget {
   const Authenticator({Key? key}) : super(key: key);

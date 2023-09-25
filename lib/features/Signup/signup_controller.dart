@@ -1,18 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/oScreens/phone_verification_2.dart';
+import 'package:path/path.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+import '../OTP/phone_verification_2.dart';
 
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
+class SignupController {
   String email = "";
   String _password = "";
 
@@ -26,7 +19,6 @@ class _SignUpPageState extends State<SignUpPage> {
     // Clean up the controller when the widget is disposed.
     passwordController.dispose();
     emailController.dispose();
-    super.dispose();
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -44,9 +36,9 @@ class _SignUpPageState extends State<SignUpPage> {
       user = userCredential.user;
 
       var bar = SnackBar(content: Text("${user?.email} has signed up"));
-      ScaffoldMessenger.of(context).showSnackBar(bar);
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(bar);
       Navigator.push(
-        context,
+        context as BuildContext,
         MaterialPageRoute(
             builder: (context) => PV2(
                   auth: _auth,
@@ -55,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
     } on FirebaseAuthException catch (error) {
       var bar = SnackBar(content: Text("${error.message}"));
-      ScaffoldMessenger.of(context).showSnackBar(bar);
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(bar);
     }
 
     // Navigator.push(
@@ -115,93 +107,6 @@ class _SignUpPageState extends State<SignUpPage> {
               borderRadius: BorderRadius.circular(10.sp),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-          backgroundColor: kBackgroundColor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        backgroundColor: kBackgroundColor,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/logo.png",
-              width: 0.75.sw,
-            ),
-            SizedBox(height: 0.03.sh),
-            tField(hText: 'Email'),
-            tpField(hText: 'Password'),
-            //sBox(h: 2),
-            SizedBox(height: 0.05.sh),
-            Container(
-              height: 0.05.sh,
-              width: 0.25.sw,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.sp)),
-                    backgroundColor: Color(0xff5EBB86)),
-                onPressed: () async {
-                  setState(() {
-                    isLoading = true;
-                    _password = passwordController.text;
-                    email = emailController.text;
-                  });
-                  if (email.isEmpty || _password.isEmpty) {
-                    const snackBar = SnackBar(
-                      content: Text("One of these fields is empty"),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } else {
-                    await signupUser(email, _password);
-                    setState(() {
-                      isLoading = false;
-                    });
-                  }
-                },
-                child: isLoading
-                    ? Container(
-                        height: 15.sp,
-                        width: 15.sp,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2.sp,
-                        ),
-                      )
-                    : Text(
-                        'Sign Up',
-                        style:
-                            TextStyle(color: Colors.white, fontSize: 0.03.sw),
-                      ),
-              ),
-            )
-          ],
         ),
       ),
     );

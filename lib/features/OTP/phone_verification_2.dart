@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vet_bookr/oScreens/list_pet.dart';
+import 'package:vet_bookr/features/OTP/OTP_controller.dart';
 
 class PV2 extends StatefulWidget {
   final FirebaseAuth auth;
@@ -18,12 +16,9 @@ class PV2 extends StatefulWidget {
 }
 
 class _PV2State extends State<PV2> {
-  bool isLoading = false;
+  OTPController otpController = OTPController();
 
-  String globalVerificationId = "";
-  bool otpNotSent = true;
-  final _phoneController = TextEditingController();
-  final _otpController = TextEditingController();
+  String phoneController = otpController._phoneController.text();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +48,7 @@ class _PV2State extends State<PV2> {
               Container(
                 color: Color(0xffFFF5F0),
                 padding: EdgeInsets.all(0.07.sh),
-                child: otpNotSent
+                child: otpController.otpNotSent
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -90,7 +85,8 @@ class _PV2State extends State<PV2> {
                               initialCountryCode: 'IN',
                               onChanged: (phone) {
                                 setState(() {
-                                  _phoneController.text = phone.completeNumber;
+                                  otpController.phoneController.text =
+                                      phone.completeNumber;
                                 });
                               },
                             ),
@@ -239,84 +235,5 @@ class _PV2State extends State<PV2> {
         ),
       ),
     );
-  }
-
-  verifyPhoneNo(String phoneNo) async {
-    await widget.auth.verifyPhoneNumber(
-        phoneNumber: phoneNo,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          var existingUser = widget.auth.currentUser;
-
-          //After the User  SignsIn
-          await existingUser?.linkWithCredential(credential).then((value) {
-            const snackBar =
-                SnackBar(content: Text("User Signed In SuccessFully"));
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          });
-        },
-        /**
-         * Handles only invalid phone no.s or if sms quota expired
-         */
-        verificationFailed: (FirebaseAuthException e) {
-          if (e.code == 'invalid-phone-number') {
-            const snackBar = SnackBar(
-                content: Text('The provided phone number is not valid.'));
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-        },
-        codeSent: (String verificationId, int? resendToken) async {
-          setState(() {
-            isLoading = false;
-            otpNotSent = false;
-            globalVerificationId = verificationId;
-          });
-          const snackBar = SnackBar(content: Text('OTP Sent.'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {});
-  }
-
-  validateOTP(String otp) async {
-    //Validate the OTP by calling a function in Auth
-
-    try {
-      User user = widget.auth.currentUser!;
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: globalVerificationId, smsCode: otp);
-      if (widget.fromLogin == false) {
-        user.linkWithCredential(credential);
-        print("this code works");
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(widget.auth.currentUser?.uid)
-            .set({
-          "email": widget.auth.currentUser?.email,
-          "phone": _phoneController.text,
-          "id": widget.auth.currentUser?.uid,
-          "pets": []
-        });
-      }
-
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-
-      preferences.setBool('isUserLoggedIn', true);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ListPets()));
-      });
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "invalid-verification-code") {
-        const snackBar =
-            SnackBar(content: Text("Invalid OTP. Please Enter Correct OTP"));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    _otpController.dispose();
-    super.dispose();
   }
 }

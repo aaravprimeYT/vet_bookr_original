@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
+import 'package:vet_bookr/features/Login/login_page.dart';
 import 'package:vet_bookr/features/Menu/menu_screen.dart';
-import 'package:vet_bookr/oScreens/signup_page.dart';
-
-import 'login_page.dart';
+import 'package:vet_bookr/features/Signup/signup_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});

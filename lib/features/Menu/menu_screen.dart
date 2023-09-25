@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/features/Pharmacy_Loading/pharma_Loading.dart';
 import 'package:vet_bookr/features/Social_Loading/social_loading.dart';
-import 'package:vet_bookr/oScreens/welcome_screen.dart';
+import 'package:vet_bookr/features/Welcome_Page/welcome_screen.dart';
 
 import '../../oScreens/list_pet.dart';
 import '../Vet_Loading//clinicsloading.dart';
