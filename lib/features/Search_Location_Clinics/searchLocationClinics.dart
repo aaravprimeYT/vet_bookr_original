@@ -49,6 +49,20 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
       print(searchClinicController.apiChanger);
       clinicTile(searchClinicController.vetClinic);
     }
+    if (searchClinicController.dropdownvalue ==
+        searchClinicController.apis[3]) {
+      searchClinicController.apiChanger = 25000;
+      searchClinicController.getTotalData();
+      print(searchClinicController.apiChanger);
+      clinicTile(searchClinicController.vetClinic);
+    }
+    if (searchClinicController.dropdownvalue ==
+        searchClinicController.apis[4]) {
+      searchClinicController.apiChanger = 50000;
+      searchClinicController.getTotalData();
+      print(searchClinicController.apiChanger);
+      clinicTile(searchClinicController.vetClinic);
+    }
   }
 
   clinicTile(data) {
@@ -162,6 +176,9 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                     },
                     onClosed: () async {
                       await searchClinicController.handlePressButton(context);
+                      setState(() {
+                        searchClinicController.isLoading = false;
+                      });
                     });
               },
             ),

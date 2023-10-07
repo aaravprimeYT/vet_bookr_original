@@ -6,6 +6,7 @@ class VetClinic {
   final double rating;
   final String address;
   final bool timing;
+  final String phone;
 
   const VetClinic(
       {required this.name,
@@ -14,15 +15,19 @@ class VetClinic {
       required this.placeId,
       required this.lat,
       required this.lng,
-      required this.timing});
+      required this.timing,
+      required this.phone});
 
   factory VetClinic.fromJson(Map<String, dynamic> vetJson) => VetClinic(
-      name: vetJson["name"] ?? "",
-      address: vetJson["vicinity"] ?? "",
-      rating: vetJson["rating"].toDouble() ?? 0.0,
-      placeId: vetJson["place_id"] ?? "",
-      lat: vetJson["geometry"]["location"]["lat"],
-      lng: vetJson["geometry"]["location"]["lng"],
-      timing: vetJson["opening_hours"] == null ? false : vetJson["opening_hours"]["open_now"],
-  );
+        phone: "",
+        name: vetJson["name"] ?? "",
+        address: vetJson["vicinity"] ?? "",
+        rating: vetJson["rating"].toDouble() ?? 0.0,
+        placeId: vetJson["place_id"] ?? "",
+        lat: vetJson["geometry"]["location"]["lat"],
+        lng: vetJson["geometry"]["location"]["lng"],
+        timing: vetJson["opening_hours"] == null
+            ? false
+            : vetJson["opening_hours"]["open_now"],
+      );
 }

@@ -22,15 +22,11 @@ class PetPharmaciesPage extends StatefulWidget {
 class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
   bool isLoading = true;
 
-  String dropdownvalue = 'in 2.5Kms';
+  String dropdownvalue = 'in 2.5 Kms';
 
   var apiChanger = 2500;
 
-  var apis = [
-    'in 2.5Kms',
-    'in 5Kms',
-    'in 10Kms',
-  ];
+  var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
 
   @override
   void initState() {
@@ -95,7 +91,8 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
     List<double> latLng = await getLatLng();
 
     String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+pharmacies+near+me&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=veterinary_pharmacy&key=${Constants.apiKey}";
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+pharmacies+near+me&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=veterinary_pharmacy&key=${Constants
+        .apiKey}";
 
     ///Getting the data
     final response = await http.get(Uri.parse(vetsUrl));
@@ -124,7 +121,8 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => VetsMaps(
+                builder: (context) =>
+                    VetsMaps(
                       vetClinic: data,
                     )));
       },
@@ -153,7 +151,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                 Text(
                   data.address,
                   style:
-                      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
+                  TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
                 ),
                 SizedBox(
                   height: 0.005.sh,
@@ -163,7 +161,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                   style: TextStyle(
                       fontSize: 15.sp,
                       color:
-                          data.timing ? Colors.greenAccent : Colors.redAccent),
+                      data.timing ? Colors.greenAccent : Colors.redAccent),
                 ),
                 SizedBox(
                   height: 0.005.sh,
@@ -176,10 +174,11 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                     itemCount: 5,
                     itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                     itemSize: 0.03.sh,
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
+                    itemBuilder: (context, _) =>
+                        Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
                     onRatingUpdate: (rating) {
                       print(rating);
                     },
@@ -200,21 +199,28 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
     });
     if (dropdownvalue == apis[0]) {
       apiChanger = 2500;
-      getTotalData();
+      await getTotalData();
       print(apiChanger);
-      clinicTile(vetClinic);
     }
     if (dropdownvalue == apis[1]) {
       apiChanger = 5000;
-      getTotalData();
+      await getTotalData();
       print(apiChanger);
-      clinicTile(vetClinic);
     }
     if (dropdownvalue == apis[2]) {
       apiChanger = 10000;
-      getTotalData();
+      await getTotalData();
       print(apiChanger);
-      clinicTile(vetClinic);
+    }
+    if (dropdownvalue == apis[3]) {
+      apiChanger = 25000;
+      await getTotalData();
+      print(apiChanger);
+    }
+    if (dropdownvalue == apis[4]) {
+      apiChanger = 50000;
+      await getTotalData();
+      print(apiChanger);
     }
   }
 
@@ -289,31 +295,31 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
               // sBox(h: 1),
               isLoading
                   ? Container(
-                      width: 1.sw,
-                      height: 0.7.sh,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 15.sp,
-                            width: 15.sp,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Color(0xffFF8B6A),
-                            ),
-                          ),
-                        ],
+                width: 1.sw,
+                height: 0.7.sh,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 15.sp,
+                      width: 15.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xffFF8B6A),
                       ),
-                    )
+                    ),
+                  ],
+                ),
+              )
                   : ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: vetClinic?.length,
-                      itemBuilder: ((context, index) {
-                        return clinicTile(vetClinic![index]);
-                      }),
-                    )
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: vetClinic?.length,
+                itemBuilder: ((context, index) {
+                  return clinicTile(vetClinic![index]);
+                }),
+              )
             ],
           ),
         ),

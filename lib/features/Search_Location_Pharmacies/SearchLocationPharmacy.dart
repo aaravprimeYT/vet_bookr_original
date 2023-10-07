@@ -50,6 +50,20 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
       print(searchPharmacyController.apiChanger);
       clinicTile(searchPharmacyController.vetClinic);
     }
+    if (searchPharmacyController.dropdownvalue ==
+        searchPharmacyController.apis[3]) {
+      searchPharmacyController.apiChanger = 25000;
+      searchPharmacyController.getTotalData();
+      print(searchPharmacyController.apiChanger);
+      clinicTile(searchPharmacyController.vetClinic);
+    }
+    if (searchPharmacyController.dropdownvalue ==
+        searchPharmacyController.apis[4]) {
+      searchPharmacyController.apiChanger = 50000;
+      searchPharmacyController.getTotalData();
+      print(searchPharmacyController.apiChanger);
+      clinicTile(searchPharmacyController.vetClinic);
+    }
   }
 
   clinicTile(data) {
@@ -164,6 +178,9 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                     },
                     onClosed: () async {
                       await searchPharmacyController.handlePressButton(context);
+                      setState(() {
+                        searchPharmacyController.isLoading = false;
+                      });
                     });
               },
             ),

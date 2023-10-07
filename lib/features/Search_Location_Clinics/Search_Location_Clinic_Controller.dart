@@ -14,15 +14,11 @@ import '../../models/vet_clinic.dart';
 class SearchClinicController {
   bool isLoading = true;
 
-  String dropdownvalue = 'in 2.5Kms';
+  String dropdownvalue = 'in 2.5 Kms';
 
   var apiChanger = 2500;
 
-  var apis = [
-    'in 2.5Kms',
-    'in 5Kms',
-    'in 10Kms',
-  ];
+  var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
 
   late List<VetClinic>? vetClinic;
 
@@ -89,7 +85,6 @@ class SearchClinicController {
     /**
      * Adding the markerss
      */
-
     isLoading = false;
   }
 
@@ -109,10 +104,22 @@ class SearchClinicController {
       return VetClinic.fromJson(vetJson);
     }).toList();
     print(vetClinic);
+    print("this is error");
+    for (var i in vetClinic!) {
+      String vetDetailsUrl =
+          "https://maps.googleapis.com/maps/api/place/details/json?placeid=${i.placeId}&key=${Constants.apiKey}";
+      print(vetDetailsUrl);
+
+      ///Getting the data
+      final response = await http.get(Uri.parse(vetDetailsUrl));
+
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      print(data["formatted_phone_number"]);
+    }
+
     /**
      * Adding the markerss
      */
-
     latLong = [lat, lng];
     isLoading = false;
   }

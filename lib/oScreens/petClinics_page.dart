@@ -22,15 +22,11 @@ class PetClinicsPage extends StatefulWidget {
 class _PetClinicsPageState extends State<PetClinicsPage> {
   bool isLoading = true;
 
-  String dropdownvalue = 'in 2.5Kms';
+  String dropdownvalue = 'in 2.5 Kms';
 
   var apiChanger = 2500;
 
-  var apis = [
-    'in 2.5Kms',
-    'in 5Kms',
-    'in 10Kms',
-  ];
+  var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
 
   @override
   void initState() {
@@ -209,6 +205,16 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
     }
     if (dropdownvalue == apis[2]) {
       apiChanger = 10000;
+      await getTotalData();
+      print(apiChanger);
+    }
+    if (dropdownvalue == apis[3]) {
+      apiChanger = 25000;
+      await getTotalData();
+      print(apiChanger);
+    }
+    if (dropdownvalue == apis[4]) {
+      apiChanger = 50000;
       await getTotalData();
       print(apiChanger);
     }
