@@ -7,9 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Menu/menu_screen.dart';
 
-import '../oScreens/addPet_screen.dart';
-import '../oScreens/list_ui.dart';
-import 'deleteUser.dart';
+import '../../oScreens/addPet_screen.dart';
+import '../../oScreens/deleteUser.dart';
+import '../../oScreens/list_ui.dart';
 
 class ListPets extends StatefulWidget {
   @override

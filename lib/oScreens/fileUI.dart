@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/oScreens/showPdf.dart';
 
-import 'editPetFiles.dart';
+import '../features/Pet_Files/Edit_Pet_Files/editPetFiles.dart';
 
 class FileUI extends StatefulWidget {
   FileUI({Key? key, required this.id, required this.petId}) : super(key: key);

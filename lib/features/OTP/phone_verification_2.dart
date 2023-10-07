@@ -18,8 +18,6 @@ class PV2 extends StatefulWidget {
 class _PV2State extends State<PV2> {
   OTPController otpController = OTPController();
 
-  String phoneController = otpController._phoneController.text();
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -106,21 +104,25 @@ class _PV2State extends State<PV2> {
                             child: GestureDetector(
                               onTap: () async {
                                 setState(() {
-                                  isLoading = true;
+                                  otpController.isLoading = true;
                                 });
-                                if (_phoneController.text.isEmpty) {
+                                if (otpController
+                                    .phoneController.text.isEmpty) {
                                   const snackBar = SnackBar(
                                       content: Text("Phone No is empty"));
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 } else {
-                                  await verifyPhoneNo(_phoneController.text);
+                                  await otpController.verifyPhoneNo(
+                                      otpController.phoneController.text,
+                                      widget.auth,
+                                      context);
                                 }
-                                print(_phoneController.text);
+                                print(otpController.phoneController.text);
                               },
                               child: CircleAvatar(
                                 backgroundColor: Color(0xff6AC4FF),
-                                child: isLoading
+                                child: otpController.isLoading
                                     ? Container(
                                         height: 15.sp,
                                         width: 15.sp,
@@ -170,7 +172,7 @@ class _PV2State extends State<PV2> {
                                 hintText: "Enter OTP",
                                 hintStyle: TextStyle(fontSize: 0.017.sh),
                               ),
-                              controller: _otpController,
+                              controller: otpController.otpController,
                             ),
                           ),
                           SizedBox(
@@ -191,21 +193,25 @@ class _PV2State extends State<PV2> {
                             child: GestureDetector(
                               onTap: () async {
                                 setState(() {
-                                  isLoading = true;
+                                  otpController.isLoading = true;
                                 });
-                                if (_otpController.text.isEmpty) {
+                                if (otpController.otpController.text.isEmpty) {
                                   const snackBar = SnackBar(
                                       content:
                                           Text("Empty OTP cannot be sent"));
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 } else {
-                                  validateOTP(_otpController.text);
+                                  otpController.validateOTP(
+                                      otpController.otpController.text,
+                                      widget.auth,
+                                      widget.fromLogin,
+                                      context);
                                 }
                               },
                               child: CircleAvatar(
                                 backgroundColor: Color(0xff6AC4FF),
-                                child: isLoading
+                                child: otpController.isLoading
                                     ? Container(
                                         height: 15.sp,
                                         width: 15.sp,

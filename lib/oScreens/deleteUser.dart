@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
+import 'package:vet_bookr/features/Pet_List/list_pet.dart';
 import 'package:vet_bookr/features/Welcome_Page/welcome_screen.dart';
-import 'package:vet_bookr/oScreens/list_pet.dart';
 
 class DeleteUser extends StatefulWidget {
   const DeleteUser({Key? key}) : super(key: key);

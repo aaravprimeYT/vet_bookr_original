@@ -12,7 +12,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-
   SignupController signupController = SignupController();
 
   @override
@@ -72,7 +71,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   } else {
                     await signupController.signupUser(
                         signupController.emailController.text,
-                        signupController.passwordController.text);
+                        signupController.passwordController.text,
+                        context);
                     setState(() {
                       signupController.isLoading = false;
                     });
@@ -80,18 +80,18 @@ class _SignUpPageState extends State<SignUpPage> {
                 },
                 child: signupController.isLoading
                     ? Container(
-                  height: 15.sp,
-                  width: 15.sp,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.sp,
-                  ),
-                )
+                        height: 15.sp,
+                        width: 15.sp,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.sp,
+                        ),
+                      )
                     : Text(
-                  'Sign Up',
-                  style:
-                  TextStyle(color: Colors.white, fontSize: 0.03.sw),
-                ),
+                        'Sign Up',
+                        style:
+                            TextStyle(color: Colors.white, fontSize: 0.03.sw),
+                      ),
               ),
             )
           ],

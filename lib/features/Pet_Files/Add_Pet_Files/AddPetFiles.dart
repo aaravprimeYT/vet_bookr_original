@@ -1,16 +1,13 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/models/prescription.dart';
+import 'package:vet_bookr/features/Pet_Files/Add_Pet_Files/Add_Pet_Files_Controller.dart';
 
-import 'addPet_screen.dart';
+import '../../../oScreens/addPet_screen.dart';
 
 class AddPetFiles extends StatefulWidget {
   AddPetFiles({super.key, required this.petId});
@@ -22,61 +19,7 @@ class AddPetFiles extends StatefulWidget {
 }
 
 class _AddPetFilesState extends State<AddPetFiles> {
-  DateTime selectedDate = DateTime.now();
-  final nameController = TextEditingController();
-
-  final ImagePicker imgpicker = ImagePicker();
-  List<XFile>? imagefiles;
-
-  openImages() async {
-    try {
-      var pickedfiles = await imgpicker.pickMultiImage();
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedfiles != null) {
-        imagefiles = pickedfiles;
-        setState(() {});
-      } else {
-        print("No image is selected.");
-      }
-    } catch (e) {
-      print("error while picking file.");
-    }
-  }
-
-  List<Prescription> prescArray = [];
-
-  bool isLoading = false;
-
-  final vaccinationController = TextEditingController();
-
-  bool noImage = true;
-
-  File? pdfFile;
-  final storageRef = FirebaseStorage.instance.ref();
-
-  var petId = DateTime.now().millisecondsSinceEpoch.toString();
-
-  String imageUrl = "";
-  List<String> imageUrlList = [];
-  int index = 0;
-
-  Future<void> uploadImages(
-      {required String path, required String name}) async {
-    try {
-      final imageRef = storageRef.child(
-          "Users/${FirebaseAuth.instance.currentUser?.uid}/$petId$index");
-      index++;
-      await imageRef.putFile(File(path));
-      imageUrl = await imageRef.getDownloadURL();
-      imageUrlList.add(imageUrl);
-      setState(() {});
-      print(imageRef.getDownloadURL());
-    } on FirebaseException catch (e) {
-      print("Function does work");
-      SnackBar snackBar = SnackBar(content: Text(e.message!));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
+  PetFilesController petFilesController = PetFilesController();
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +81,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
                   Padding(
                     padding: EdgeInsets.only(top: 0.02.sh, bottom: 0.02.sh),
                     child: TextField(
-                      controller: vaccinationController,
+                      controller: petFilesController.vaccinationController,
                       onTap: () => {
                         showDatePicker(
                                 builder: (context, child) {
@@ -165,7 +108,7 @@ class _AddPetFilesState extends State<AddPetFiles> {
                           if (value == null) {
                             return;
                           } else {
-                            vaccinationController.text =
+                            petFilesController.vaccinationController.text =
                                 "${value.day}/${value.month}/${value.year}";
                           }
                         })
@@ -198,20 +141,6 @@ class _AddPetFilesState extends State<AddPetFiles> {
         ),
       ),
     );
-  }
-
-  Future<void> addPetToFireStore(Map<String, dynamic> addedPet) async {
-    var doc = FirebaseFirestore.instance.collection("petFiles").doc();
-    await FirebaseFirestore.instance
-        .collection("petFiles")
-        .doc(doc.id)
-        .set(addedPet);
-    await FirebaseFirestore.instance
-        .collection("petsDetails")
-        .doc(widget.petId)
-        .update({
-      "petFiles": FieldValue.arrayUnion([doc.id])
-    });
   }
 
   List<File> files = [];
@@ -255,10 +184,10 @@ class _AddPetFilesState extends State<AddPetFiles> {
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
                     setState(() {
-                      isLoading = true;
+                      petFilesController.isLoading = true;
                     });
                     if (nameController.text == "" ||
-                        vaccinationController.text == "" ||
+                        petFilesController.vaccinationController.text == "" ||
                         files.length == 0) {
                       const snackBar = SnackBar(
                         content: Text("One of these fields is empty"),
@@ -272,24 +201,25 @@ class _AddPetFilesState extends State<AddPetFiles> {
                       // vaccinationDate =
                       //     "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
                       for (File file in files) {
-                        await uploadImages(path: file.path, name: petName);
+                        await petFilesController.uploadImages(
+                            path: file.path, name: petName, context: context);
                       }
 
                       Map<String, dynamic> addedPetFile = {
                         "name": nameController.text,
-                        "files": imageUrlList,
-                        "date": vaccinationController.text
+                        "files": petFilesController.imageUrlList,
+                        "date": petFilesController.vaccinationController.text
                       };
-                      addPetToFireStore(addedPetFile);
+                      petFilesController.addPetToFireStore(addedPetFile);
                       nameController.clear();
-                      vaccinationController.clear();
+                      petFilesController.vaccinationController.clear();
                       Navigator.pop(context);
                     }
                     setState(() {
-                      isLoading = false;
+                      petFilesController.isLoading = false;
                     });
                   },
-                  child: isLoading
+                  child: petFilesController.isLoading
                       ? Container(
                           height: 15.sp,
                           width: 15.sp,
@@ -310,63 +240,3 @@ class _AddPetFilesState extends State<AddPetFiles> {
     );
   }
 }
-
-Widget imageWidget(image) {
-  return image != null
-      ? Image.file(
-          File("${image?.path}"),
-          fit: BoxFit.cover,
-        )
-      : ElevatedButton(onPressed: () {}, child: Text(""));
-}
-
-var controllers;
-
-controllerChanger(index) {
-  if (index == 0) {
-    return controllers = nameController;
-  }
-  if (index == 1) {
-    return controllers = ageController;
-  }
-  if (index == 2) {
-    return controllers = breedController;
-  }
-  if (index == 3) {
-    return controllers = weightController;
-  }
-}
-
-var hintText = "";
-
-hintTextChanger(index) {
-  if (index == 0) {
-    return hintText = "Name Of Vaccination/Disease";
-  }
-  if (index == 1) {
-    return hintText = "Age: ";
-  }
-  if (index == 2) {
-    return hintText = "Breed: ";
-  }
-  if (index == 3) {
-    return hintText = "Weight: ";
-  }
-}
-
-var variableText;
-
-// variableChanger(index, value) {
-//   if (index == 0) {
-//     return petName = value;
-//   }
-//   if (index == 1) {
-//     return petAge = value;
-//   }
-//   if (index == 2) {
-//     return petBreed = value;
-//   }
-//   if (index == 3) {
-//     return petWeight = value;
-//   }
-// }

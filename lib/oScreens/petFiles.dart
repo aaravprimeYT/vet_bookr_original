@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/oScreens/AddPetFiles.dart';
+import 'package:vet_bookr/features/Pet_Files/Add_Pet_Files/AddPetFiles.dart';
 
 import 'fileUI.dart';
 

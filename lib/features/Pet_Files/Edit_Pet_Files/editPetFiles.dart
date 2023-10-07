@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
+import 'package:vet_bookr/features/Pet_Files/Edit_Pet_Files/Edit_Pet_Files_Controller.dart';
 
-import 'addPet_screen.dart';
+import '../../../oScreens/addPet_screen.dart';
 
 class EditPetFiles extends StatefulWidget {
   EditPetFiles({super.key, required this.petId, required this.details});
@@ -19,20 +18,7 @@ class EditPetFiles extends StatefulWidget {
 }
 
 class _EditPetFilesState extends State<EditPetFiles> {
-  final nameController = TextEditingController();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    nameController.text = widget.details["name"];
-    vaccinationController.text = widget.details["date"];
-  }
-
-  bool isLoading = false;
-  bool deleteLoading = false;
-
-  final vaccinationController = TextEditingController();
+  EditPetFilesController editPetFilesController = EditPetFilesController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +79,7 @@ class _EditPetFilesState extends State<EditPetFiles> {
                   Padding(
                     padding: EdgeInsets.only(top: 0.02.sh, bottom: 0.02.sh),
                     child: TextField(
-                      controller: vaccinationController,
+                      controller: editPetFilesController.vaccinationController,
                       onTap: () => {
                         showDatePicker(
                                 builder: (context, child) {
@@ -120,7 +106,7 @@ class _EditPetFilesState extends State<EditPetFiles> {
                           if (value == null) {
                             return;
                           } else {
-                            vaccinationController.text =
+                            editPetFilesController.vaccinationController.text =
                                 "${value.day}/${value.month}/${value.year}";
                           }
                         })
@@ -153,35 +139,6 @@ class _EditPetFilesState extends State<EditPetFiles> {
     );
   }
 
-  Future<void> addPetToFireStore(Map<String, dynamic> addedPet) async {
-    await FirebaseFirestore.instance
-        .collection("petFiles")
-        .doc(widget.details["id"])
-        .update(addedPet);
-
-    DocumentSnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
-        .instance
-        .collection("petsDetails")
-        .doc(widget.petId)
-        .get();
-    await FirebaseFirestore.instance
-        .collection("petsDetails")
-        .doc(widget.petId)
-        .update({
-      "petFiles": FieldValue.arrayRemove(
-        snap.data()!["petFiles"]!,
-      ),
-    });
-    await FirebaseFirestore.instance
-        .collection("petsDetails")
-        .doc(widget.petId)
-        .update({
-      "petFiles": FieldValue.arrayUnion(
-        snap.data()!["petFiles"]!,
-      ),
-    });
-  }
-
   Widget buttonWidget() {
     return Column(
       children: [
@@ -197,10 +154,11 @@ class _EditPetFilesState extends State<EditPetFiles> {
                           borderRadius: BorderRadius.circular(10))),
                   onPressed: () async {
                     setState(() {
-                      isLoading = true;
+                      editPetFilesController.isLoading = true;
                     });
                     if (nameController.text == "" ||
-                        vaccinationController.text == "") {
+                        editPetFilesController.vaccinationController.text ==
+                            "") {
                       const snackBar = SnackBar(
                         content: Text("One of these fields is empty"),
                       );
@@ -208,17 +166,19 @@ class _EditPetFilesState extends State<EditPetFiles> {
                     } else {
                       Map<String, dynamic> addedPetFile = {
                         "name": nameController.text,
-                        "date": vaccinationController.text
+                        "date":
+                            editPetFilesController.vaccinationController.text
                       };
-                      await addPetToFireStore(addedPetFile);
-                      vaccinationController.clear();
+                      await editPetFilesController.addPetToFireStore(
+                          addedPetFile, widget.petId, widget.details);
+                      editPetFilesController.vaccinationController.clear();
                       Navigator.pop(context);
                     }
                     setState(() {
-                      isLoading = false;
+                      editPetFilesController.isLoading = false;
                     });
                   },
-                  child: isLoading
+                  child: editPetFilesController.isLoading
                       ? Container(
                           height: 15.sp,
                           width: 15.sp,
@@ -242,7 +202,7 @@ class _EditPetFilesState extends State<EditPetFiles> {
                         borderRadius: BorderRadius.circular(10))),
                 onPressed: () async {
                   setState(() {
-                    deleteLoading = true;
+                    editPetFilesController.deleteLoading = true;
                   });
                   await FirebaseFirestore.instance
                       .collection("petsDetails")
@@ -277,7 +237,7 @@ class _EditPetFilesState extends State<EditPetFiles> {
                   });
                   Navigator.pop(context);
                 },
-                child: deleteLoading
+                child: editPetFilesController.deleteLoading
                     ? Container(
                         height: 15.sp,
                         width: 15.sp,
@@ -297,48 +257,5 @@ class _EditPetFilesState extends State<EditPetFiles> {
         ),
       ],
     );
-  }
-}
-
-Widget imageWidget(image) {
-  return image != null
-      ? Image.file(
-          File("${image?.path}"),
-          fit: BoxFit.cover,
-        )
-      : ElevatedButton(onPressed: () {}, child: Text(""));
-}
-
-var controllers;
-
-controllerChanger(index) {
-  if (index == 0) {
-    return controllers = nameController;
-  }
-  if (index == 1) {
-    return controllers = ageController;
-  }
-  if (index == 2) {
-    return controllers = breedController;
-  }
-  if (index == 3) {
-    return controllers = weightController;
-  }
-}
-
-var hintText = "";
-
-hintTextChanger(index) {
-  if (index == 0) {
-    return hintText = "Name Of Vaccination/Disease";
-  }
-  if (index == 1) {
-    return hintText = "Age: ";
-  }
-  if (index == 2) {
-    return hintText = "Breed: ";
-  }
-  if (index == 3) {
-    return hintText = "Weight: ";
   }
 }

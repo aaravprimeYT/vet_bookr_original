@@ -5,7 +5,7 @@ import 'package:vet_bookr/features/Pharmacy_Loading/pharma_Loading.dart';
 import 'package:vet_bookr/features/Social_Loading/social_loading.dart';
 import 'package:vet_bookr/features/Welcome_Page/welcome_screen.dart';
 
-import '../../oScreens/list_pet.dart';
+import '../Pet_List/list_pet.dart';
 import '../Vet_Loading//clinicsloading.dart';
 import 'menu_controller.dart';
 

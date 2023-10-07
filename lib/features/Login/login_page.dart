@@ -93,7 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                     } else {
                       await loginController.signInUser(
                           loginController.emailController.text,
-                          loginController.passwordController.text);
+                          loginController.passwordController.text,
+                          context);
                       // }
                     }
                     setState(() {

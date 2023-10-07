@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:path/path.dart';
 import 'package:vet_bookr/features/OTP/phone_verification_2.dart';
 
 class LoginController {
@@ -19,7 +18,7 @@ class LoginController {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  signInUser(String email, String password) async {
+  signInUser(String email, String password, BuildContext context) async {
     User? user;
 
     try {
@@ -30,23 +29,23 @@ class LoginController {
       user = userCredential.user;
       var bar = SnackBar(content: Text("${user?.email} is signed in"));
 
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(bar);
+      ScaffoldMessenger.of(context).showSnackBar(bar);
 
       /**
        * Go to Phone Verification
        */
       Navigator.push(
-        context as BuildContext,
+        context,
         MaterialPageRoute(
             builder: (context) => PV2(auth: _auth, fromLogin: true)),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         const snackBar = SnackBar(content: Text("User not found"));
-        ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else if (e.code == 'wrong-password') {
         const snackBar2 = SnackBar(content: Text("Incorrect Password"));
-        ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar2);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar2);
       }
     }
   }

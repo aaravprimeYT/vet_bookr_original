@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:path/path.dart';
 
 import '../OTP/phone_verification_2.dart';
 
@@ -23,7 +22,7 @@ class SignupController {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  signupUser(String email, String password) async {
+  signupUser(String email, String password, BuildContext context) async {
     User? user;
 
     /**
@@ -36,9 +35,9 @@ class SignupController {
       user = userCredential.user;
 
       var bar = SnackBar(content: Text("${user?.email} has signed up"));
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(bar);
+      ScaffoldMessenger.of(context).showSnackBar(bar);
       Navigator.push(
-        context as BuildContext,
+        context,
         MaterialPageRoute(
             builder: (context) => PV2(
                   auth: _auth,
@@ -47,7 +46,7 @@ class SignupController {
       );
     } on FirebaseAuthException catch (error) {
       var bar = SnackBar(content: Text("${error.message}"));
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(bar);
+      ScaffoldMessenger.of(context).showSnackBar(bar);
     }
 
     // Navigator.push(
