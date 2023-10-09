@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vet_bookr/features/Pet_Pharmacy/petPharmacies_part.dart';
 import 'package:vet_bookr/features/Search_Location_Pharmacies/SearchLocationPharmacy.dart';
 import 'package:vet_bookr/models/sizeConfig.dart';
-import 'package:vet_bookr/oScreens/petPharmacies_part.dart';
 
 class PharmaLoading extends StatefulWidget {
   const PharmaLoading({super.key});

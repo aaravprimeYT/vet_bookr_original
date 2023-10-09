@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Pet_Files/Edit_Pet_Files/Edit_Pet_Files_Controller.dart';
 
-import '../../../oScreens/addPet_screen.dart';
+import '../../Add_Pet/addPet_screen.dart';
 
 class EditPetFiles extends StatefulWidget {
   EditPetFiles({super.key, required this.petId, required this.details});

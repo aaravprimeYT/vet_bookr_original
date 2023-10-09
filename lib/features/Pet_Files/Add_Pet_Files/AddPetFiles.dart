@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Pet_Files/Add_Pet_Files/Add_Pet_Files_Controller.dart';
 
-import '../../../oScreens/addPet_screen.dart';
+import '../../Add_Pet/addPet_screen.dart';
 
 class AddPetFiles extends StatefulWidget {
   AddPetFiles({super.key, required this.petId});

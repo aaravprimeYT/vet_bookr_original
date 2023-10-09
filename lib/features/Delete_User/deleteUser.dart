@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
+import 'package:vet_bookr/features/Delete_User/Delete_User_Controller.dart';
 import 'package:vet_bookr/features/Pet_List/list_pet.dart';
 import 'package:vet_bookr/features/Welcome_Page/welcome_screen.dart';
 
@@ -15,37 +16,16 @@ class DeleteUser extends StatefulWidget {
 }
 
 class _DeleteUserState extends State<DeleteUser> {
+
+  DeleteUserController deleteUserController = DeleteUserController();
+
   @override
   void initState() {
     // TODO: implement initState
-    emailController.text = FirebaseAuth.instance.currentUser!.email.toString();
+    deleteUserController.emailController.text =
+        FirebaseAuth.instance.currentUser!.email.toString();
   }
 
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-
-  bool isLoading = false;
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future deleteUser(String email, String password) async {
-    try {
-      User user = _auth.currentUser!;
-      AuthCredential credentials =
-          EmailAuthProvider.credential(email: email, password: password);
-      print(user);
-      UserCredential result =
-          await user.reauthenticateWithCredential(credentials);
-
-      if (result.user != null) {
-        await result.user!.delete();
-      }
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +65,14 @@ class _DeleteUserState extends State<DeleteUser> {
             ),
             Padding(
               padding:
-                  EdgeInsets.only(top: 0.1.sh, left: 0.1.sw, right: 0.1.sw),
+              EdgeInsets.only(top: 0.1.sh, left: 0.1.sw, right: 0.1.sw),
               child: SizedBox(
                 width: 0.9.sw,
                 height: 40.sp,
                 child: TextFormField(
                   cursorColor: Colors.black,
                   style: TextStyle(fontSize: 0.017.sh),
-                  controller: emailController,
+                  controller: deleteUserController.emailController,
                   enabled: false,
                   decoration: InputDecoration(
                     label: Text("Your Email is: ",
@@ -114,7 +94,7 @@ class _DeleteUserState extends State<DeleteUser> {
             ),
             Padding(
               padding:
-                  EdgeInsets.symmetric(horizontal: 0.1.sw, vertical: 0.01.sh),
+              EdgeInsets.symmetric(horizontal: 0.1.sw, vertical: 0.01.sh),
               child: SizedBox(
                 width: 0.9.sw,
                 height: 40.sp,
@@ -122,7 +102,7 @@ class _DeleteUserState extends State<DeleteUser> {
                   cursorColor: Colors.black,
                   obscureText: true,
                   style: TextStyle(fontSize: 0.017.sh),
-                  controller: passwordController,
+                  controller: deleteUserController.passwordController,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.sp),
@@ -157,7 +137,7 @@ class _DeleteUserState extends State<DeleteUser> {
                     backgroundColor: Color(0xffFF8B6A)),
                 onPressed: () async {
                   setState(() {
-                    isLoading = true;
+                    deleteUserController.isLoading = true;
                   });
 
                   print(
@@ -222,29 +202,30 @@ class _DeleteUserState extends State<DeleteUser> {
                       .delete();
                   print("Firestore deleted first");
 
-                  await deleteUser(
-                      emailController.text, passwordController.text);
+                  await deleteUserController.deleteUser(
+                      deleteUserController.emailController.text,
+                      deleteUserController.passwordController.text);
 
                   setState(() {
-                    isLoading = false;
+                    deleteUserController.isLoading = false;
                   });
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WelcomePage()));
                 },
-                child: isLoading
+                child: deleteUserController.isLoading
                     ? Container(
-                        height: 2.sp,
-                        width: 2.sp,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2.sp,
-                        ),
-                      )
+                  height: 2.sp,
+                  width: 2.sp,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2.sp,
+                  ),
+                )
                     : Text(
-                        "Delete User",
-                        style: TextStyle(
-                            fontSize: 12.sp, fontWeight: FontWeight.w400),
-                      ))
+                  "Delete User",
+                  style: TextStyle(
+                      fontSize: 12.sp, fontWeight: FontWeight.w400),
+                ))
           ],
         ),
       ),

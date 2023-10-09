@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vet_bookr/features/Pet_Clinics/petClinics_page.dart';
 import 'package:vet_bookr/features/Search_Location_Clinics/searchLocationClinics.dart';
 import 'package:vet_bookr/models/sizeConfig.dart';
-import 'package:vet_bookr/oScreens/petClinics_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

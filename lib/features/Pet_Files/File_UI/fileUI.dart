@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vet_bookr/features/Pet_Files/File_UI/File_UI_Controller.dart';
 import 'package:vet_bookr/oScreens/showPdf.dart';
 
-import '../features/Pet_Files/Edit_Pet_Files/editPetFiles.dart';
+import '../Edit_Pet_Files/editPetFiles.dart';
 
 class FileUI extends StatefulWidget {
   FileUI({Key? key, required this.id, required this.petId}) : super(key: key);
@@ -17,31 +17,16 @@ class FileUI extends StatefulWidget {
 }
 
 class _FileUIState extends State<FileUI> {
+  FileUIController fileUIController = FileUIController();
+
   @override
   void initState() {
-    getFileDetails();
+    fileUIController.getFileDetails(widget.id);
+    setState(() {
+      fileUIController.isLoading = false;
+    });
     super.initState();
   }
-
-  void getFileDetails() async {
-    DocumentSnapshot<Map<String, dynamic>> petDetails = await FirebaseFirestore
-        .instance
-        .collection("petFiles")
-        .doc(widget.id)
-        .get();
-    details = petDetails.data()!;
-    details.putIfAbsent("id", () => widget.id);
-    setState(() {
-      isLoading = false;
-    });
-    print(petDetails.data());
-  }
-
-  late Map<String, dynamic> petDetails;
-
-  late Map<String, dynamic> details;
-
-  bool isLoading = true;
 
   @override
   void dispose() {
@@ -50,7 +35,7 @@ class _FileUIState extends State<FileUI> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    return fileUIController.isLoading
         ? Padding(
             padding: EdgeInsets.all(0.095.sh),
             child: CircularProgressIndicator(
@@ -102,7 +87,7 @@ class _FileUIState extends State<FileUI> {
                                       MaterialPageRoute(
                                         builder: (context) => EditPetFiles(
                                           petId: widget.petId,
-                                          details: details,
+                                          details: fileUIController.details,
                                         ),
                                       ),
                                     );
@@ -116,7 +101,7 @@ class _FileUIState extends State<FileUI> {
                           width: 0.42.sw,
                           padding: EdgeInsets.only(top: 0.005.sh),
                           child: Text(
-                            "${details["name"]}",
+                            "${fileUIController.details["name"]}",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 0.020.sh, color: Color(0xffF08714)),
@@ -133,7 +118,7 @@ class _FileUIState extends State<FileUI> {
                         Padding(
                           padding: EdgeInsets.only(top: 0.005.sh),
                           child: Text(
-                            "${details["date"]}",
+                            "${fileUIController.details["date"]}",
                             style: TextStyle(
                                 fontSize: 0.020.sh, color: Color(0xffF08714)),
                           ),
@@ -160,8 +145,9 @@ class _FileUIState extends State<FileUI> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ImageViewer(
-                                        urls: details["files"],
-                                        diseaseName: details["name"],
+                                        urls: fileUIController.details["files"],
+                                        diseaseName:
+                                            fileUIController.details["name"],
                                       ),
                                     ),
                                   );

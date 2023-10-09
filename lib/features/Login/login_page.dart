@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
+import 'package:vet_bookr/features/Forgot_Password/forgot_password.dart';
 import 'package:vet_bookr/features/Login/login_controller.dart';
-import 'package:vet_bookr/oScreens/forgot_password.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

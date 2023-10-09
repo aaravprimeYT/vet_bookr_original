@@ -1,115 +1,27 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/models/vet_clinic.dart';
+import 'package:vet_bookr/features/Pet_Resorts/Pet_Resorts_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
-class PetParksPage extends StatefulWidget {
-  // PetParksPage(this.vetClinic);
-  const PetParksPage({super.key});
+class PetResortsPage extends StatefulWidget {
+  // PetClinicsPage(this.vetClinic);
+  const PetResortsPage({super.key});
 
   @override
-  State<PetParksPage> createState() => _PetParksPageState();
+  State<PetResortsPage> createState() => _PetResortsPageState();
 }
 
-class _PetParksPageState extends State<PetParksPage> {
-  bool isLoading = true;
-
-  String dropdownvalue = 'in 2.5 Kms';
-
-  var apiChanger = 2500;
-
-  var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
+class _PetResortsPageState extends State<PetResortsPage> {
+  PetResortController petResortController = PetResortController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getTotalData();
-  }
-
-  late List<VetClinic>? vetClinic;
-
-  late GoogleMapController googleMapController;
-
-  static const String _kLocationServicesDisabledMessage =
-      'Location services are disabled.';
-  static const String _kPermissionDeniedMessage = 'Permission denied.';
-  static const String _kPermissionDeniedForeverMessage =
-      'Permission denied forever.';
-  static const String _kPermissionGrantedMessage = 'Permission granted.';
-
-  void _onMapCreated(GoogleMapController controller) {
-    googleMapController = controller;
-  }
-
-  Set<Marker> _markers = Set<Marker>();
-
-  Future<Position> determinePosition() async {
-    ///Check if location is enabled
-    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
-
-    if (!isLocationEnabled) {
-      return Future.error(_kLocationServicesDisabledMessage);
-    }
-
-    /**
-     * Request Location Permission
-     */
-    await Geolocator.requestPermission();
-
-    ///Check if the kind of permission we got
-
-    LocationPermission locationPermission = await Geolocator.checkPermission();
-
-    if (locationPermission == LocationPermission.denied) {
-      return Future.error(_kPermissionDeniedMessage);
-    }
-
-    if (locationPermission == LocationPermission.deniedForever) {
-      return Future.error(_kPermissionDeniedForeverMessage);
-    }
-
-    return Geolocator.getCurrentPosition();
-  }
-
-  Future<List<double>> getLatLng() async {
-    Position position = await determinePosition();
-    List<double> latLong = [position.latitude, position.longitude];
-
-    return latLong;
-  }
-
-  Future<void> getTotalData() async {
-    List<double> latLng = await getLatLng();
-
-    String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+parks&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=pet-parks&key=${Constants.apiKey}";
-    final response = await http.get(Uri.parse(vetsUrl));
-
-    final Map<String, dynamic> data = jsonDecode(response.body);
-
-    print(data);
-    vetClinic = (data["results"] as List).map((vetJson) {
-      print(vetJson);
-      return VetClinic.fromJson(vetJson);
-    }).toList();
-    print(vetClinic);
-    /**
-     * Adding the markerss
-     */
-    if (!mounted) return;
-
-    setState(() {
-      isLoading = false;
-    });
+    petResortController.getTotalData();
   }
 
   clinicTile(data) {
@@ -190,32 +102,32 @@ class _PetParksPageState extends State<PetParksPage> {
 
   void apisChanger() async {
     setState(() {
-      isLoading = true;
+      petResortController.isLoading = true;
     });
-    if (dropdownvalue == apis[0]) {
-      apiChanger = 2500;
-      await getTotalData();
-      print(apiChanger);
+    if (petResortController.dropdownvalue == petResortController.apis[0]) {
+      petResortController.apiChanger = 2500;
+      await petResortController.getTotalData();
+      print(petResortController.apiChanger);
     }
-    if (dropdownvalue == apis[1]) {
-      apiChanger = 5000;
-      await getTotalData();
-      print(apiChanger);
+    if (petResortController.dropdownvalue == petResortController.apis[1]) {
+      petResortController.apiChanger = 5000;
+      await petResortController.getTotalData();
+      print(petResortController.apiChanger);
     }
-    if (dropdownvalue == apis[2]) {
-      apiChanger = 10000;
-      await getTotalData();
-      print(apiChanger);
+    if (petResortController.dropdownvalue == petResortController.apis[2]) {
+      petResortController.apiChanger = 10000;
+      await petResortController.getTotalData();
+      print(petResortController.apiChanger);
     }
-    if (dropdownvalue == apis[3]) {
-      apiChanger = 25000;
-      await getTotalData();
-      print(apiChanger);
+    if (petResortController.dropdownvalue == petResortController.apis[3]) {
+      petResortController.apiChanger = 25000;
+      await petResortController.getTotalData();
+      print(petResortController.apiChanger);
     }
-    if (dropdownvalue == apis[4]) {
-      apiChanger = 50000;
-      await getTotalData();
-      print(apiChanger);
+    if (petResortController.dropdownvalue == petResortController.apis[4]) {
+      petResortController.apiChanger = 50000;
+      await petResortController.getTotalData();
+      print(petResortController.apiChanger);
     }
   }
 
@@ -249,7 +161,7 @@ class _PetParksPageState extends State<PetParksPage> {
                   Padding(
                     padding: EdgeInsets.only(left: 10.0.sp, top: 15.sp),
                     child: Text(
-                      'Best Pet Parks Near Me',
+                      'Best Pet Resorts Near Me',
                       style: TextStyle(
                           color: Color(0xffFF8B6A), fontSize: 0.04.sw),
                     ),
@@ -258,10 +170,10 @@ class _PetParksPageState extends State<PetParksPage> {
                     padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                     height: 0.04.sh,
                     child: DropdownButton(
-                      value: dropdownvalue,
+                      value: petResortController.dropdownvalue,
                       underline: SizedBox(),
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      items: apis.map((String items) {
+                      items: petResortController.apis.map((String items) {
                         print(items);
                         return DropdownMenuItem(
                           value: items,
@@ -273,7 +185,7 @@ class _PetParksPageState extends State<PetParksPage> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          dropdownvalue = newValue!;
+                          petResortController.dropdownvalue = newValue!;
                         });
                         apisChanger();
                       },
@@ -288,7 +200,7 @@ class _PetParksPageState extends State<PetParksPage> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              isLoading
+              petResortController.isLoading
                   ? Container(
                       width: 1.sw,
                       height: 0.7.sh,
@@ -310,9 +222,10 @@ class _PetParksPageState extends State<PetParksPage> {
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: vetClinic?.length,
+                      itemCount: petResortController.vetClinic?.length,
                       itemBuilder: ((context, index) {
-                        return clinicTile(vetClinic![index]);
+                        return clinicTile(
+                            petResortController.vetClinic![index]);
                       }),
                     )
             ],

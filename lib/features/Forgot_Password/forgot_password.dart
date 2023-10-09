@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vet_bookr/features/Forgot_Password/Forgot_Password_Controller.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   ForgotPasswordScreen({
@@ -12,23 +12,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  bool isLoading = false;
-
-  String globalVerificationId = "";
-  bool otpNotSent = true;
-  final emailController = TextEditingController();
-
-  Future<void> passwordReset() async {
-    try {
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: emailController.text);
-    } on FirebaseAuthException catch (err) {
-      var snackBar = SnackBar(
-        content: Text(err.message.toString()),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
+  ForgotPasswordController forgotPasswordController =
+      ForgotPasswordController();
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +67,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           child: TextFormField(
                             cursorColor: Colors.black,
                             style: TextStyle(fontSize: 0.017.sh),
-                            controller: emailController,
+                            controller:
+                                forgotPasswordController.emailController,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.sp),
@@ -113,16 +99,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               backgroundColor: Color(0xff5EBB86)),
                           onPressed: () async {
                             setState(() {
-                              isLoading = true;
+                              forgotPasswordController.isLoading = true;
                             });
-                            if (emailController.text.isEmpty) {
+                            if (forgotPasswordController
+                                .emailController.text.isEmpty) {
                               const snackBar = SnackBar(
                                 content: Text("Please enter an Email Id"),
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             } else {
-                              await passwordReset();
+                              await forgotPasswordController
+                                  .passwordReset(context);
                               var snackBar = SnackBar(
                                 content: Text(
                                     "Password reset link is sent successfully"),
@@ -131,10 +119,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   .showSnackBar(snackBar);
                             }
                             setState(() {
-                              isLoading = false;
+                              forgotPasswordController.isLoading = false;
                             });
                           },
-                          child: isLoading
+                          child: forgotPasswordController.isLoading
                               ? Container(
                                   height: 15.sp,
                                   width: 15.sp,

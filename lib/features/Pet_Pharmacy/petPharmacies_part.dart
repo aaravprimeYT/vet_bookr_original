@@ -1,14 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/models/vet_clinic.dart';
+import 'package:vet_bookr/features/Pet_Pharmacy/Pet_Pharmacy_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
 class PetPharmaciesPage extends StatefulWidget {
@@ -20,98 +15,15 @@ class PetPharmaciesPage extends StatefulWidget {
 }
 
 class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
-  bool isLoading = true;
-
-  String dropdownvalue = 'in 2.5 Kms';
-
-  var apiChanger = 2500;
-
-  var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
+  PetPharmacyController petPharmacyController = PetPharmacyController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getTotalData();
-  }
-
-  late List<VetClinic>? vetClinic;
-
-  late GoogleMapController googleMapController;
-
-  static const String _kLocationServicesDisabledMessage =
-      'Location services are disabled.';
-  static const String _kPermissionDeniedMessage = 'Permission denied.';
-  static const String _kPermissionDeniedForeverMessage =
-      'Permission denied forever.';
-  static const String _kPermissionGrantedMessage = 'Permission granted.';
-
-  void _onMapCreated(GoogleMapController controller) {
-    googleMapController = controller;
-  }
-
-  Set<Marker> _markers = Set<Marker>();
-
-  Future<Position> determinePosition() async {
-    ///Check if location is enabled
-    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
-
-    if (!isLocationEnabled) {
-      return Future.error(_kLocationServicesDisabledMessage);
-    }
-
-    /**
-     * Request Location Permission
-     */
-    await Geolocator.requestPermission();
-
-    ///Check if the kind of permission we got
-
-    LocationPermission locationPermission = await Geolocator.checkPermission();
-
-    if (locationPermission == LocationPermission.denied) {
-      return Future.error(_kPermissionDeniedMessage);
-    }
-
-    if (locationPermission == LocationPermission.deniedForever) {
-      return Future.error(_kPermissionDeniedForeverMessage);
-    }
-
-    return Geolocator.getCurrentPosition();
-  }
-
-  Future<List<double>> getLatLng() async {
-    Position position = await determinePosition();
-    List<double> latLong = [position.latitude, position.longitude];
-
-    return latLong;
-  }
-
-  Future<void> getTotalData() async {
-    List<double> latLng = await getLatLng();
-
-    String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+pharmacies+near+me&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=veterinary_pharmacy&key=${Constants
-        .apiKey}";
-
-    ///Getting the data
-    final response = await http.get(Uri.parse(vetsUrl));
-
-    final Map<String, dynamic> data = jsonDecode(response.body);
-
-    print(data);
-    vetClinic = (data["results"] as List).map((vetJson) {
-      print(vetJson);
-      return VetClinic.fromJson(vetJson);
-    }).toList();
-    print(vetClinic);
-    /**
-     * Adding the markerss
-     */
-    if (!mounted) return;
-
+    petPharmacyController.getTotalData();
     setState(() {
-      isLoading = false;
+      petPharmacyController.isLoading = false;
     });
   }
 
@@ -121,8 +33,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    VetsMaps(
+                builder: (context) => VetsMaps(
                       vetClinic: data,
                     )));
       },
@@ -151,7 +62,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                 Text(
                   data.address,
                   style:
-                  TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
+                      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
                 ),
                 SizedBox(
                   height: 0.005.sh,
@@ -161,7 +72,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                   style: TextStyle(
                       fontSize: 15.sp,
                       color:
-                      data.timing ? Colors.greenAccent : Colors.redAccent),
+                          data.timing ? Colors.greenAccent : Colors.redAccent),
                 ),
                 SizedBox(
                   height: 0.005.sh,
@@ -174,11 +85,10 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                     itemCount: 5,
                     itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                     itemSize: 0.03.sh,
-                    itemBuilder: (context, _) =>
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
                     onRatingUpdate: (rating) {
                       print(rating);
                     },
@@ -195,32 +105,32 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
 
   void apisChanger() async {
     setState(() {
-      isLoading = true;
+      petPharmacyController.isLoading = true;
     });
-    if (dropdownvalue == apis[0]) {
-      apiChanger = 2500;
-      await getTotalData();
-      print(apiChanger);
+    if (petPharmacyController.dropdownvalue == petPharmacyController.apis[0]) {
+      petPharmacyController.apiChanger = 2500;
+      await petPharmacyController.getTotalData();
+      print(petPharmacyController.apiChanger);
     }
-    if (dropdownvalue == apis[1]) {
-      apiChanger = 5000;
-      await getTotalData();
-      print(apiChanger);
+    if (petPharmacyController.dropdownvalue == petPharmacyController.apis[1]) {
+      petPharmacyController.apiChanger = 5000;
+      await petPharmacyController.getTotalData();
+      print(petPharmacyController.apiChanger);
     }
-    if (dropdownvalue == apis[2]) {
-      apiChanger = 10000;
-      await getTotalData();
-      print(apiChanger);
+    if (petPharmacyController.dropdownvalue == petPharmacyController.apis[2]) {
+      petPharmacyController.apiChanger = 10000;
+      await petPharmacyController.getTotalData();
+      print(petPharmacyController.apiChanger);
     }
-    if (dropdownvalue == apis[3]) {
-      apiChanger = 25000;
-      await getTotalData();
-      print(apiChanger);
+    if (petPharmacyController.dropdownvalue == petPharmacyController.apis[3]) {
+      petPharmacyController.apiChanger = 25000;
+      await petPharmacyController.getTotalData();
+      print(petPharmacyController.apiChanger);
     }
-    if (dropdownvalue == apis[4]) {
-      apiChanger = 50000;
-      await getTotalData();
-      print(apiChanger);
+    if (petPharmacyController.dropdownvalue == petPharmacyController.apis[4]) {
+      petPharmacyController.apiChanger = 50000;
+      await petPharmacyController.getTotalData();
+      print(petPharmacyController.apiChanger);
     }
   }
 
@@ -263,10 +173,10 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                     padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                     height: 0.04.sh,
                     child: DropdownButton(
-                      value: dropdownvalue,
+                      value: petPharmacyController.dropdownvalue,
                       underline: SizedBox(),
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      items: apis.map((String items) {
+                      items: petPharmacyController.apis.map((String items) {
                         print(items);
                         return DropdownMenuItem(
                           value: items,
@@ -278,7 +188,7 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          dropdownvalue = newValue!;
+                          petPharmacyController.dropdownvalue = newValue!;
                         });
                         apisChanger();
                       },
@@ -293,33 +203,34 @@ class _PetPharmaciesPageState extends State<PetPharmaciesPage> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              isLoading
+              petPharmacyController.isLoading
                   ? Container(
-                width: 1.sw,
-                height: 0.7.sh,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 15.sp,
-                      width: 15.sp,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Color(0xffFF8B6A),
+                      width: 1.sw,
+                      height: 0.7.sh,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 15.sp,
+                            width: 15.sp,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xffFF8B6A),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              )
+                    )
                   : ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: vetClinic?.length,
-                itemBuilder: ((context, index) {
-                  return clinicTile(vetClinic![index]);
-                }),
-              )
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: petPharmacyController.vetClinic?.length,
+                      itemBuilder: ((context, index) {
+                        return clinicTile(
+                            petPharmacyController.vetClinic![index]);
+                      }),
+                    )
             ],
           ),
         ),
