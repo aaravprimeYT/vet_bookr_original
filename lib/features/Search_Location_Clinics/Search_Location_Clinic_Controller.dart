@@ -7,6 +7,7 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vet_bookr/constant.dart';
 
 import '../../models/vet_clinic.dart';
@@ -60,7 +61,8 @@ class SearchClinicController {
     List<VetClinic> vetClinicData = [];
 
     String searchVetApiURL =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=${latLng[0]},${latLng[1]}&radius=$distanceChanger&type=veterinary_care&key=${Constants.apiKey}";
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=${latLng[0]},${latLng[1]}&radius=$distanceChanger&type=veterinary_care&key=${Constants
+        .apiKey}";
 
     // Getting the data
     final response = await http.get(Uri.parse(searchVetApiURL));
@@ -75,7 +77,8 @@ class SearchClinicController {
     for (int i = 0; i < vetClinicData.length; i++) {
       String placeId = vetClinicData[i].placeId;
       String vetDetailsUrl =
-          "https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${Constants.apiKey}";
+          "https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${Constants
+          .apiKey}";
 
       final response = await http.get(Uri.parse(vetDetailsUrl));
 
@@ -92,7 +95,8 @@ class SearchClinicController {
     latLong = [lat!, lng!];
     List<VetClinic> searchVetClinics = [];
     String searchVetsApiURL =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=$lat,$lng&radius=2500&type=veterinary_care&key=${Constants.apiKey}";
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=$lat,$lng&radius=2500&type=veterinary_care&key=${Constants
+        .apiKey}";
 
     ///Getting the data
     final response = await http.get(Uri.parse(searchVetsApiURL));
@@ -110,8 +114,8 @@ class SearchClinicController {
     print(response.errorMessage);
   }
 
-  Future<List<VetClinic>> getSearchVetClinicsData(
-      BuildContext context, String selectedCountryCode) async {
+  Future<List<VetClinic>> getSearchVetClinicsData(BuildContext context,
+      String selectedCountryCode) async {
     Prediction? placePredictions = await PlacesAutocomplete.show(
         onError: onError,
         context: context,
@@ -131,7 +135,7 @@ class SearchClinicController {
         ),
         components: [Component(Component.country, selectedCountryCode)]);
     List<VetClinic> searchVetClinics =
-        await displayPrediction(placePredictions);
+    await displayPrediction(placePredictions);
     return searchVetClinics;
   }
 
@@ -143,7 +147,7 @@ class SearchClinicController {
         apiHeaders: await GoogleApiHeaders().getHeaders(),
       );
       PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(placePredictions.placeId!);
+      await _places.getDetailsByPlaceId(placePredictions.placeId!);
       final lat = detail.result.geometry?.location.lat;
       final lng = detail.result.geometry?.location.lng;
       List<VetClinic> searchVetsClinics = await searchVetsData(lat, lng);
@@ -156,4 +160,13 @@ class SearchClinicController {
   }
 
   List<double>? latLong;
+
+  Future<void> makeACall(String phone) async {
+    final call = Uri.parse('tel:' + phone);
+    if (await canLaunchUrl(call)) {
+      launchUrl(call);
+    } else {
+      throw 'Could not launch $call';
+    }
+  }
 }

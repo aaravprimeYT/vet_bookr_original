@@ -1,14 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/models/vet_clinic.dart';
+import 'package:vet_bookr/features/Pet_Restaurants/Pet_Restaurants_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
 class PetRestaurantsPage extends StatefulWidget {
@@ -19,95 +14,16 @@ class PetRestaurantsPage extends StatefulWidget {
 }
 
 class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
-  bool isLoading = true;
-
-  String dropdownvalue = 'in 2.5 Kms';
-
-  var apiChanger = 2500;
-
-  var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
+  PetRestaurantsController petRestaurantsController =
+      PetRestaurantsController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getTotalData();
-  }
-
-  late List<VetClinic>? vetClinic;
-
-  late GoogleMapController googleMapController;
-
-  static const String _kLocationServicesDisabledMessage =
-      'Location services are disabled.';
-  static const String _kPermissionDeniedMessage = 'Permission denied.';
-  static const String _kPermissionDeniedForeverMessage =
-      'Permission denied forever.';
-  static const String _kPermissionGrantedMessage = 'Permission granted.';
-
-  void _onMapCreated(GoogleMapController controller) {
-    googleMapController = controller;
-  }
-
-  Set<Marker> _markers = Set<Marker>();
-
-  Future<Position> determinePosition() async {
-    ///Check if location is enabled
-    bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
-
-    if (!isLocationEnabled) {
-      return Future.error(_kLocationServicesDisabledMessage);
-    }
-
-    /**
-     * Request Location Permission
-     */
-    await Geolocator.requestPermission();
-
-    ///Check if the kind of permission we got
-
-    LocationPermission locationPermission = await Geolocator.checkPermission();
-
-    if (locationPermission == LocationPermission.denied) {
-      return Future.error(_kPermissionDeniedMessage);
-    }
-
-    if (locationPermission == LocationPermission.deniedForever) {
-      return Future.error(_kPermissionDeniedForeverMessage);
-    }
-
-    return Geolocator.getCurrentPosition();
-  }
-
-  Future<List<double>> getLatLng() async {
-    Position position = await determinePosition();
-    List<double> latLong = [position.latitude, position.longitude];
-
-    return latLong;
-  }
-
-  Future<void> getTotalData() async {
-    List<double> latLng = await getLatLng();
-
-    String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+restaurant&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=pet_restaurants&key=${Constants.apiKey}";
-    final response = await http.get(Uri.parse(vetsUrl));
-
-    final Map<String, dynamic> data = jsonDecode(response.body);
-
-    print(data);
-    vetClinic = (data["results"] as List).map((vetJson) {
-      print(vetJson);
-      return VetClinic.fromJson(vetJson);
-    }).toList();
-    print(vetClinic);
-    /**
-     * Adding the markerss
-     */
-    if (!mounted) return;
-
+    petRestaurantsController.getTotalData();
     setState(() {
-      isLoading = false;
+      petRestaurantsController.isLoading = false;
     });
   }
 
@@ -189,32 +105,37 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
 
   void apisChanger() async {
     setState(() {
-      isLoading = true;
+      petRestaurantsController.isLoading = true;
     });
-    if (dropdownvalue == apis[0]) {
-      apiChanger = 2500;
-      await getTotalData();
-      print(apiChanger);
+    if (petRestaurantsController.dropdownvalue ==
+        petRestaurantsController.apis[0]) {
+      petRestaurantsController.apiChanger = 2500;
+      await petRestaurantsController.getTotalData();
+      print(petRestaurantsController.apiChanger);
     }
-    if (dropdownvalue == apis[1]) {
-      apiChanger = 5000;
-      await getTotalData();
-      print(apiChanger);
+    if (petRestaurantsController.dropdownvalue ==
+        petRestaurantsController.apis[1]) {
+      petRestaurantsController.apiChanger = 5000;
+      await petRestaurantsController.getTotalData();
+      print(petRestaurantsController.apiChanger);
     }
-    if (dropdownvalue == apis[2]) {
-      apiChanger = 10000;
-      await getTotalData();
-      print(apiChanger);
+    if (petRestaurantsController.dropdownvalue ==
+        petRestaurantsController.apis[2]) {
+      petRestaurantsController.apiChanger = 10000;
+      await petRestaurantsController.getTotalData();
+      print(petRestaurantsController.apiChanger);
     }
-    if (dropdownvalue == apis[3]) {
-      apiChanger = 25000;
-      await getTotalData();
-      print(apiChanger);
+    if (petRestaurantsController.dropdownvalue ==
+        petRestaurantsController.apis[3]) {
+      petRestaurantsController.apiChanger = 25000;
+      await petRestaurantsController.getTotalData();
+      print(petRestaurantsController.apiChanger);
     }
-    if (dropdownvalue == apis[4]) {
-      apiChanger = 50000;
-      await getTotalData();
-      print(apiChanger);
+    if (petRestaurantsController.dropdownvalue ==
+        petRestaurantsController.apis[4]) {
+      petRestaurantsController.apiChanger = 50000;
+      await petRestaurantsController.getTotalData();
+      print(petRestaurantsController.apiChanger);
     }
   }
 
@@ -259,10 +180,11 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                       padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                       height: 0.04.sh,
                       child: DropdownButton(
-                        value: dropdownvalue,
+                        value: petRestaurantsController.dropdownvalue,
                         underline: SizedBox(),
                         icon: const Icon(Icons.keyboard_arrow_down),
-                        items: apis.map((String items) {
+                        items:
+                            petRestaurantsController.apis.map((String items) {
                           print(items);
                           return DropdownMenuItem(
                             value: items,
@@ -274,7 +196,7 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
-                            dropdownvalue = newValue!;
+                            petRestaurantsController.dropdownvalue = newValue!;
                           });
                           apisChanger();
                         },
@@ -290,7 +212,7 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              isLoading
+              petRestaurantsController.isLoading
                   ? Container(
                       width: 1.sw,
                       height: 0.7.sh,
@@ -312,9 +234,10 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: vetClinic?.length,
+                      itemCount: petRestaurantsController.vetClinic?.length,
                       itemBuilder: ((context, index) {
-                        return clinicTile(vetClinic![index]);
+                        return clinicTile(
+                            petRestaurantsController.vetClinic![index]);
                       }),
                     )
             ],
