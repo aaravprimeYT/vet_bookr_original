@@ -6,9 +6,9 @@ class VetClinic {
   final double rating;
   final String address;
   final bool timing;
-  final String phone;
+  String phone;
 
-  const VetClinic(
+  VetClinic(
       {required this.name,
       required this.address,
       required this.rating,

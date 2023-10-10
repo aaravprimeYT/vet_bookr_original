@@ -5,10 +5,10 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Search_Location_Clinics/Search_Location_Clinic_Controller.dart';
+import 'package:vet_bookr/models/vet_clinic.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
 class SearchLocationClinics extends StatefulWidget {
-  // SearchLocationClinics(this.vetClinic);
   const SearchLocationClinics({super.key});
 
   @override
@@ -16,56 +16,50 @@ class SearchLocationClinics extends StatefulWidget {
 }
 
 class _SearchLocationClinicsState extends State<SearchLocationClinics> {
+  bool isLoading = true;
+  String dropdownValue = 'in 2.5 Kms';
+  int distanceChanger = 2500;
+  String selectedCountryCode = "in";
+  late List<VetClinic>? vetClinicList;
   SearchClinicController searchClinicController = SearchClinicController();
 
   @override
   void initState() {
     super.initState();
-    searchClinicController.getTotalData();
+    initialiseVetClinicData();
   }
 
-  void apisChanger() async {
+  Future<void> initialiseVetClinicData() async {
+    vetClinicList = await searchClinicController.getNearbyVets(distanceChanger);
     setState(() {
-      searchClinicController.isLoading = true;
+      isLoading = false;
     });
-    if (searchClinicController.dropdownvalue ==
-        searchClinicController.apis[0]) {
-      searchClinicController.apiChanger = 2500;
-      searchClinicController.getTotalData();
-      print(searchClinicController.apiChanger);
-      clinicTile(searchClinicController.vetClinic);
+  }
+
+  Future<void> distanceChangerHandler() async {
+    if (dropdownValue == searchClinicController.searchDistanceList[0]) {
+      distanceChanger = 2500;
+      await searchClinicController.getNearbyVets(distanceChanger);
     }
-    if (searchClinicController.dropdownvalue ==
-        searchClinicController.apis[1]) {
-      searchClinicController.apiChanger = 5000;
-      searchClinicController.getTotalData();
-      print(searchClinicController.apiChanger);
-      clinicTile(searchClinicController.vetClinic);
+    if (dropdownValue == searchClinicController.searchDistanceList[1]) {
+      distanceChanger = 5000;
+      await searchClinicController.getNearbyVets(distanceChanger);
     }
-    if (searchClinicController.dropdownvalue ==
-        searchClinicController.apis[2]) {
-      searchClinicController.apiChanger = 10000;
-      searchClinicController.getTotalData();
-      print(searchClinicController.apiChanger);
-      clinicTile(searchClinicController.vetClinic);
+    if (dropdownValue == searchClinicController.searchDistanceList[2]) {
+      distanceChanger = 10000;
+      await searchClinicController.getNearbyVets(distanceChanger);
     }
-    if (searchClinicController.dropdownvalue ==
-        searchClinicController.apis[3]) {
-      searchClinicController.apiChanger = 25000;
-      searchClinicController.getTotalData();
-      print(searchClinicController.apiChanger);
-      clinicTile(searchClinicController.vetClinic);
+    if (dropdownValue == searchClinicController.searchDistanceList[3]) {
+      distanceChanger = 25000;
+      await searchClinicController.getNearbyVets(distanceChanger);
     }
-    if (searchClinicController.dropdownvalue ==
-        searchClinicController.apis[4]) {
-      searchClinicController.apiChanger = 50000;
-      searchClinicController.getTotalData();
-      print(searchClinicController.apiChanger);
-      clinicTile(searchClinicController.vetClinic);
+    if (dropdownValue == searchClinicController.searchDistanceList[4]) {
+      distanceChanger = 50000;
+      await searchClinicController.getNearbyVets(distanceChanger);
     }
   }
 
-  clinicTile(data) {
+  Widget clinicTile(VetClinic data) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -148,7 +142,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.black,
           ),
@@ -160,7 +154,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
           Padding(
             padding: EdgeInsets.only(right: 5.sp),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.search,
                 color: Colors.black,
               ),
@@ -170,14 +164,18 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                     context: context,
                     onSelect: (Country country) {
                       setState(() {
-                        searchClinicController.selectedCountryCode =
-                            country.countryCode;
+                        selectedCountryCode = country.countryCode;
                       });
                     },
                     onClosed: () async {
-                      await searchClinicController.handlePressButton(context);
                       setState(() {
-                        searchClinicController.isLoading = false;
+                        isLoading = true;
+                      });
+                      vetClinicList =
+                          await searchClinicController.getSearchVetClinicsData(
+                              context, selectedCountryCode);
+                      setState(() {
+                        isLoading = false;
                       });
                     });
               },
@@ -207,10 +205,11 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                     padding: EdgeInsets.only(top: 0.02.sh, left: 0.01.sw),
                     height: 0.04.sh,
                     child: DropdownButton(
-                      value: searchClinicController.dropdownvalue,
+                      value: dropdownValue,
                       underline: SizedBox(),
                       icon: const Icon(Icons.keyboard_arrow_down),
-                      items: searchClinicController.apis.map((String items) {
+                      items: searchClinicController.searchDistanceList
+                          .map((String items) {
                         print(items);
                         return DropdownMenuItem(
                           value: items,
@@ -220,25 +219,28 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                           ),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
+                      onChanged: (String? newValue) async {
                         setState(() {
-                          searchClinicController.dropdownvalue = newValue!;
+                          isLoading = true;
+                          dropdownValue = newValue!;
                         });
-
-                        apisChanger();
+                        await distanceChangerHandler();
+                        setState(() {
+                          isLoading = false;
+                        });
                       },
                     ),
                   ),
                 ],
               ),
-              Divider(
+              const Divider(
                 thickness: 2,
                 color: Color(0xffFF8B6A),
                 indent: 15,
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              searchClinicController.isLoading
+              isLoading
                   ? Container(
                       width: 1.sw,
                       height: 0.7.sh,
@@ -249,7 +251,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                           Container(
                             height: 15.sp,
                             width: 15.sp,
-                            child: CircularProgressIndicator(
+                            child: const CircularProgressIndicator(
                               strokeWidth: 2,
                               color: Color(0xffFF8B6A),
                             ),
@@ -257,7 +259,7 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                         ],
                       ),
                     )
-                  : searchClinicController.vetClinic?.length == 0
+                  : vetClinicList!.isEmpty
                       ? Container(
                           height: 0.5.sh,
                           width: 1.sw,
@@ -275,12 +277,11 @@ class _SearchLocationClinicsState extends State<SearchLocationClinics> {
                         )
                       : ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: searchClinicController.vetClinic?.length,
-                          itemBuilder: ((context, index) {
-                            return clinicTile(
-                                searchClinicController.vetClinic![index]);
-                          }),
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: vetClinicList!.length,
+                          itemBuilder: (context, index) {
+                            return clinicTile(vetClinicList![index]);
+                          },
                         ),
             ],
           ),
