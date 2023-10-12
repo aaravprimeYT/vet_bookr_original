@@ -1,13 +1,14 @@
 import 'dart:io';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:vet_bookr/oScreens/addPet_screen.dart';
+
 import '../models/prescription.dart';
 
 class PrescriptionUpload extends StatefulWidget {
   final Function(List<Prescription> prescriptions) callBack;
+
   const PrescriptionUpload({super.key, required this.callBack});
 
   @override
@@ -31,16 +32,9 @@ class _PrescriptionUploadState extends State<PrescriptionUpload> {
 
   List<Prescription> prescArray = [];
 
-
-
-
   ImagePicker imagePicker = ImagePicker();
 
-
-
   final storageRef = FirebaseStorage.instance.ref();
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +53,9 @@ class _PrescriptionUploadState extends State<PrescriptionUpload> {
                 style: TextStyle(color: Color(0xffDD8229), fontSize: 24),
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xffFF8B6A),
@@ -103,7 +99,8 @@ class _PrescriptionUploadState extends State<PrescriptionUpload> {
                 widget.callBack(prescArray);
                 Navigator.pop(context);
               },
-              child: Text("Done"),),
+              child: Text("Done"),
+            ),
             SizedBox(
               height: 10,
             ),
@@ -116,8 +113,7 @@ class _PrescriptionUploadState extends State<PrescriptionUpload> {
             Expanded(
               child: Container(
                 height: 2000,
-                child:
-                GridView.builder(
+                child: GridView.builder(
                   itemCount: 6,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -125,51 +121,43 @@ class _PrescriptionUploadState extends State<PrescriptionUpload> {
                     crossAxisSpacing: 20,
                     childAspectRatio: 0.798,
                   ),
-                  itemBuilder: (context, index) =>
-                      Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: SizedBox(
-                              height: 150,
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width / 2.5,
-                              child: imageWidget(index),
-                            ),
-                          ),
-
-                          SizedBox(
-                            height: 95,
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width / 2.5,
-                            child: TextField(
-                              onChanged: (petName) {
-                                print(petName);
-                              },
-                              controller: controllerChanger(index),
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.all(10),
-                                hintText: 'Please Type Pets Diagnosis and Date',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                alignLabelWithHint: true,
-                              ),
-                              scrollPadding: const EdgeInsets.all(00.0),
-                              keyboardType: TextInputType.multiline,
-                              minLines: 2,
-                              maxLines: 2,
-                              style: const TextStyle(
-                                color: Colors.black,
-                              ),
-                              autofocus: false,
-                            ),
-                          ),
-                        ],
+                  itemBuilder: (context, index) => Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: SizedBox(
+                          height: 150,
+                          width: MediaQuery.of(context).size.width / 2.5,
+                          child: imageWidget(index),
+                        ),
                       ),
+                      SizedBox(
+                        height: 95,
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: TextField(
+                          onChanged: (petName) {
+                            print(petName);
+                          },
+                          controller: controllerChanger(index),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(10),
+                            hintText: 'Please Type Pets Diagnosis and Date',
+                            hintStyle: TextStyle(color: Colors.grey),
+                            alignLabelWithHint: true,
+                          ),
+                          scrollPadding: const EdgeInsets.all(00.0),
+                          keyboardType: TextInputType.multiline,
+                          minLines: 2,
+                          maxLines: 2,
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                          autofocus: false,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -182,27 +170,45 @@ class _PrescriptionUploadState extends State<PrescriptionUpload> {
   Widget imageWidget(int index) {
     if (index == 0) {
       return image1 != null
-          ? Image.file(File("${image1?.path}"), fit: BoxFit.cover,)
+          ? Image.file(
+              File("${image1?.path}"),
+              fit: BoxFit.cover,
+            )
           : elevatedWidget(index);
     } else if (index == 1) {
       return image2 != null
-          ? Image.file(File("${image2?.path}"), fit: BoxFit.cover,)
+          ? Image.file(
+              File("${image2?.path}"),
+              fit: BoxFit.cover,
+            )
           : elevatedWidget(index);
     } else if (index == 2) {
       return image3 != null
-          ? Image.file(File("${image3?.path}"), fit: BoxFit.cover,)
+          ? Image.file(
+              File("${image3?.path}"),
+              fit: BoxFit.cover,
+            )
           : elevatedWidget(index);
     } else if (index == 3) {
       return image4 != null
-          ? Image.file(File("${image4?.path}"), fit: BoxFit.cover,)
+          ? Image.file(
+              File("${image4?.path}"),
+              fit: BoxFit.cover,
+            )
           : elevatedWidget(index);
     } else if (index == 4) {
       return image5 != null
-          ? Image.file(File("${image5?.path}"), fit: BoxFit.cover,)
+          ? Image.file(
+              File("${image5?.path}"),
+              fit: BoxFit.cover,
+            )
           : elevatedWidget(index);
     } else {
       return image6 != null
-          ? Image.file(File("${image6?.path}"), fit: BoxFit.cover,)
+          ? Image.file(
+              File("${image6?.path}"),
+              fit: BoxFit.cover,
+            )
           : elevatedWidget(index);
     }
   }
@@ -227,7 +233,6 @@ class _PrescriptionUploadState extends State<PrescriptionUpload> {
               image6 = image;
             }
           });
-
         },
         child: Text("Select Image"));
   }

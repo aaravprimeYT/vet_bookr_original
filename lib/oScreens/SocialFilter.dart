@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/oScreens/petBoarding_page.dart';
-import 'package:vet_bookr/oScreens/petCafes_page.dart';
-import 'package:vet_bookr/oScreens/petGrooming_page.dart';
-import 'package:vet_bookr/oScreens/petParks_page.dart';
-import 'package:vet_bookr/oScreens/petResorts_page.dart';
-import 'package:vet_bookr/oScreens/petRestaurants_page.dart';
+import 'package:vet_bookr/features/Pet_Boarding/petBoarding_page.dart';
+import 'package:vet_bookr/features/Pet_Cafe/petCafes_page.dart';
+import 'package:vet_bookr/features/Pet_Grooming/petGrooming_page.dart';
+import 'package:vet_bookr/features/Pet_Parks/petParks_page.dart';
+import 'package:vet_bookr/features/Pet_Resorts/petResorts_page.dart';
+import 'package:vet_bookr/features/Pet_Restaurants/petRestaurants_page.dart';
 import 'package:vet_bookr/oScreens/petTrainers_page.dart';
 
 class PetSocialFilter extends StatelessWidget {
