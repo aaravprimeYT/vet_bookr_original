@@ -6,6 +6,8 @@ import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Pet_Resorts/Pet_Resorts_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
+import '../../models/vet_clinic.dart';
+
 class PetResortsPage extends StatefulWidget {
   // PetClinicsPage(this.vetClinic);
   const PetResortsPage({super.key});
@@ -16,12 +18,23 @@ class PetResortsPage extends StatefulWidget {
 
 class _PetResortsPageState extends State<PetResortsPage> {
   PetResortController petResortController = PetResortController();
+  bool isLoading = true;
+  String dropdownValue = 'in 2.5 Kms';
+  late List<VetClinic>? resortsList;
+  var distanceChanger = 2500;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    petResortController.getTotalData();
+    initialisePetResortData();
+  }
+
+  Future<void> initialisePetResortData() async {
+    resortsList = await petResortController.getResortsData(distanceChanger);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   clinicTile(data) {
@@ -74,24 +87,45 @@ class _PetResortsPageState extends State<PetResortsPage> {
                 SizedBox(
                   height: 0.005.sh,
                 ),
-                Container(
-                  child: RatingBar.builder(
-                    initialRating: data.rating,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                    itemSize: 0.03.sh,
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: RatingBar.builder(
+                        initialRating: data.rating,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                        itemSize: 0.03.sh,
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                        ignoreGestures: true,
+                      ),
                     ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                    ignoreGestures: true,
-                  ),
-                )
+                    TextButton(
+                      style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.sp)),
+                          backgroundColor: Color(0xffFF8B6A)),
+                      onPressed: () async {
+                        await petResortController.makeACall(data.phone);
+                      },
+                      child: Text(
+                        "Make a call",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 0.03.sw,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -102,32 +136,32 @@ class _PetResortsPageState extends State<PetResortsPage> {
 
   void apisChanger() async {
     setState(() {
-      petResortController.isLoading = true;
+      isLoading = true;
     });
-    if (petResortController.dropdownvalue == petResortController.apis[0]) {
-      petResortController.apiChanger = 2500;
-      await petResortController.getTotalData();
-      print(petResortController.apiChanger);
+    if (dropdownValue == petResortController.apis[0]) {
+      distanceChanger = 2500;
+      await petResortController.getResortsData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petResortController.dropdownvalue == petResortController.apis[1]) {
-      petResortController.apiChanger = 5000;
-      await petResortController.getTotalData();
-      print(petResortController.apiChanger);
+    if (dropdownValue == petResortController.apis[1]) {
+      distanceChanger = 5000;
+      await petResortController.getResortsData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petResortController.dropdownvalue == petResortController.apis[2]) {
-      petResortController.apiChanger = 10000;
-      await petResortController.getTotalData();
-      print(petResortController.apiChanger);
+    if (dropdownValue == petResortController.apis[2]) {
+      distanceChanger = 10000;
+      await petResortController.getResortsData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petResortController.dropdownvalue == petResortController.apis[3]) {
-      petResortController.apiChanger = 25000;
-      await petResortController.getTotalData();
-      print(petResortController.apiChanger);
+    if (dropdownValue == petResortController.apis[3]) {
+      distanceChanger = 25000;
+      await petResortController.getResortsData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petResortController.dropdownvalue == petResortController.apis[4]) {
-      petResortController.apiChanger = 50000;
-      await petResortController.getTotalData();
-      print(petResortController.apiChanger);
+    if (dropdownValue == petResortController.apis[4]) {
+      distanceChanger = 50000;
+      await petResortController.getResortsData(distanceChanger);
+      print(distanceChanger);
     }
   }
 
@@ -170,7 +204,7 @@ class _PetResortsPageState extends State<PetResortsPage> {
                     padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                     height: 0.04.sh,
                     child: DropdownButton(
-                      value: petResortController.dropdownvalue,
+                      value: dropdownValue,
                       underline: SizedBox(),
                       icon: const Icon(Icons.keyboard_arrow_down),
                       items: petResortController.apis.map((String items) {
@@ -185,7 +219,7 @@ class _PetResortsPageState extends State<PetResortsPage> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          petResortController.dropdownvalue = newValue!;
+                          dropdownValue = newValue!;
                         });
                         apisChanger();
                       },
@@ -200,7 +234,7 @@ class _PetResortsPageState extends State<PetResortsPage> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              petResortController.isLoading
+              isLoading
                   ? Container(
                       width: 1.sw,
                       height: 0.7.sh,
@@ -222,10 +256,9 @@ class _PetResortsPageState extends State<PetResortsPage> {
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: petResortController.vetClinic?.length,
+                      itemCount: resortsList!.length,
                       itemBuilder: ((context, index) {
-                        return clinicTile(
-                            petResortController.vetClinic![index]);
+                        return clinicTile(resortsList![index]);
                       }),
                     )
             ],

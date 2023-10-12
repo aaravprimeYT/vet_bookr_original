@@ -6,6 +6,8 @@ import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Pet_Boarding/Pet_Boarding_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
+import '../../models/vet_clinic.dart';
+
 class PetBoardersPage extends StatefulWidget {
   // PetBoardersPage(this.vetClinic);
   const PetBoardersPage({super.key});
@@ -15,15 +17,25 @@ class PetBoardersPage extends StatefulWidget {
 }
 
 class _PetBoardersPageState extends State<PetBoardersPage> {
+  bool isLoading = true;
+  String dropdownValue = 'in 2.5 Kms';
+  int distanceChanger = 2500;
+  String selectedCountryCode = "in";
+  late List<VetClinic>? petBoardersList;
   PetBoardingController petBoardingController = PetBoardingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    petBoardingController.getTotalData();
+    initialisePetBoarderData();
+  }
+
+  Future<void> initialisePetBoarderData() async {
+    petBoardersList =
+        await petBoardingController.getPetBoardersData(distanceChanger);
     setState(() {
-      petBoardingController.isLoading = false;
+      isLoading = false;
     });
   }
 
@@ -77,24 +89,45 @@ class _PetBoardersPageState extends State<PetBoardersPage> {
                 SizedBox(
                   height: 0.005.sh,
                 ),
-                Container(
-                  child: RatingBar.builder(
-                    initialRating: data.rating,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                    itemSize: 0.03.sh,
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: RatingBar.builder(
+                        initialRating: data.rating,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                        itemSize: 0.03.sh,
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                        ignoreGestures: true,
+                      ),
                     ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                    ignoreGestures: true,
-                  ),
-                )
+                    TextButton(
+                      style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.sp)),
+                          backgroundColor: Color(0xffFF8B6A)),
+                      onPressed: () async {
+                        await petBoardingController.makeACall(data.phone);
+                      },
+                      child: Text(
+                        "Make a call",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 0.03.sw,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -105,32 +138,27 @@ class _PetBoardersPageState extends State<PetBoardersPage> {
 
   void apisChanger() async {
     setState(() {
-      petBoardingController.isLoading = true;
+      isLoading = true;
     });
-    if (petBoardingController.dropdownvalue == petBoardingController.apis[0]) {
-      petBoardingController.apiChanger = 2500;
-      await petBoardingController.getTotalData();
-      print(petBoardingController.apiChanger);
+    if (dropdownValue == petBoardingController.apis[0]) {
+      distanceChanger = 2500;
+      await petBoardingController.getPetBoardersData(distanceChanger);
     }
-    if (petBoardingController.dropdownvalue == petBoardingController.apis[1]) {
-      petBoardingController.apiChanger = 5000;
-      await petBoardingController.getTotalData();
-      print(petBoardingController.apiChanger);
+    if (dropdownValue == petBoardingController.apis[1]) {
+      distanceChanger = 5000;
+      await petBoardingController.getPetBoardersData(distanceChanger);
     }
-    if (petBoardingController.dropdownvalue == petBoardingController.apis[2]) {
-      petBoardingController.apiChanger = 10000;
-      await petBoardingController.getTotalData();
-      print(petBoardingController.apiChanger);
+    if (dropdownValue == petBoardingController.apis[2]) {
+      distanceChanger = 10000;
+      await petBoardingController.getPetBoardersData(distanceChanger);
     }
-    if (petBoardingController.dropdownvalue == petBoardingController.apis[3]) {
-      petBoardingController.apiChanger = 25000;
-      await petBoardingController.getTotalData();
-      print(petBoardingController.apiChanger);
+    if (dropdownValue == petBoardingController.apis[3]) {
+      distanceChanger = 25000;
+      await petBoardingController.getPetBoardersData(distanceChanger);
     }
-    if (petBoardingController.dropdownvalue == petBoardingController.apis[4]) {
-      petBoardingController.apiChanger = 50000;
-      await petBoardingController.getTotalData();
-      print(petBoardingController.apiChanger);
+    if (dropdownValue == petBoardingController.apis[4]) {
+      distanceChanger = 50000;
+      await petBoardingController.getPetBoardersData(distanceChanger);
     }
   }
 
@@ -173,11 +201,10 @@ class _PetBoardersPageState extends State<PetBoardersPage> {
                     padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                     height: 0.04.sh,
                     child: DropdownButton(
-                      value: petBoardingController.dropdownvalue,
+                      value: dropdownValue,
                       underline: SizedBox(),
                       icon: const Icon(Icons.keyboard_arrow_down),
                       items: petBoardingController.apis.map((String items) {
-                        print(items);
                         return DropdownMenuItem(
                           value: items,
                           child: Text(
@@ -188,7 +215,7 @@ class _PetBoardersPageState extends State<PetBoardersPage> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          petBoardingController.dropdownvalue = newValue!;
+                          dropdownValue = newValue!;
                         });
                         apisChanger();
                       },
@@ -203,7 +230,7 @@ class _PetBoardersPageState extends State<PetBoardersPage> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              petBoardingController.isLoading
+              isLoading
                   ? Container(
                       width: 1.sw,
                       height: 0.7.sh,
@@ -225,10 +252,9 @@ class _PetBoardersPageState extends State<PetBoardersPage> {
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: petBoardingController.vetClinic?.length,
+                      itemCount: petBoardersList!.length,
                       itemBuilder: ((context, index) {
-                        return clinicTile(
-                            petBoardingController.vetClinic![index]);
+                        return clinicTile(petBoardersList![index]);
                       }),
                     )
             ],
