@@ -7,15 +7,7 @@ import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/vet_clinic.dart';
 
 class PetClinicController {
-  bool isLoading = true;
-
-  String dropdownvalue = 'in 2.5 Kms';
-
-  var apiChanger = 2500;
-
   var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
-
-  late List<VetClinic>? vetClinic;
 
   late GoogleMapController googleMapController;
 
@@ -33,12 +25,7 @@ class PetClinicController {
       return Future.error(_kLocationServicesDisabledMessage);
     }
 
-    /**
-     * Request Location Permission
-     */
     await Geolocator.requestPermission();
-
-    ///Check if the kind of permission we got
 
     LocationPermission locationPermission = await Geolocator.checkPermission();
 
@@ -60,26 +47,36 @@ class PetClinicController {
     return latLong;
   }
 
-  Future<void> getTotalData() async {
+  Future<List<VetClinic>> getClinicData(int distanceChanger) async {
     List<double> latLng = await getLatLng();
+    List<VetClinic> petClinicData = [];
 
-    String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=veterinary_care&key=${Constants.apiKey}";
+    String searchVetsData =
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=vets&location=${latLng[0]},${latLng[1]}&radius=$distanceChanger&type=veterinary_care&key=${Constants.apiKey}";
 
-    ///Getting the data
-    final response = await http.get(Uri.parse(vetsUrl));
+    final response = await http.get(Uri.parse(searchVetsData));
 
     final Map<String, dynamic> data = jsonDecode(response.body);
 
     print(data);
-    vetClinic = (data["results"] as List).map((vetJson) {
+    petClinicData = (data["results"] as List).map((vetJson) {
       print(vetJson);
       return VetClinic.fromJson(vetJson);
     }).toList();
-    print(vetClinic);
-    /**
-     * Adding the markerss
-     */
-    //if (!mounted) return;
+    print(petClinicData);
+
+    for (int i = 0; i < petClinicData.length; i++) {
+      String placeId = petClinicData[i].placeId;
+      String resortsDetailUrl =
+          "https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${Constants.apiKey}";
+
+      final response = await http.get(Uri.parse(resortsDetailUrl));
+
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      String phoneNumber = data['result']['formatted_phone_number'];
+
+      petClinicData[i].phone = phoneNumber;
+    }
+    return petClinicData;
   }
 }

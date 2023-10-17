@@ -6,6 +6,8 @@ import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Pet_Clinics/Pet_Clinics_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
+import '../../models/vet_clinic.dart';
+
 class PetClinicsPage extends StatefulWidget {
   // PetClinicsPage(this.vetClinic);
   const PetClinicsPage({super.key});
@@ -15,16 +17,24 @@ class PetClinicsPage extends StatefulWidget {
 }
 
 class _PetClinicsPageState extends State<PetClinicsPage> {
+  bool isLoading = true;
 
+  String dropdownValue = 'in 2.5 Kms';
+  late List<VetClinic>? clinicList;
+  var distanceChanger = 2500;
   PetClinicController petClinicController = PetClinicController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    petClinicController.getTotalData();
+    initialiseClinicData();
+  }
+
+  Future<void> initialiseClinicData() async {
+    clinicList = await petClinicController.getClinicData(distanceChanger);
     setState(() {
-      petClinicController.isLoading = false;
+      isLoading = false;
     });
   }
 
@@ -34,8 +44,7 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    VetsMaps(
+                builder: (context) => VetsMaps(
                       vetClinic: data,
                     )));
       },
@@ -64,7 +73,7 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                 Text(
                   data.address,
                   style:
-                  TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
+                      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w300),
                 ),
                 SizedBox(
                   height: 0.005.sh,
@@ -74,7 +83,7 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                   style: TextStyle(
                       fontSize: 15.sp,
                       color:
-                      data.timing ? Colors.greenAccent : Colors.redAccent),
+                          data.timing ? Colors.greenAccent : Colors.redAccent),
                 ),
                 SizedBox(
                   height: 0.005.sh,
@@ -87,11 +96,10 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                     itemCount: 5,
                     itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                     itemSize: 0.03.sh,
-                    itemBuilder: (context, _) =>
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
                     onRatingUpdate: (rating) {
                       print(rating);
                     },
@@ -108,32 +116,32 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
 
   void apisChanger() async {
     setState(() {
-      petClinicController.isLoading = true;
+      isLoading = true;
     });
-    if (petClinicController.dropdownvalue == petClinicController.apis[0]) {
-      petClinicController.apiChanger = 2500;
-      await petClinicController.getTotalData();
-      print(petClinicController.apiChanger);
+    if (dropdownValue == petClinicController.apis[0]) {
+      distanceChanger = 2500;
+      await petClinicController.getClinicData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petClinicController.dropdownvalue == petClinicController.apis[1]) {
-      petClinicController.apiChanger = 5000;
-      await petClinicController.getTotalData();
-      print(petClinicController.apiChanger);
+    if (dropdownValue == petClinicController.apis[1]) {
+      distanceChanger = 5000;
+      await petClinicController.getClinicData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petClinicController.dropdownvalue == petClinicController.apis[2]) {
-      petClinicController.apiChanger = 10000;
-      await petClinicController.getTotalData();
-      print(petClinicController.apiChanger);
+    if (dropdownValue == petClinicController.apis[2]) {
+      distanceChanger = 10000;
+      await petClinicController.getClinicData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petClinicController.dropdownvalue == petClinicController.apis[3]) {
-      petClinicController.apiChanger = 25000;
-      await petClinicController.getTotalData();
-      print(petClinicController.apiChanger);
+    if (dropdownValue == petClinicController.apis[3]) {
+      distanceChanger = 25000;
+      await petClinicController.getClinicData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petClinicController.dropdownvalue == petClinicController.apis[4]) {
-      petClinicController.apiChanger = 50000;
-      await petClinicController.getTotalData();
-      print(petClinicController.apiChanger);
+    if (dropdownValue == petClinicController.apis[4]) {
+      distanceChanger = 50000;
+      await petClinicController.getClinicData(distanceChanger);
+      print(distanceChanger);
     }
   }
 
@@ -176,7 +184,7 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                     padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                     height: 0.05.sh,
                     child: DropdownButton(
-                      value: petClinicController.dropdownvalue,
+                      value: dropdownValue,
                       underline: SizedBox(),
                       icon: const Icon(Icons.keyboard_arrow_down),
                       items: petClinicController.apis.map((String items) {
@@ -191,7 +199,7 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          petClinicController.dropdownvalue = newValue!;
+                          dropdownValue = newValue!;
                         });
                         apisChanger();
                       },
@@ -206,33 +214,33 @@ class _PetClinicsPageState extends State<PetClinicsPage> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              petClinicController.isLoading
+              isLoading
                   ? Container(
-                width: 1.sw,
-                height: 0.7.sh,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 15.sp,
-                      width: 15.sp,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Color(0xffFF8B6A),
+                      width: 1.sw,
+                      height: 0.7.sh,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 15.sp,
+                            width: 15.sp,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xffFF8B6A),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              )
+                    )
                   : ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: petClinicController.vetClinic?.length,
-                itemBuilder: ((context, index) {
-                  return clinicTile(petClinicController.vetClinic![index]);
-                }),
-              )
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: clinicList?.length,
+                      itemBuilder: ((context, index) {
+                        return clinicTile(clinicList![index]);
+                      }),
+                    )
             ],
           ),
         ),

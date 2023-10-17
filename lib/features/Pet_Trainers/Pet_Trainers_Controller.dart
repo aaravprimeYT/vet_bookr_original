@@ -7,9 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/models/vet_clinic.dart';
 
-class PetRestaurantsController {
+class PetTrainersController {
   var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
-
   late GoogleMapController googleMapController;
 
   static const String _kLocationServicesDisabledMessage =
@@ -19,6 +18,7 @@ class PetRestaurantsController {
       'Permission denied forever.';
 
   Future<Position> determinePosition() async {
+    ///Check if location is enabled
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!isLocationEnabled) {
@@ -26,7 +26,6 @@ class PetRestaurantsController {
     }
 
     await Geolocator.requestPermission();
-
 
     LocationPermission locationPermission = await Geolocator.checkPermission();
 
@@ -48,38 +47,38 @@ class PetRestaurantsController {
     return latLong;
   }
 
-  Future<List<VetClinic>> getRestuarantData(int distanceChanger) async {
+  Future<List<VetClinic>> getTrainersData(int distanceChanger) async {
     List<double> latLng = await getLatLng();
-    List<VetClinic> petRestaurantData = [];
+    List<VetClinic> petTrainersData = [];
 
-    String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+restaurant&location=${latLng[0]},${latLng[1]}&radius=$distanceChanger&type=pet_restaurants&key=${Constants
+    String trainerApiUrl =
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+trainers&location=${latLng[0]},${latLng[1]}&radius=$distanceChanger&type=pet_trainers&key=${Constants
         .apiKey}";
-    final response = await http.get(Uri.parse(vetsUrl));
+    final response = await http.get(Uri.parse(trainerApiUrl));
 
     final Map<String, dynamic> data = jsonDecode(response.body);
 
     print(data);
-    petRestaurantData = (data["results"] as List).map((vetJson) {
+    petTrainersData = (data["results"] as List).map((vetJson) {
       print(vetJson);
       return VetClinic.fromJson(vetJson);
     }).toList();
-    print(petRestaurantData);
+    print(petTrainersData);
 
-    for (int i = 0; i < petRestaurantData.length; i++) {
-      String placeId = petRestaurantData[i].placeId;
-      String restuarantDetailUrl =
+    for (int i = 0; i < petTrainersData.length; i++) {
+      String placeId = petTrainersData[i].placeId;
+      String trainerDetailUrl =
           "https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${Constants
           .apiKey}";
 
-      final response = await http.get(Uri.parse(restuarantDetailUrl));
+      final response = await http.get(Uri.parse(trainerDetailUrl));
 
       final Map<String, dynamic> data = jsonDecode(response.body);
       String phoneNumber = data['result']['formatted_phone_number'];
 
-      petRestaurantData[i].phone = phoneNumber;
+      petTrainersData[i].phone = phoneNumber;
     }
-    return petRestaurantData;
+    return petTrainersData;
   }
 
   Future<void> makeACall(String phone) async {

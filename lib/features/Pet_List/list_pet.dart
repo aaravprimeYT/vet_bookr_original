@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Menu/menu_screen.dart';
 
-import '../Add_Pet/addPet_screen.dart';
+import '../Add_Pet/Add_Pet_Options/Dog_Or_Cat.dart';
 import '../Delete_User/deleteUser.dart';
 import 'List_UI/list_ui.dart';
 
@@ -37,7 +37,7 @@ class _ListPetsState extends State<ListPets> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddPetHome()),
+            MaterialPageRoute(builder: (context) => PetSelectionPage()),
           );
         },
         backgroundColor: Color(0xffFF8B6A),

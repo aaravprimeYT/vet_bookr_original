@@ -8,7 +8,7 @@ import 'package:vet_bookr/features/Pet_Grooming/petGrooming_page.dart';
 import 'package:vet_bookr/features/Pet_Parks/petParks_page.dart';
 import 'package:vet_bookr/features/Pet_Resorts/petResorts_page.dart';
 import 'package:vet_bookr/features/Pet_Restaurants/petRestaurants_page.dart';
-import 'package:vet_bookr/oScreens/petTrainers_page.dart';
+import 'package:vet_bookr/features/Pet_Trainers/petTrainers_page.dart';
 
 class PetSocialFilter extends StatelessWidget {
   PetSocialFilter({Key? key}) : super(key: key);

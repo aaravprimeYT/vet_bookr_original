@@ -6,6 +6,8 @@ import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Pet_Restaurants/Pet_Restaurants_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
+import '../../models/vet_clinic.dart';
+
 class PetRestaurantsPage extends StatefulWidget {
   const PetRestaurantsPage({super.key});
 
@@ -17,13 +19,26 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
   PetRestaurantsController petRestaurantsController =
       PetRestaurantsController();
 
+  bool isLoading = true;
+
+  String dropdownValue = 'in 2.5 Kms';
+
+  var distanceChanger = 2500;
+
+  late List<VetClinic>? restaurantsList;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    petRestaurantsController.getTotalData();
+    initialisePetRestaurantData();
+  }
+
+  Future<void> initialisePetRestaurantData() async {
+    restaurantsList =
+        await petRestaurantsController.getRestuarantData(distanceChanger);
     setState(() {
-      petRestaurantsController.isLoading = false;
+      isLoading = false;
     });
   }
 
@@ -77,24 +92,45 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                 SizedBox(
                   height: 0.005.sh,
                 ),
-                Container(
-                  child: RatingBar.builder(
-                    initialRating: data.rating,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                    itemSize: 0.03.sh,
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: RatingBar.builder(
+                        initialRating: data.rating,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                        itemSize: 0.03.sh,
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                        ignoreGestures: true,
+                      ),
                     ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                    ignoreGestures: true,
-                  ),
-                )
+                    TextButton(
+                      style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.sp)),
+                          backgroundColor: Color(0xffFF8B6A)),
+                      onPressed: () async {
+                        await petRestaurantsController.makeACall(data.phone);
+                      },
+                      child: Text(
+                        "Make a call",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 0.03.sw,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -105,37 +141,32 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
 
   void apisChanger() async {
     setState(() {
-      petRestaurantsController.isLoading = true;
+      isLoading = true;
     });
-    if (petRestaurantsController.dropdownvalue ==
-        petRestaurantsController.apis[0]) {
-      petRestaurantsController.apiChanger = 2500;
-      await petRestaurantsController.getTotalData();
-      print(petRestaurantsController.apiChanger);
+    if (dropdownValue == petRestaurantsController.apis[0]) {
+      distanceChanger = 2500;
+      await petRestaurantsController.getRestuarantData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petRestaurantsController.dropdownvalue ==
-        petRestaurantsController.apis[1]) {
-      petRestaurantsController.apiChanger = 5000;
-      await petRestaurantsController.getTotalData();
-      print(petRestaurantsController.apiChanger);
+    if (dropdownValue == petRestaurantsController.apis[1]) {
+      distanceChanger = 5000;
+      await petRestaurantsController.getRestuarantData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petRestaurantsController.dropdownvalue ==
-        petRestaurantsController.apis[2]) {
-      petRestaurantsController.apiChanger = 10000;
-      await petRestaurantsController.getTotalData();
-      print(petRestaurantsController.apiChanger);
+    if (dropdownValue == petRestaurantsController.apis[2]) {
+      distanceChanger = 10000;
+      await petRestaurantsController.getRestuarantData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petRestaurantsController.dropdownvalue ==
-        petRestaurantsController.apis[3]) {
-      petRestaurantsController.apiChanger = 25000;
-      await petRestaurantsController.getTotalData();
-      print(petRestaurantsController.apiChanger);
+    if (dropdownValue == petRestaurantsController.apis[3]) {
+      distanceChanger = 25000;
+      await petRestaurantsController.getRestuarantData(distanceChanger);
+      print(distanceChanger);
     }
-    if (petRestaurantsController.dropdownvalue ==
-        petRestaurantsController.apis[4]) {
-      petRestaurantsController.apiChanger = 50000;
-      await petRestaurantsController.getTotalData();
-      print(petRestaurantsController.apiChanger);
+    if (dropdownValue == petRestaurantsController.apis[4]) {
+      distanceChanger = 50000;
+      await petRestaurantsController.getRestuarantData(distanceChanger);
+      print(distanceChanger);
     }
   }
 
@@ -180,7 +211,7 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                       padding: EdgeInsets.only(top: 0.017.sh, left: 0.01.sw),
                       height: 0.04.sh,
                       child: DropdownButton(
-                        value: petRestaurantsController.dropdownvalue,
+                        value: dropdownValue,
                         underline: SizedBox(),
                         icon: const Icon(Icons.keyboard_arrow_down),
                         items:
@@ -196,7 +227,7 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
-                            petRestaurantsController.dropdownvalue = newValue!;
+                            dropdownValue = newValue!;
                           });
                           apisChanger();
                         },
@@ -212,7 +243,7 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              petRestaurantsController.isLoading
+              isLoading
                   ? Container(
                       width: 1.sw,
                       height: 0.7.sh,
@@ -234,10 +265,9 @@ class _PetRestaurantsPageState extends State<PetRestaurantsPage> {
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: petRestaurantsController.vetClinic?.length,
+                      itemCount: restaurantsList!.length,
                       itemBuilder: ((context, index) {
-                        return clinicTile(
-                            petRestaurantsController.vetClinic![index]);
+                        return clinicTile(restaurantsList![index]);
                       }),
                     )
             ],
