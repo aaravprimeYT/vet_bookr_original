@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/features/Menu/menu_screen.dart';
+import 'package:vet_bookr/features/Carousel_Slider/Carousel_Slider_Page.dart';
 
 import '../Add_Pet/Add_Pet_Options/Dog_Or_Cat.dart';
 import '../Delete_User/deleteUser.dart';
@@ -51,16 +51,7 @@ class _ListPetsState extends State<ListPets> {
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: kBackgroundColor,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MenuScreen()));
-          },
-        ),
+        leading: Container(),
         actions: [
           Padding(
             padding: EdgeInsets.only(top: 0.015.sh),
@@ -89,11 +80,8 @@ class _ListPetsState extends State<ListPets> {
 
                     await preferences.setBool('isUserLoggedIn', false);
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MenuScreen()));
-                      print("log out");
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
                     });
                   } else if (value == 1) {
                     Navigator.pushReplacement(

@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../Pet_List/list_pet.dart';
+import 'package:vet_bookr/features/Bottom_Tab_Navigator/Bottom_Tab_Page.dart';
 
 class OTPController {
   bool isLoading = false;
@@ -72,7 +71,7 @@ class OTPController {
       preferences.setBool('isUserLoggedIn', true);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ListPets()));
+            context, MaterialPageRoute(builder: (context) => BottomTabPage()));
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == "invalid-verification-code") {

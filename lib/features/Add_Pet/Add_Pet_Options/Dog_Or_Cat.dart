@@ -19,28 +19,21 @@ class _PetSelectionPageState extends State<PetSelectionPage> {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: Padding(
-          padding: EdgeInsets.only(left: 0.15.sw),
-          child: Text(
-            'My Pet Details',
-            style: TextStyle(
-              color: Color(0xffF08519),
-              fontSize: 0.05.sw,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'My Pet Details',
+              style: TextStyle(
+                color: Color(0xffF08519),
+                fontSize: 0.05.sw,
+              ),
             ),
-          ),
+          ],
         ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: kBackgroundColor,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
       ),
       body: Padding(
         padding: EdgeInsets.only(left: 0.05.sw, top: 0.1.sh),

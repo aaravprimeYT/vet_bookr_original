@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:vet_bookr/features/Pet_Files/petFiles.dart';
+import 'package:vet_bookr/features/Pet_Files/Add_Pet_Files/AddPetFiles.dart';
+import 'package:vet_bookr/features/Pet_Files/File_UI/File_UI_Controller.dart';
 
 import '../constant.dart';
+import '../features/Pet_Files/petFiles.dart';
 
 class ShowPet extends StatefulWidget {
   ShowPet({Key? key, required this.details}) : super(key: key);
@@ -21,13 +23,32 @@ class ShowPet extends StatefulWidget {
 }
 
 class _ShowPetState extends State<ShowPet> {
+  FileUIController fileUIController = FileUIController();
   List<String> labels = ["Name", "Age", "Breed", "Weight"];
   bool editableText = false;
-
+  bool showRecord = true;
+  bool showProfile = false;
   String imageUrl = "";
+  Color profileButton = Colors.transparent;
+  Color recordButton = Color(0xff75C3F4);
+  bool isLoading = false;
+  FontWeight profileFont = FontWeight.w400;
+  FontWeight recordFont = FontWeight.bold;
+
+  Widget backgroundChanger() {
+    if (showRecord == true) {
+      print(showRecord);
+      return recordWidget();
+    } else if (showProfile == true) {
+      //print(showProfile);
+      return profileWidget();
+    }
+    return Text("wait");
+  }
 
   @override
   void initState() {
+    getPetFiles();
     // TODO: implement initState
     nameController.text = widget.details["name"];
     ageController.text = widget.details["age"];
@@ -51,8 +72,6 @@ class _ShowPetState extends State<ShowPet> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
-
-  bool isLoading = false;
 
   final nameController = TextEditingController();
   final ageController = TextEditingController();
@@ -94,6 +113,13 @@ class _ShowPetState extends State<ShowPet> {
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           backgroundColor: Colors.transparent,
           elevation: 0,
+          title: Padding(
+            padding: EdgeInsets.only(left: 0.175.sw),
+            child: Text(
+              "${widget.details["name"]}'s Details",
+              style: TextStyle(color: Color(0xffF08519), fontSize: 0.05.sw),
+            ),
+          ),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -201,181 +227,163 @@ class _ShowPetState extends State<ShowPet> {
                   //alignment: Alignment.center,
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.all(15.sp),
+                      padding: EdgeInsets.only(bottom: 15.sp),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // sBox(h: 10),
-                          Text(
-                            'Pet Information',
-                            style: TextStyle(
-                                color: Color(0xffF08519), fontSize: 0.05.sw),
-                          ),
-                          //      myPetTile()
-                          SizedBox(
-                            height: 0.05.sh,
-                          ),
-                          Stack(
-                            children: [
-                              CircleAvatar(
-                                radius: 0.095.sh,
-                                backgroundColor: Color(0xffFF8B6A),
-                                backgroundImage: profilePic == null
-                                    ? NetworkImage(
-                                        widget.details["profilePicture"],
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // sBox(h: 10),
+                            //      myPetTile()
+                            SizedBox(
+                              height: 0.015.sh,
+                            ),
+                            Stack(
+                              children: [
+                                Container(
+                                  height: 0.15.sh,
+                                  width: 0.15.sh,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.sp),
+                                    color: Color(0xffFF8B6A),
+                                  ),
+                                  child: profilePic == null
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.sp),
+                                          child: Image.network(
+                                            widget.details["profilePicture"],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.sp),
+                                          child: Image.file(
+                                            File(
+                                              "${profilePic?.path}",
+                                            ),
+                                          ),
+                                        ),
+                                ),
+                                editableText
+                                    ? Positioned(
+                                        right: 0.01.sw,
+                                        bottom: 0.005.sh,
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            profilePic = await ImagePicker()
+                                                .pickImage(
+                                                    source:
+                                                        ImageSource.gallery);
+                                            setState(() {});
+                                          },
+                                          child: CircleAvatar(
+                                            backgroundColor: Color(0xffFF8B6A),
+                                            radius: 0.02.sh,
+                                            child: Icon(
+                                              Icons.camera_alt_outlined,
+                                              size: 0.05.sw,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       )
-                                    : null,
-                                child: profilePic == null
-                                    ? Container(
+                                    : Container(
                                         width: 0,
                                         height: 0,
                                       )
-                                    : ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: Image.file(
-                                          File(
-                                            "${profilePic?.path}",
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                              editableText
-                                  ? Positioned(
-                                      right: 0.025.sw,
-                                      bottom: 0.005.sh,
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          profilePic = await ImagePicker()
-                                              .pickImage(
-                                                  source: ImageSource.gallery);
-                                          setState(() {});
-                                        },
-                                        child: CircleAvatar(
-                                          backgroundColor: Color(0xffFF8B6A),
-                                          radius: 0.02.sh,
-                                          child: Icon(
-                                            Icons.camera_alt_outlined,
-                                            size: 0.05.sw,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Container(
-                                      width: 0,
-                                      height: 0,
-                                    )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 0.02.sh,
-                          ),
-                          ...List.generate(
-                            4,
-                            (index) => Padding(
-                              padding: EdgeInsets.only(
-                                  top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
-                              child: TextField(
-                                enabled: editableText,
-                                controller: controllerChanger(index),
-                                style: TextStyle(fontSize: 0.017.sh),
-                                cursorColor: Colors.black,
-                                decoration: InputDecoration(
-                                  label: Text(labels[index],
-                                      style: TextStyle(fontSize: 0.02.sh)),
-                                  labelStyle: TextStyle(color: Colors.black54),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.sp),
-                                      borderSide:
-                                          BorderSide(color: Color(0xffFF8B6A))),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.sp),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.sp),
-                                      borderSide:
-                                          BorderSide(color: Color(0xffFF8B6A))),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 10.sp),
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                ),
-                              ),
+                              ],
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: 0.02.sh,
-                                left: 0.05.sw,
-                                right: 0.05.sw,
-                                bottom: 0.02.sh),
-                            child: TextField(
-                              enabled: editableText,
-                              onTap: () => {
-                                showDatePicker(
-                                        builder: (context, child) {
-                                          return Theme(
-                                            data: Theme.of(context).copyWith(
-                                              colorScheme: ColorScheme.light(
-                                                primary: Color(0xffFF8B6A),
-                                              ),
-                                              textButtonTheme:
-                                                  TextButtonThemeData(
-                                                style: TextButton.styleFrom(
-                                                  primary: Color(
-                                                      0xffFF8B6A), // button text color
-                                                ),
-                                              ),
-                                            ),
-                                            child: child!,
-                                          );
-                                        },
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate:
-                                            DateTime(DateTime.now().year - 4),
-                                        lastDate: DateTime.now())
-                                    .then((value) {
-                                  if (value == null) {
-                                    return;
-                                  } else {
+                            SizedBox(
+                              height: 0.025.sh,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
                                     setState(() {
-                                      widget.details["lastVaccinationDate"] =
-                                          "${value.day}/${value.month}/${value.year}";
+                                      showRecord = true;
+                                      showProfile = false;
+                                      profileButton = Colors.transparent;
+                                      recordButton = Color(0xff75C3F4);
+                                      recordFont = FontWeight.bold;
+                                      profileFont = FontWeight.w400;
                                     });
-                                  }
-                                })
-                              },
-                              controller: TextEditingController(
-                                  text:
-                                      "${widget.details["lastVaccinationDate"]}"),
-                              readOnly: true,
-                              style: TextStyle(fontSize: 0.017.sh),
-                              decoration: InputDecoration(
-                                label: Text("Last Vaccination Date",
-                                    style: TextStyle(fontSize: 0.02.sh)),
-                                labelStyle: TextStyle(color: Colors.black54),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.sp),
+                                  },
+                                  child: Stack(children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 0.5.sw,
+                                      child: Text(
+                                        'Records',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18.sp,
+                                            fontWeight: recordFont),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0.15.sw,
+                                      bottom: 0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.sp),
+                                            color: recordButton),
+                                        width: 0.2.sw,
+                                        height: 2,
+                                      ),
+                                    ),
+                                  ]),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.sp),
-                                    borderSide:
-                                        BorderSide(color: Color(0xffFF8B6A))),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.sp),
-                                    borderSide:
-                                        BorderSide(color: Color(0xffFF8B6A))),
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10.sp),
-                              ),
+                                GestureDetector(
+                                  onTap: () {
+                                    print(recordButton);
+                                    print(profileButton);
+                                    setState(() {
+                                      showRecord = false;
+                                      showProfile = true;
+                                      recordButton = Colors.transparent;
+                                      profileButton = Color(0xff75C3F4);
+                                      profileFont = FontWeight.bold;
+                                      recordFont = FontWeight.w400;
+                                    });
+                                  },
+                                  child: Stack(children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 0.5.sw,
+                                      child: Text(
+                                        'Profile',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18.sp,
+                                            fontWeight: profileFont),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0.15.sw,
+                                      bottom: 0,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.sp),
+                                            color: profileButton),
+                                        width: 0.2.sw,
+                                        height: 2,
+                                      ),
+                                    ),
+                                  ]),
+                                ),
+                              ],
                             ),
-                          ),
-                          buttonWidget()
-                        ],
-                      ),
+                            Container(
+                              width: 1.sw,
+                              height: 1,
+                              color: Color(0xff75C3F4).withOpacity(0.3),
+                            ),
+                            backgroundChanger(),
+                          ]),
                     ),
                   ),
                 ),
@@ -394,14 +402,30 @@ class _ShowPetState extends State<ShowPet> {
           children: [
             Container(
               width: 0.4.sw,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  backgroundColor: Color(0xffFF8B6A),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.sp),
-                  ),
-                ),
+              child: FloatingActionButton.extended(
+                label: isLoadingEdit
+                    ? Container(
+                        height: 15.sp,
+                        width: 15.sp,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.sp,
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            editableText ? "Save Changes" : "Add Records",
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 0.03.sw),
+                          ),
+                        ],
+                      ),
+                backgroundColor: Color(0xffFF8B6A),
                 onPressed: () async {
                   if (editableText) {
                     setState(() {
@@ -465,27 +489,12 @@ class _ShowPetState extends State<ShowPet> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PetFiles(
-                          petId: widget.details["id"],
-                        ),
+                        builder: (context) =>
+                            AddPetFiles(petId: widget.details["id"]),
                       ),
-                    );
+                    ).then((value) => getPetFiles());
                   }
                 },
-                child: isLoadingEdit
-                    ? Container(
-                        height: 15.sp,
-                        width: 15.sp,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2.sp,
-                        ),
-                      )
-                    : Text(
-                        editableText ? "Save Changes" : "Pet Health Records",
-                        style:
-                            TextStyle(color: Colors.white, fontSize: 0.03.sw),
-                      ),
               ),
             ),
           ],
@@ -495,5 +504,326 @@ class _ShowPetState extends State<ShowPet> {
         ),
       ],
     );
+  }
+
+  Widget profileWidget() {
+    return Column(
+      children: [
+        ...List.generate(
+          4,
+          (index) => Padding(
+            padding:
+                EdgeInsets.only(top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
+            child: TextField(
+              enabled: editableText,
+              controller: controllerChanger(index),
+              style: TextStyle(fontSize: 0.017.sh),
+              cursorColor: Colors.black,
+              decoration: InputDecoration(
+                label: Text(labels[index], style: TextStyle(fontSize: 0.02.sh)),
+                labelStyle: TextStyle(color: Colors.black54),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.sp),
+                    borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.sp),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.sp),
+                    borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10.sp),
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+              top: 0.02.sh, left: 0.05.sw, right: 0.05.sw, bottom: 0.02.sh),
+          child: TextField(
+            enabled: editableText,
+            onTap: () => {
+              showDatePicker(
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                              primary: Color(0xffFF8B6A),
+                            ),
+                            textButtonTheme: TextButtonThemeData(
+                              style: TextButton.styleFrom(
+                                primary: Color(0xffFF8B6A), // button text color
+                              ),
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(DateTime.now().year - 4),
+                      lastDate: DateTime.now())
+                  .then((value) {
+                if (value == null) {
+                  return;
+                } else {
+                  setState(() {
+                    widget.details["lastVaccinationDate"] =
+                        "${value.day}/${value.month}/${value.year}";
+                  });
+                }
+              })
+            },
+            controller: TextEditingController(
+                text: "${widget.details["lastVaccinationDate"]}"),
+            readOnly: true,
+            style: TextStyle(fontSize: 0.017.sh),
+            decoration: InputDecoration(
+              label: Text("Last Vaccination Date",
+                  style: TextStyle(fontSize: 0.02.sh)),
+              labelStyle: TextStyle(color: Colors.black54),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.sp),
+              ),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.sp),
+                  borderSide: BorderSide(color: Color(0xffFF8B6A))),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.sp),
+                  borderSide: BorderSide(color: Color(0xffFF8B6A))),
+              contentPadding: EdgeInsets.symmetric(horizontal: 10.sp),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget recordWidget() {
+    return isLoading
+        ? Container(
+            height: 15.sp,
+            width: 15.sp,
+            child: CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 2.sp,
+            ),
+          )
+        : Column(
+            children: [
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: petFileDetails.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 0.015.sh),
+                        child: Container(
+                          height: 140.sp,
+                          width: 0.9.sw,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.sp),
+                              color: Colors.white),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 0.01.sh, left: 0.03.sw),
+                                    child: Text(
+                                      petFileDetails[index]['name'],
+                                      style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 0.01.sh, right: 0.01.sw),
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 0.015.sh),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 0.03.sw),
+                                          child: Text(
+                                            "Administration Date: ",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.sp,
+                                              color: Color(0xff5D5D5D),
+                                            ),
+                                          ),
+                                        ),
+                                        Text(petFileDetails[index]
+                                                ["administrationDate"] ??
+                                            "No Administration Date")
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 0.006.sh),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 0.03.sw),
+                                          child: Text(
+                                            "Expiry Date: ",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.sp,
+                                              color: Color(0xff5D5D5D),
+                                            ),
+                                          ),
+                                        ),
+                                        Text(petFileDetails[index]
+                                                ["expiryDate"] ??
+                                            "No Expiry Date")
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 0.006.sh),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 0.03.sw),
+                                          child: Text(
+                                            "Notes: ",
+                                            style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.sp,
+                                              color: Color(0xff5D5D5D),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 16,
+                                          width: 0.7.sw,
+                                          child: Text(
+                                            petFileDetails[index]["notes"] ??
+                                                "No Notes",
+                                            style: TextStyle(
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 0.015.sh),
+                                child: Container(
+                                  width: 0.88.sw,
+                                  height: 0.03.sh,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                        padding: EdgeInsets.zero,
+                                        backgroundColor: Color(0xff7FC3F4),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.sp))),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PetFiles(
+                                              petFileDetails:
+                                                  petFileDetails[index]),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "View Record",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.sp),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      //Text(petFileDetails[index]['expiryDate'])
+                    ],
+                  );
+                },
+              ),
+              buttonWidget(),
+            ],
+          );
+  }
+
+  List<Map<String, dynamic>> petFileDetails = [];
+
+  Future<void> getPetFiles() async {
+    petFileDetails = [];
+    setState(() {
+      isLoading = true;
+    });
+    // 1. Get the ids
+    DocumentSnapshot<Map<String, dynamic>> petDoc = await FirebaseFirestore
+        .instance
+        .collection("petsDetails")
+        .doc(widget.details['id'])
+        .get();
+    List<dynamic> petFileIds = petDoc.data()!['petFiles'];
+    // 2. Loop through the ids
+    for (String fileId in petFileIds) {
+      DocumentSnapshot<Map<String, dynamic>> fileDetails =
+          await FirebaseFirestore.instance
+              .collection("petFiles")
+              .doc(fileId)
+              .get();
+      if (fileDetails.data() != null) {
+        petFileDetails.add(fileDetails.data()!);
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  //call expiryDateChecker in recordWidget
+  //if expiryDateChecker = true, display the date, else say text
+  //if function is made with string changer, where to call function
+
+  //if file does not have expiryDate, dont show expiry date
+  Future<bool> expiryDateChecker(index) async {
+    print(petFileDetails[index].containsKey("expiryDate"));
+    return petFileDetails[index].containsKey("expiryDate");
   }
 }

@@ -3,11 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/features/Pharmacy_Loading/pharma_Loading.dart';
 import 'package:vet_bookr/features/Social_Loading/social_loading.dart';
-import 'package:vet_bookr/features/Welcome_Page/welcome_screen.dart';
 
-import '../Pet_List/list_pet.dart';
 import '../Vet_Loading//clinicsloading.dart';
-import 'menu_controller.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -19,35 +16,11 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   bool isLoading = false;
 
-  final HomeController _menuController = HomeController();
+  //final HomeController _menuController = HomeController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.computer),
-            label: 'Pet-GPT',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_search),
-            label: 'Lost & Found',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Find',
-          ),
-        ],
-      ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -88,53 +61,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              bool loginCheck = _menuController.checkLogin();
-                              if (loginCheck) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ListPets(),
-                                  ),
-                                );
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => WelcomePage(),
-                                  ),
-                                );
-                              }
-                            },
-                            style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(0),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.transparent),
-                              shape: MaterialStateProperty.all(
-                                CircleBorder(),
-                              ),
-                            ),
-                            child: Image.asset(
-                              "assets/My_Pet_Profile.png",
-                              width: 0.27.sw,
-                              height: 0.27.sw,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 0.01.sh,
-                          ),
-                          Text(
-                            "My Pets",
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontFamily: "Vintage Style",
-                            ),
-                          ),
-                        ],
-                      ),
                       Column(
                         children: [
                           ElevatedButton(

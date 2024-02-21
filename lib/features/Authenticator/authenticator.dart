@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vet_bookr/constant.dart';
-import 'package:vet_bookr/features/Menu/menu_screen.dart';
-import 'package:vet_bookr/features/Welcome_Page/welcome_screen.dart';
+import 'package:vet_bookr/features/Bottom_Tab_Navigator/Bottom_Tab_Page.dart';
+
+import '../Carousel_Slider/Carousel_Slider_Page.dart';
 
 class Authenticator extends StatefulWidget {
   const Authenticator({Key? key}) : super(key: key);
@@ -29,18 +30,18 @@ class _AuthenticatorState extends State<Authenticator> {
     if (currentUser == null || loginCheck == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => WelcomePage()));
+            context, MaterialPageRoute(builder: (context) => HomePage()));
       });
     } else {
       if (loginCheck == true) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => MenuScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => BottomTabPage()));
         });
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => WelcomePage()));
+              context, MaterialPageRoute(builder: (context) => HomePage()));
         });
       }
     }

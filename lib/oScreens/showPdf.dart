@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ImageViewer extends StatelessWidget {
-  ImageViewer({Key? key, required this.urls, required this.diseaseName})
+class ShowPdf extends StatelessWidget {
+  ShowPdf(
+      {Key? key,
+      required this.urls,
+      required this.diseaseName,
+      required this.index})
       : super(key: key);
-
+  int index;
   List<dynamic> urls = [];
   String diseaseName;
 
   @override
   Widget build(BuildContext context) {
+    print(urls[index]);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -17,26 +23,22 @@ class ImageViewer extends StatelessWidget {
         title: Text(diseaseName),
       ),
       body: Container(
-        child: ListView.builder(
-          itemCount: urls.length,
-          itemBuilder: (context, index) {
-            return Container(
-              width: 1.sw,
-              margin: EdgeInsets.only(
-                left: 0.05.sw,
-                right: 0.05.sw,
-                top: 0.02.sh,
-              ),
-              child: InteractiveViewer(
-                minScale: 0.1,
-                maxScale: 1.6,
-                child: Image.network(
-                  "${urls[index]}",
-                  fit: BoxFit.contain,
-                ),
-              ),
-            );
+        height: 1.sh,
+        width: 1.sw,
+        child: PDF(
+          enableSwipe: true,
+          swipeHorizontal: false,
+          autoSpacing: false,
+          pageFling: false,
+          onError: (error) {
+            print(error.toString());
           },
+        ).cachedFromUrl(
+          urls[index],
+          placeholder: (progress) => Text('$progress %'),
+          errorWidget: (err) => Text(
+            err.toString(),
+          ),
         ),
       ),
     );

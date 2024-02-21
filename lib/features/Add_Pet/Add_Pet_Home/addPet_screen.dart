@@ -15,13 +15,15 @@ class AddPetHome extends StatefulWidget {
 }
 
 String petName = "";
-int petAge = 0;
 double petWeight = 0;
 String petBreed = "";
 String vaccinationDate = "";
+String birthdayDate = "";
 
+final vaccinationController = TextEditingController();
 final nameController = TextEditingController();
-final ageController = TextEditingController();
+final noteController = TextEditingController();
+final birthdayController = TextEditingController();
 final breedController = TextEditingController();
 final weightController = TextEditingController();
 
@@ -112,7 +114,7 @@ class _AddPetHomeState extends State<AddPetHome> {
                     height: 15,
                   ),
                   ...List.generate(
-                    4,
+                    3,
                     (index) => Padding(
                       padding: EdgeInsets.only(
                           top: 0.02.sh, left: 0.05.sw, right: 0.05.sw),
@@ -138,12 +140,12 @@ class _AddPetHomeState extends State<AddPetHome> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        top: 0.02.sh,
-                        left: 0.05.sw,
-                        right: 0.05.sw,
-                        bottom: 0.02.sh),
+                      top: 0.02.sh,
+                      left: 0.05.sw,
+                      right: 0.05.sw,
+                    ),
                     child: TextField(
-                        controller: addPetController.vaccinationController,
+                        controller: birthdayController,
                         onTap: () => {
                               showDatePicker(
                                       builder: (context, child) {
@@ -172,7 +174,73 @@ class _AddPetHomeState extends State<AddPetHome> {
                                 if (value == null) {
                                   return;
                                 } else {
-                                  addPetController.vaccinationController.text =
+                                  birthdayController.text =
+                                      "${value.day}/${value.month}/${value.year}";
+                                }
+                              })
+                            },
+                        readOnly: true,
+                        style: TextStyle(fontSize: 0.017.sh),
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.sp),
+                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.sp),
+                              borderSide: BorderSide(color: Color(0xffFF8B6A))),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 0.03.sw,
+                          ),
+                          hintText: "Birthday",
+                          hintStyle:
+                              TextStyle(color: Colors.grey, fontSize: 0.017.sh),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onChanged: (name) {
+                          setState(() {
+                            birthdayDate = birthdayController as String;
+                          });
+                        }),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 0.02.sh,
+                        left: 0.05.sw,
+                        right: 0.05.sw,
+                        bottom: 0.02.sh),
+                    child: TextField(
+                        controller: vaccinationController,
+                        onTap: () => {
+                              showDatePicker(
+                                      builder: (context, child) {
+                                        return Theme(
+                                          data: Theme.of(context).copyWith(
+                                            colorScheme: ColorScheme.light(
+                                              primary: Color(0xffFF8B6A),
+                                            ),
+                                            textButtonTheme:
+                                                TextButtonThemeData(
+                                              style: TextButton.styleFrom(
+                                                primary: Color(
+                                                    0xffFF8B6A), // button text color
+                                              ),
+                                            ),
+                                          ),
+                                          child: child!,
+                                        );
+                                      },
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate:
+                                          DateTime(DateTime.now().year - 4),
+                                      lastDate: DateTime.now())
+                                  .then((value) {
+                                if (value == null) {
+                                  return;
+                                } else {
+                                  vaccinationController.text =
                                       "${value.day}/${value.month}/${value.year}";
                                 }
                               })
@@ -198,8 +266,7 @@ class _AddPetHomeState extends State<AddPetHome> {
                         ),
                         onChanged: (name) {
                           setState(() {
-                            vaccinationDate = addPetController
-                                .vaccinationController as String;
+                            vaccinationDate = vaccinationController as String;
                           });
                         }),
                   ),
@@ -242,7 +309,7 @@ class _AddPetHomeState extends State<AddPetHome> {
                       addPetController.isLoading = true;
                     });
                     if (isEmpty ||
-                        addPetController.vaccinationController.text == "" ||
+                        vaccinationController.text == "" ||
                         addPetController.profilePic?.path == null) {
                       const snackBar = SnackBar(
                         content: Text("One of these fields is empty"),
@@ -258,18 +325,17 @@ class _AddPetHomeState extends State<AddPetHome> {
 
                       Map<String, dynamic> addedPet = {
                         "name": addPetController.controllerChanger(0).text,
-                        "age": addPetController.controllerChanger(1).text,
-                        "weight": addPetController.controllerChanger(3).text,
-                        "breed": addPetController.controllerChanger(2).text,
+                        "age": birthdayController.text,
+                        "weight": addPetController.controllerChanger(2).text,
+                        "breed": addPetController.controllerChanger(1).text,
                         "profilePicture": addPetController.imageUrl,
                         "id": "",
                         "petFiles": [],
-                        "lastVaccinationDate":
-                            addPetController.vaccinationController.text
+                        "lastVaccinationDate": vaccinationController.text
                       };
                       await addPetController.addPetToFireStore(
                           addedPet, context);
-                      for (var i = 0; i < 4; i++) {
+                      for (var i = 0; i < 3; i++) {
                         addPetController.controllerChanger(i).clear();
                       }
                       Navigator.pop(context);
@@ -301,18 +367,3 @@ class _AddPetHomeState extends State<AddPetHome> {
     );
   }
 }
-
-// variableChanger(index, value) {
-//   if (index == 0) {
-//     return petName = value;
-//   }
-//   if (index == 1) {
-//     return petAge = value;
-//   }
-//   if (index == 2) {
-//     return petBreed = value;
-//   }
-//   if (index == 3) {
-//     return petWeight = value;
-//   }
-// }

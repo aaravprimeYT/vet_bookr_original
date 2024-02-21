@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Login/login_page.dart';
-import 'package:vet_bookr/features/Menu/menu_screen.dart';
 import 'package:vet_bookr/features/Signup/signup_page.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -18,19 +16,8 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: kBackgroundColor,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MenuScreen()));
-          },
-        ),
       ),
       backgroundColor: kBackgroundColor,
       body: SingleChildScrollView(

@@ -7,6 +7,8 @@ import 'package:vet_bookr/constant.dart';
 import 'package:vet_bookr/features/Search_Location_Pharmacies/Search_Pharmacy_Controller.dart';
 import 'package:vet_bookr/oScreens/vetMaps.dart';
 
+import '../../models/vet_clinic.dart';
+
 class SearchLocationPharmacy extends StatefulWidget {
   // SearchLocationPharmacy(this.vetClinic);
   const SearchLocationPharmacy({super.key});
@@ -16,53 +18,56 @@ class SearchLocationPharmacy extends StatefulWidget {
 }
 
 class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
+  bool isLoading = true;
+
+  String dropdownValue = 'in 2.5 Kms';
+  late List<VetClinic>? searchPharmacyList;
+
+  String selectedCountryCode = "in";
+
+  var distanceChanger = 2500;
   SearchPharmacyController searchPharmacyController =
       SearchPharmacyController();
 
   @override
   void initState() {
     super.initState();
-    searchPharmacyController.getTotalData();
+    searchPharmacyController.getNearbyPharmacies(distanceChanger);
   }
 
   void apisChanger() async {
     setState(() {
-      searchPharmacyController.isLoading = true;
+      isLoading = true;
     });
-    if (searchPharmacyController.dropdownvalue ==
-        searchPharmacyController.apis[0]) {
-      searchPharmacyController.apiChanger = 2500;
-      searchPharmacyController.getTotalData();
-      print(searchPharmacyController.apiChanger);
-      clinicTile(searchPharmacyController.vetClinic);
+    if (dropdownValue == searchPharmacyController.apis[0]) {
+      distanceChanger = 2500;
+      searchPharmacyController.getNearbyPharmacies(distanceChanger);
+      print(distanceChanger);
+      clinicTile(searchPharmacyList);
     }
-    if (searchPharmacyController.dropdownvalue ==
-        searchPharmacyController.apis[1]) {
-      searchPharmacyController.apiChanger = 5000;
-      searchPharmacyController.getTotalData();
-      print(searchPharmacyController.apiChanger);
-      clinicTile(searchPharmacyController.vetClinic);
+    if (dropdownValue == searchPharmacyController.apis[1]) {
+      distanceChanger = 5000;
+      searchPharmacyController.getNearbyPharmacies(distanceChanger);
+      print(distanceChanger);
+      clinicTile(searchPharmacyList);
     }
-    if (searchPharmacyController.dropdownvalue ==
-        searchPharmacyController.apis[2]) {
-      searchPharmacyController.apiChanger = 10000;
-      searchPharmacyController.getTotalData();
-      print(searchPharmacyController.apiChanger);
-      clinicTile(searchPharmacyController.vetClinic);
+    if (dropdownValue == searchPharmacyController.apis[2]) {
+      distanceChanger = 10000;
+      searchPharmacyController.getNearbyPharmacies(distanceChanger);
+      print(distanceChanger);
+      clinicTile(searchPharmacyList);
     }
-    if (searchPharmacyController.dropdownvalue ==
-        searchPharmacyController.apis[3]) {
-      searchPharmacyController.apiChanger = 25000;
-      searchPharmacyController.getTotalData();
-      print(searchPharmacyController.apiChanger);
-      clinicTile(searchPharmacyController.vetClinic);
+    if (dropdownValue == searchPharmacyController.apis[3]) {
+      distanceChanger = 25000;
+      searchPharmacyController.getNearbyPharmacies(distanceChanger);
+      print(distanceChanger);
+      clinicTile(searchPharmacyList);
     }
-    if (searchPharmacyController.dropdownvalue ==
-        searchPharmacyController.apis[4]) {
-      searchPharmacyController.apiChanger = 50000;
-      searchPharmacyController.getTotalData();
-      print(searchPharmacyController.apiChanger);
-      clinicTile(searchPharmacyController.vetClinic);
+    if (dropdownValue == searchPharmacyController.apis[4]) {
+      distanceChanger = 50000;
+      searchPharmacyController.getNearbyPharmacies(distanceChanger);
+      print(distanceChanger);
+      clinicTile(searchPharmacyList);
     }
   }
 
@@ -172,14 +177,14 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                     context: context,
                     onSelect: (Country country) {
                       setState(() {
-                        searchPharmacyController.selectedCountryCode =
-                            country.countryCode;
+                        selectedCountryCode = country.countryCode;
                       });
                     },
                     onClosed: () async {
-                      await searchPharmacyController.handlePressButton(context);
+                      await searchPharmacyController.getSearchPharmacyData(
+                          context, selectedCountryCode);
                       setState(() {
-                        searchPharmacyController.isLoading = false;
+                        isLoading = false;
                       });
                     });
               },
@@ -209,7 +214,7 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                     padding: EdgeInsets.only(top: 0.02.sh, left: 0.01.sw),
                     height: 0.04.sh,
                     child: DropdownButton(
-                      value: searchPharmacyController.dropdownvalue,
+                      value: dropdownValue,
                       underline: SizedBox(),
                       icon: const Icon(Icons.keyboard_arrow_down),
                       items: searchPharmacyController.apis.map((String items) {
@@ -224,7 +229,7 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          searchPharmacyController.dropdownvalue = newValue!;
+                          dropdownValue = newValue!;
                         });
                         apisChanger();
                       },
@@ -239,7 +244,7 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                 endIndent: 10,
               ),
               // sBox(h: 1),
-              searchPharmacyController.isLoading
+              isLoading
                   ? Container(
                       width: 1.sw,
                       height: 0.7.sh,
@@ -258,7 +263,7 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                         ],
                       ),
                     )
-                  : searchPharmacyController.vetClinic?.length == 0
+                  : searchPharmacyList?.length == 0
                       ? Container(
                           height: 0.5.sh,
                           width: 1.sw,
@@ -277,10 +282,10 @@ class _SearchLocationPharmacyState extends State<SearchLocationPharmacy> {
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: searchPharmacyController.vetClinic?.length,
+                          itemCount: searchPharmacyList!.length,
                           itemBuilder: ((context, index) {
                             return clinicTile(
-                              searchPharmacyController.vetClinic![index],
+                              searchPharmacyList![index],
                             );
                           }),
                         ),

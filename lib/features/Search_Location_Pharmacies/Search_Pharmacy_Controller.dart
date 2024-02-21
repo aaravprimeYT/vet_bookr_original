@@ -7,20 +7,13 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vet_bookr/constant.dart';
 
 import '../../models/vet_clinic.dart';
 
 class SearchPharmacyController {
-  bool isLoading = true;
-
-  String dropdownvalue = 'in 2.5 Kms';
-
-  var apiChanger = 2500;
-
   var apis = ['in 2.5 Kms', 'in 5 Kms', 'in 10 Kms', 'in 25 Kms', 'in 50 Kms'];
-
-  late List<VetClinic>? vetClinic;
 
   late GoogleMapController googleMapController;
 
@@ -31,19 +24,13 @@ class SearchPharmacyController {
       'Permission denied forever.';
 
   Future<Position> determinePosition() async {
-    ///Check if location is enabled
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!isLocationEnabled) {
       return Future.error(_kLocationServicesDisabledMessage);
     }
 
-    /**
-     * Request Location Permission
-     */
     await Geolocator.requestPermission();
-
-    ///Check if the kind of permission we got
 
     LocationPermission locationPermission = await Geolocator.checkPermission();
 
@@ -65,51 +52,57 @@ class SearchPharmacyController {
     return latLong;
   }
 
-  Future<void> getTotalData() async {
+  Future<List<VetClinic>> getNearbyPharmacies(int distanceChanger) async {
     List<double> latLng = await getLatLng();
+    List<VetClinic> pharmacyData = [];
 
-    String vetsUrl =
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+pharmacies+near+me&location=${latLng[0]},${latLng[1]}&radius=$apiChanger&type=veterinary_pharmacy&key=${Constants.apiKey}";
+    String pharmacyApiUrl =
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+pharmacies+near+me&location=${latLng[0]},${latLng[1]}&radius=$distanceChanger&type=veterinary_pharmacy&key=${Constants.apiKey}";
 
     ///Getting the data
-    final response = await http.get(Uri.parse(vetsUrl));
+    final response = await http.get(Uri.parse(pharmacyApiUrl));
 
     final Map<String, dynamic> data = jsonDecode(response.body);
 
     print(data);
-    vetClinic = (data["results"] as List).map((vetJson) {
+    pharmacyData = (data["results"] as List).map((vetJson) {
       print(vetJson);
       return VetClinic.fromJson(vetJson);
     }).toList();
-    print(vetClinic);
-    /**
-     * Adding the markerss
-     */
+    print(pharmacyData);
 
-    isLoading = false;
+    for (int i = 0; i < pharmacyData.length; i++) {
+      String placeId = pharmacyData[i].placeId;
+      String pharmacyDetailUrl =
+          "https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${Constants.apiKey}";
+
+      final response = await http.get(Uri.parse(pharmacyDetailUrl));
+
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      String phoneNumber = data['result']['formatted_phone_number'];
+
+      pharmacyData[i].phone = phoneNumber;
+    }
+    return pharmacyData;
   }
 
-  Future<void> getTotalSearchData(var lat, var lng) async {
-    isLoading = true;
-    String vetsUrl =
+  Future<List<VetClinic>> searchPharmacyData(double? lat, double? lng) async {
+    latLong = [lat!, lng!];
+    List<VetClinic> searchPharmacies = [];
+    String searchPharmacyData =
         "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=pet+pharmacies+near+me&location=$lat,$lng&radius=2500&type=veterinary_pharmacy&key=${Constants.apiKey}";
 
     ///Getting the data
-    final response = await http.get(Uri.parse(vetsUrl));
+    final response = await http.get(Uri.parse(searchPharmacyData));
 
     final Map<String, dynamic> data = jsonDecode(response.body);
 
     print(data);
-    vetClinic = (data["results"] as List).map((vetJson) {
+    searchPharmacies = (data["results"] as List).map((vetJson) {
       print(vetJson);
       return VetClinic.fromJson(vetJson);
     }).toList();
-    print(vetClinic);
-    /**
-     * Adding the markerss
-     */
-
-    isLoading = false;
+    return searchPharmacies;
   }
 
   void onError(PlacesAutocompleteResponse response) {
@@ -117,13 +110,12 @@ class SearchPharmacyController {
     print(response.errorMessage);
   }
 
-  Future<void> handlePressButton(BuildContext context) async {
-    // show input autocomplete with selected mode
-    // then get the Prediction selected
-    Prediction? p = await PlacesAutocomplete.show(
+  Future<List<VetClinic>> getSearchPharmacyData(
+      BuildContext context, String selectedCountryCode) async {
+    Prediction? placePredictions = await PlacesAutocomplete.show(
         onError: onError,
         context: context,
-        apiKey: "AIzaSyA1zlr6L_Ogiwf8uqwEOdKOpGcwra3xJUY",
+        apiKey: Constants.apiKey,
         //onError: onError,
         mode: Mode.overlay,
         types: [],
@@ -140,27 +132,39 @@ class SearchPharmacyController {
           ),
         ),
         components: [Component(Component.country, selectedCountryCode)]);
-    print("Prediction");
-    print(p);
-    await displayPrediction(p);
+    List<VetClinic> searchPharmacies =
+        await displayPrediction(placePredictions);
+    return searchPharmacies;
   }
 
-  String selectedCountryCode = "in";
-
-  Future<void> displayPrediction(Prediction? p) async {
-    if (p != null) {
+  Future<List<VetClinic>> displayPrediction(Prediction? placePrediction) async {
+    if (placePrediction != null) {
       // get detail (lat/lng)
       GoogleMapsPlaces _places = GoogleMapsPlaces(
         apiKey: "AIzaSyA1zlr6L_Ogiwf8uqwEOdKOpGcwra3xJUY",
         apiHeaders: await GoogleApiHeaders().getHeaders(),
       );
       PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(p.placeId!);
+          await _places.getDetailsByPlaceId(placePrediction.placeId!);
       final lat = detail.result.geometry?.location.lat;
       final lng = detail.result.geometry?.location.lng;
-      await getTotalSearchData(lat, lng);
-      print("$lat,$lng");
-      //print("${p.description} - $lat/$lng");
+      List<VetClinic> searchPharmacies = await searchPharmacyData(lat, lng);
+      latLong![0] = lat!;
+      latLong![1] = lng!;
+      return searchPharmacies;
+    } else {
+      return [];
+    }
+  }
+
+  List<double>? latLong;
+
+  Future<void> makeACall(String phone) async {
+    final call = Uri.parse('tel:' + phone);
+    if (await canLaunchUrl(call)) {
+      launchUrl(call);
+    } else {
+      throw 'Could not launch $call';
     }
   }
 }

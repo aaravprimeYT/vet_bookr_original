@@ -16,7 +16,6 @@ class AddPetController {
 
   bool isLoading = false;
 
-  final vaccinationController = TextEditingController();
 
   bool noImage = true;
 
@@ -27,10 +26,9 @@ class AddPetController {
 
   String imageUrl = "";
 
-  Future<void> uploadImages(
-      {required String path,
-      required String id,
-      required BuildContext context}) async {
+  Future<void> uploadImages({required String path,
+    required String id,
+    required BuildContext context}) async {
     try {
       final imageRef = storageRef
           .child("Users/${FirebaseAuth.instance.currentUser?.uid}/$id");
@@ -44,8 +42,8 @@ class AddPetController {
     }
   }
 
-  Future<void> addPetToFireStore(
-      Map<String, dynamic> addedPet, BuildContext context) async {
+  Future<void> addPetToFireStore(Map<String, dynamic> addedPet,
+      BuildContext context) async {
     var doc = FirebaseFirestore.instance.collection("petDetails").doc();
     addedPet.update("id", (value) => doc.id);
     await uploadImages(path: profilePic!.path, id: doc.id, context: context);
@@ -75,12 +73,9 @@ class AddPetController {
       return controllers = nameController;
     }
     if (index == 1) {
-      return controllers = ageController;
-    }
-    if (index == 2) {
       return controllers = breedController;
     }
-    if (index == 3) {
+    if (index == 2) {
       return controllers = weightController;
     }
   }
@@ -89,16 +84,13 @@ class AddPetController {
 
   hintTextChanger(index) {
     if (index == 0) {
-      return hintText = "Name ";
+      return hintText = "Name";
     }
     if (index == 1) {
-      return hintText = "Age (Years, Months) ";
+      return hintText = "Breed";
     }
     if (index == 2) {
-      return hintText = "Breed ";
-    }
-    if (index == 3) {
-      return hintText = "Weight (Kg) ";
+      return hintText = "Weight (Kg)";
     }
   }
 }
